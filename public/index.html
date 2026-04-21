@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="description" content="Gerencie tarefas domésticas com sua família" />
+  <title>Casa em Ordem</title>
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --blue-light: #3b82f6;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    html {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color-scheme: light;
+    }
+
+    body {
+      background: var(--slate-100);
+      min-height: 100vh;
+      color: var(--slate-900);
+      line-height: 1.5;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100vh;
+      max-width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 100%;
+      }
+    }
+
+    /* Auth Container */
+    .auth-section {
+      grid-column: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .auth-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: var(--slate-500);
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+
+    /* Main App */
+    .app-section {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .app-section.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .badge {
+      background: var(--blue);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .badge-label {
+      font-size: 13px;
+      color: var(--slate-500);
+    }
+
+    /* Nav */
+    .nav {
+      display: flex;
+      background: var(--slate-50);
+      padding: 8px;
+      gap: 4px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--slate-500);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .nav-btn:hover {
+      background: var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .nav-btn.active {
+      background: #fff;
+      color: var(--blue);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .nav-btn i {
+      font-size: 20px;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      max-width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+      .content {
+        padding: 32px;
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+      }
+    }
+
+    /* Date Navigation */
+    .date-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #fff;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--slate-200);
+    }
+
+    .date-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--slate-100);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--slate-600);
+    }
+
+    .date-btn:hover {
+      background: var(--slate-200);
+    }
+
+    .date-nav input[type="date"] {
+      padding: 8px 12px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .quick-dates {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .quick-date {
+      padding: 8px 16px;
+      border: 1px solid var(--slate-200);
+      background: #fff;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-date:hover {
+      background: var(--slate-100);
+    }
+
+    .quick-date.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--slate-200);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title i {
+      font-size: 18px;
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      border: 2px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--slate-900);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .form-group input::placeholder {
+      color: var(--slate-400);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-secondary {
+      background: var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .btn-secondary:hover {
+      background: var(--slate-200);
+    }
+
+    .btn-sm {
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    /* Toggle */
+    .toggle-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--slate-500);
+    }
+
+    .toggle-link button {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* House Code */
+    .house-code {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--blue);
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .house-label {
+      font-size: 13px;
+      color: var(--slate-500);
+      text-align: center;
+    }
+
+    /* Members */
+    .members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .member {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--slate-50);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--slate-200);
+    }
+
+    .member i {
+      color: var(--amber);
+      font-size: 14px;
+    }
+
+    /* Tasks */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #fff;
+      border-radius: var(--radius);
+      border: 1px solid var(--slate-200);
+      transition: all 0.2s;
+    }
+
+    .task-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .task-item.completed {
+      background: var(--slate-50);
+      opacity: 0.7;
+    }
+
+    .task-item.completed .task-desc {
+      text-decoration: line-through;
+      color: var(--slate-500);
+    }
+
+    .task-check {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--blue);
+    }
+
+    .task-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-desc {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .task-meta {
+      font-size: 13px;
+      color: var(--slate-500);
+      margin-top: 2px;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .task-action {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: var(--slate-100);
+      color: var(--slate-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .task-action:hover {
+      color: #fff;
+    }
+
+    .task-action.done:hover {
+      background: var(--emerald);
+    }
+
+    .task-action.delete:hover {
+      background: var(--rose);
+    }
+
+    .task-action i {
+      font-size: 18px;
+    }
+
+    /* Bulk Actions */
+    .bulk-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .bulk-actions .btn {
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    /* Empty State */
+    .empty {
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .empty i {
+      font-size: 56px;
+      color: var(--slate-300);
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--slate-700);
+      margin-bottom: 8px;
+    }
+
+    .empty-text {
+      font-size: 14px;
+      color: var(--slate-500);
+    }
+
+    /* Templates */
+    .template-list {
+      margin-top: 16px;
+    }
+
+    .template-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      background: var(--slate-50);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+    }
+
+    .template-desc {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .template-meta {
+      font-size: 13px;
+      color: var(--slate-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .room-tag {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .template-delete {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--slate-400);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .template-delete:hover {
+      background: var(--rose);
+      color: #fff;
+    }
+
+    /* Settings Row */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--slate-200);
+      border-radius: 24px;
+      transition: 0.2s;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--blue);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 20px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .toast {
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideUp 0.3s ease;
+    }
+
+    .toast.success { background: var(--emerald); }
+    .toast.error { background: var(--rose); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--slate-200);
+      margin: 20px 0;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 450px;
+      max-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: var(--slate-500);
+      cursor: pointer;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .modal-close:hover {
+      background: var(--slate-100);
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-500);
+      margin-bottom: 12px;
+    }
+
+    /* Task Suggestions */
+    .task-suggestions {
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    .room-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .room-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 0 4px;
+      border-bottom: 1px solid var(--slate-100);
+      margin-top: 8px;
+    }
+
+    .room-title:first-child {
+      margin-top: 0;
+    }
+
+    .room-tasks {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .suggestion-item {
+      padding: 10px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-item:hover {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    /* Grid for desktop */
+    @media (min-width: 1024px) {
+      .grid-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .grid-layout .card {
+        margin-bottom: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Auth Section -->
+    <section class="auth-section" id="authSection">
+      <div class="auth-card">
+        <h1 class="auth-title">Casa em Ordem</h1>
+        <p class="auth-subtitle">Gerencie tarefas com sua família</p>
+
+        <div id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Senha</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <button class="btn btn-primary" onclick="handleLogin()">
+            <i class="ph ph-sign-in"></i>
+            Entrar
+          </button>
+          <div class="toggle-link">
+            Não tem conta?
+            <button onclick="showAuth('register')">Criar conta</button>
+          </div>
+        </div>
+
+        <div id="registerForm" style="display:none">
+          <div class="form-group">
+            <label for="regUsername">Seu nome</label>
+            <input type="text" id="regUsername" placeholder="Maria" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" placeholder="seu@email.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Senha</label>
+            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          </div>
+          <button class="btn btn-primary" onclick="handleRegister()">
+            <i class="ph ph-user-plus"></i>
+            Criar conta
+          </button>
+          <div class="toggle-link">
+            Já tem conta?
+            <button onclick="showAuth('login')">Fazer login</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Section -->
+    <section class="app-section" id="dashboard">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <span class="logo">Casa em Ordem</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="badge-label">Pendentes hoje</span>
+          <span class="badge" id="pendingCount">0</span>
+        </div>
+      </header>
+
+      <!-- Nav -->
+      <nav class="nav">
+        <button class="nav-btn active" id="navTasks" onclick="showTab('tasks')">
+          <i class="ph ph-list-checks"></i>
+          Tarefas
+        </button>
+        <button class="nav-btn" id="navConfig" onclick="showTab('config')">
+          <i class="ph ph-gear-six"></i>
+          Config
+        </button>
+        <button class="nav-btn" onclick="handleLogout()">
+          <i class="ph ph-sign-out"></i>
+          Sair
+        </button>
+      </nav>
+
+      <!-- Content -->
+      <main class="content">
+        <!-- Tasks Tab -->
+        <div class="tab-panel active" id="tasksPanel">
+          <!-- Date Navigation -->
+          <div class="date-nav">
+            <button class="date-btn" onclick="changeDate(-1)">
+              <i class="ph ph-caret-left"></i>
+            </button>
+            <input type="date" id="taskDate" onchange="loadTasks()">
+            <button class="date-btn" onclick="changeDate(1)">
+              <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+          <div class="quick-dates">
+            <button class="quick-date" onclick="setDate(-1)">Ontem</button>
+            <button class="quick-date active" onclick="setDate(0)">Hoje</button>
+            <button class="quick-date" onclick="setDate(1)">Amanhã</button>
+            <button class="quick-date" onclick="openDatePicker()">
+              <i class="ph ph-calendar-blank"></i>
+            </button>
+          </div>
+          <button class="btn btn-secondary" onclick="openTaskPicker()" style="margin:16px 0">
+            <i class="ph ph-plus"></i>
+            Adicionar tarefa
+          </button>
+          <div id="tasksList"></div>
+        </div>
+
+        <!-- Config Tab -->
+        <div class="tab-panel" id="configPanel">
+          <div class="grid-layout">
+            <!-- Casa -->
+            <div class="card">
+              <div class="card-title">
+                <i class="ph ph-house-line"></i>
+                Minha Casa
+              </div>
+              <div class="house-label">
+                <i class="ph ph-qr-code"></i>
+                Código para convidar
+              </div>
+              <div class="house-code" id="inviteCode">------</div>
+              <button class="btn btn-secondary btn-sm" onclick="regenerateCode()">
+                <i class="ph ph-arrows-clockwise"></i>
+                Gerar novo código
+              </button>
+              <div class="members" id="membersList"></div>
+            </div>
+
+            <!-- Templates -->
+            <div class="card">
+              <div class="card-title">
+                <i class="ph ph-template"></i>
+                Templates
+              </div>
+              <div class="form-group">
+                <label for="newTaskDesc">Nova tarefa</label>
+                <input type="text" id="newTaskDesc" placeholder="Ex: Lavar louça…" list="templatesList" autocomplete="off">
+                <datalist id="templatesDatalist"></datalist>
+              </div>
+              <div class="form-group">
+                <label for="newTaskRoom">Ambiente</label>
+                <select id="newTaskRoom" onchange="toggleNewRoom()">
+                  <option value="Sala de estar">Sala de estar</option>
+                  <option value="Lavabo">Lavabo</option>
+                  <option value="Hall">Hall</option>
+                  <option value="Corredor">Corredor</option>
+                  <option value="Varanda">Varanda</option>
+                  <option value="Suíte">Suíte</option>
+                  <option value="Escritório">Escritório</option>
+                  <option value="Quarto">Quarto</option>
+                  <option value="Banheiro social">Banheiro social</option>
+                  <option value="Banheiro suite">Banheiro suite</option>
+                  <option value="Cozinha">Cozinha</option>
+                  <option value="Área de serviço">Área de serviço</option>
+                  <option value="Geral">Geral</option>
+                  <option value="__new__">+ Novo ambiente...</option>
+                </select>
+              </div>
+              <div class="form-group" id="newRoomGroup" style="display:none">
+                <label for="newRoomName">Nome do novo ambiente</label>
+                <input type="text" id="newRoomName" placeholder="Ex: Garagem, Porão...">
+              </div>
+              <div class="form-group">
+                <label for="newTaskFreq">Frequência</label>
+                <select id="newTaskFreq" onchange="toggleDaySelector()">
+                  <option value="daily">Diária</option>
+                  <option value="weekly">Semanal</option>
+                  <option value="biweekly">Quinzenal</option>
+                  <option value="monthly">Mensal</option>
+                </select>
+              </div>
+              <div class="form-group" id="dayGroup" style="display:none">
+                <label for="newTaskDay">Dia da semana</label>
+                <select id="newTaskDay">
+                  <option value="0">Domingo</option>
+                  <option value="1">Segunda</option>
+                  <option value="2">Terça</option>
+                  <option value="3">Quarta</option>
+                  <option value="4">Quinta</option>
+                  <option value="5">Sexta</option>
+                  <option value="6">Sábado</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="newTaskAssigned">Responsável</label>
+                <input type="text" id="newTaskAssigned" placeholder="Maria, João…" autocomplete="off">
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="addTemplate()">
+                <i class="ph ph-plus"></i>
+                Adicionar
+              </button>
+              <div id="templatesList"></div>
+            </div>
+
+            <!-- Notificações -->
+            <div class="card">
+              <div class="card-title">
+                <i class="ph ph-bell"></i>
+                Notificações
+              </div>
+              <div class="setting-row">
+                <span class="setting-label">Email diário</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="notifEnabled" onchange="saveNotifSettings()">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label for="notifTime">Horário</label>
+                <select id="notifTime" onchange="saveNotifSettings()">
+                  <option value="08:00">08:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="20:00">20:00</option>
+                </select>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="sendTestEmail()" style="margin-top:16px">
+                <i class="ph ph-envelope"></i>
+                Enviar email de teste
+              </button>
+            </div>
+
+            <!-- Gerar Tarefas -->
+            <div class="card">
+              <div class="card-title">
+                <i class="ph ph-calendar-plus"></i>
+                Gerar Tarefas
+              </div>
+              <div class="form-group">
+                <label for="generatePeriod">Período</label>
+                <select id="generatePeriod">
+                  <option value="month">Este mês</option>
+                  <option value="week">Esta semana</option>
+                  <option value="today">Hoje</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="generateTasks()">
+                <i class="ph ph-plus"></i>
+                Gerar tarefas
+              </button>
+
+              <div class="divider"></div>
+
+              <div class="form-group">
+                <label for="repeatSource">Copiar de</label>
+                <select id="repeatSource">
+                  <option value="month">Mês passado</option>
+                  <option value="week">Semana passada</option>
+                  <option value="day">Ontem</option>
+                </select>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="repeatTasks()">
+                <i class="ph ph-copy"></i>
+                Repetir
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+
+  <!-- Task Picker Modal -->
+  <div class="modal-overlay" id="taskPickerModal" onclick="closeTaskPicker()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Selecionar tarefa</h2>
+        <button class="modal-close" onclick="closeTaskPicker()">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="quickTaskRoom">Ambiente</label>
+          <select id="quickTaskRoom">
+            <option value="Sala de estar">Sala de estar</option>
+            <option value="Lavabo">Lavabo</option>
+            <option value="Hall">Hall</option>
+            <option value="Corredor">Corredor</option>
+            <option value="Varanda">Varanda</option>
+            <option value="Suíte">Suíte</option>
+            <option value="Escritório">Escritório</option>
+            <option value="Quarto">Quarto</option>
+            <option value="Banheiro social">Banheiro social</option>
+            <option value="Banheiro suite">Banheiro suite</option>
+            <option value="Cozinha">Cozinha</option>
+            <option value="Área de serviço">Área de serviço</option>
+            <option value="Geral">Geral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="quickTask">Tarefa</label>
+          <input type="text" id="quickTask" placeholder="Ex: Limpar pia, Aspirar chão..." autocomplete="off" list="templatesDatalist">
+          <button class="btn btn-primary btn-sm" onclick="addQuickTask()" style="margin-top:8px">Adicionar</button>
+        </div>
+        <div class="divider"></div>
+        <div class="modal-title">Ou escolha uma sugestão</div>
+        <div class="task-suggestions" id="taskSuggestions"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <script>
+    const API_URL = 'http://localhost:3000';
+
+    function showAuth(tab) {
+      document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+    }
+
+    function showTab(tab) {
+      document.getElementById('navTasks').classList.toggle('active', tab === 'tasks');
+      document.getElementById('navConfig').classList.toggle('active', tab === 'config');
+      document.getElementById('tasksPanel').classList.toggle('active', tab === 'tasks');
+      document.getElementById('configPanel').classList.toggle('active', tab === 'config');
+      if (tab === 'tasks') loadTasks();
+    }
+
+    async function handleRegister() {
+      const username = document.getElementById('regUsername').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      try {
+        const res = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        localStorage.setItem('token', data.token);
+        initApp();
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      try {
+        const res = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        localStorage.setItem('token', data.token);
+        initApp();
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('token');
+      location.reload();
+    }
+
+    async function initApp() {
+      document.getElementById('authSection').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+      await Promise.all([loadHousehold(), loadTemplates(), loadPendingCount(), loadNotifSettings(), loadTasks()]);
+    }
+
+    async function loadHousehold() {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/household`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      if (data.hasHousehold) {
+        document.getElementById('inviteCode').textContent = data.household.invite_code;
+        let html = '';
+        for (const m of data.members) {
+          html += `<span class="member">${m.username} ${m.role === 'admin' ? '<i class="ph-fill ph-crown"></i>' : ''}</span>`;
+        }
+        document.getElementById('membersList').innerHTML = html;
+      }
+    }
+
+    async function regenerateCode() {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/household/generate-code`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('inviteCode').textContent = data.invite_code;
+        showToast('Novo código gerado!', 'success');
+      }
+    }
+
+    async function loadTemplates() {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/templates`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const templates = await res.json();
+      const freqLabels = { daily: 'Diária', weekly: 'Semanal', biweekly: 'Quinzenal', monthly: 'Mensal' };
+      const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      let html = '<div class="template-list">';
+      for (const t of templates) {
+        const freqText = t.frequency === 'weekly' && t.day_value != null 
+          ? `${freqLabels[t.frequency]} - ${dayNames[t.day_value]}`
+          : freqLabels[t.frequency];
+        const roomTag = t.room ? `<span class="room-tag">${t.room}</span>` : '';
+        html += `
+          <div class="template-item">
+            <div>
+              <div class="template-desc">${t.description}</div>
+              <div class="template-meta">${roomTag} ${freqText}${t.assigned_to ? ' · ' + t.assigned_to : ''}</div>
+            </div>
+            <button class="template-delete" onclick="deleteTemplate(${t.id})" aria-label="Excluir">
+              <i class="ph ph-trash"></i>
+            </button>
+          </div>
+        `;
+      }
+      html += '</div>';
+      document.getElementById('templatesList').innerHTML = templates.length ? html : '<div class="empty-text" style="padding:16px 0">Nenhum template</div>';
+      
+      // Popula datalist para autocomplete
+      const datalist = document.getElementById('templatesDatalist');
+      datalist.innerHTML = '';
+      for (const t of templates) {
+        const option = document.createElement('option');
+        option.value = t.description;
+        datalist.appendChild(option);
+      }
+    }
+
+    function toggleDaySelector() {
+      const freq = document.getElementById('newTaskFreq').value;
+      document.getElementById('dayGroup').style.display = freq === 'weekly' ? 'block' : 'none';
+    }
+
+    function toggleNewRoom() {
+      const roomSelect = document.getElementById('newTaskRoom');
+      const newRoomGroup = document.getElementById('newRoomGroup');
+      if (roomSelect.value === '__new__') {
+        newRoomGroup.style.display = 'block';
+        document.getElementById('newRoomName').focus();
+      } else {
+        newRoomGroup.style.display = 'none';
+      }
+    }
+
+    async function addTemplate() {
+      const token = localStorage.getItem('token');
+      const desc = document.getElementById('newTaskDesc').value.trim();
+      let room = document.getElementById('newTaskRoom').value;
+      const newRoomName = document.getElementById('newRoomName').value.trim();
+      
+      // Se selecionou novo ambiente, usa o nome digitado
+      if (room === '__new__') {
+        if (!newRoomName) return showToast('Digite o nome do ambiente', 'error');
+        room = newRoomName;
+        // Adiciona como opção no select
+        const select = document.getElementById('newTaskRoom');
+        const option = document.createElement('option');
+        option.value = room;
+        option.text = room;
+        select.insertBefore(option, select.querySelector('option[value="__new__"]'));
+        document.getElementById('newRoomName').value = '';
+        select.value = room;
+        document.getElementById('newRoomGroup').style.display = 'none';
+      }
+      
+      const freq = document.getElementById('newTaskFreq').value;
+      const assigned = document.getElementById('newTaskAssigned').value.trim();
+      const dayValue = freq === 'weekly' ? parseInt(document.getElementById('newTaskDay').value) : null;
+      if (!desc) return showToast('Digite a descrição', 'error');
+      const res = await fetch(`${API_URL}/api/templates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ description: desc, room: room, frequency: freq, assigned_to: assigned || null, day_value: dayValue })
+      });
+      if (res.ok) {
+        document.getElementById('newTaskDesc').value = '';
+        document.getElementById('newTaskAssigned').value = '';
+        await loadTemplates();
+        showToast('Template adicionado', 'success');
+      }
+    }
+
+    async function deleteTemplate(id) {
+      if (!confirm('Remover este template?')) return;
+      const token = localStorage.getItem('token');
+      await fetch(`${API_URL}/api/templates/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      await loadTemplates();
+      showToast('Template removido', 'success');
+    }
+
+    async function loadPendingCount() {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/notifications/pending`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      document.getElementById('pendingCount').textContent = data.count;
+    }
+
+    function getSelectedDate() {
+      let val = document.getElementById('taskDate').value;
+      if (!val) {
+        val = new Date().toISOString().split('T')[0];
+      }
+      return val;
+    }
+
+    function changeDate(delta) {
+      const dateInput = document.getElementById('taskDate');
+      const parts = dateInput.value.split('-');
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      d.setDate(d.getDate() + delta);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      dateInput.value = `${y}-${m}-${day}`;
+      loadTasks();
+    }
+
+    function setDate(delta) {
+      const d = new Date();
+      d.setDate(d.getDate() + delta);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      document.getElementById('taskDate').value = `${y}-${m}-${day}`;
+      loadTasks();
+    }
+
+    function openDatePicker() {
+      document.getElementById('taskDate').showPicker();
+    }
+
+    async function loadTasks() {
+      const token = localStorage.getItem('token');
+      const selectedDate = getSelectedDate();
+      
+      // Atualiza visual dos botões de data rápida
+      const quickBtns = document.querySelectorAll('.quick-date');
+      quickBtns.forEach(btn => btn.classList.remove('active'));
+      
+      const parts = selectedDate.split('-');
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      d.setHours(0,0,0,0);
+      
+      const diff = Math.round((d - today) / (1000 * 60 * 60 * 24));
+      if (diff === 0) quickBtns[1].classList.add('active');
+      else if (diff === -1) quickBtns[0].classList.add('active');
+      else if (diff === 1) quickBtns[2].classList.add('active');
+
+      const res = await fetch(`${API_URL}/api/tasks?date=${selectedDate}`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const tasks = await res.json();
+      const pending = tasks.filter(t => !t.completed);
+      const completed = tasks.filter(t => t.completed);
+      let html = '';
+      
+      if (pending.length > 0) {
+        html += `
+          <div class="bulk-actions">
+            <button class="btn btn-secondary btn-sm" onclick="selectAllTasks()">Todas</button>
+            <button class="btn btn-primary btn-sm" style="background:var(--emerald)" onclick="bulkToggle()">Feitas</button>
+            <button class="btn btn-secondary btn-sm" style="background:var(--rose);color:#fff" onclick="bulkDelete()">Excluir</button>
+          </div>
+          <div class="task-list">
+        `;
+        for (const t of pending) html += buildTaskRow(t, false);
+        html += '</div>';
+      }
+      if (completed.length > 0) {
+        html += `
+          <div style="margin:24px 0 12px;font-size:14px;font-weight:600;color:var(--slate-500)">
+            <i class="ph ph-check-circle"></i> Concluídas (${completed.length})
+          </div>
+          <div class="task-list">
+        `;
+        for (const t of completed) html += buildTaskRow(t, true);
+        html += '</div>';
+      }
+      if (!html) {
+        const parts = selectedDate.split('-');
+      const dateFormatted = new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+        html = `
+          <div class="empty">
+            <i class="ph ph-clipboard-text"></i>
+            <div class="empty-title">Nenhuma tarefa</div>
+            <div class="empty-text" style="text-transform:capitalize">${dateFormatted}</div>
+          </div>
+        `;
+      }
+      document.getElementById('tasksList').innerHTML = html;
+    }
+
+    function buildTaskRow(task, isCompleted) {
+      const room = task.room || '';
+      return `
+        <div class="task-item ${isCompleted ? 'completed' : ''}">
+          <input type="checkbox" class="task-check" value="${task.id}" ${isCompleted ? 'checked' : ''}>
+          <div class="task-info" onclick="toggleTask(${task.id})" style="cursor:pointer;flex:1">
+            <div class="task-desc">${task.description}${room ? ' - ' + room : ''}</div>
+            <div class="task-meta">${task.assigned_to || 'Todos'}</div>
+          </div>
+          <div class="task-actions">
+            ${!isCompleted ? `<button class="task-action done" onclick="toggleTask(${task.id})" aria-label="Concluir"><i class="ph ph-check"></i></button>` : ''}
+            <button class="task-action delete" onclick="deleteTask(${task.id})" aria-label="Excluir"><i class="ph ph-trash"></i></button>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectAllTasks() {
+      const checkboxes = document.querySelectorAll('.task-check');
+      const all = Array.from(checkboxes).every(cb => cb.checked);
+      checkboxes.forEach(cb => cb.checked = !all);
+    }
+
+    function getSelected() {
+      return Array.from(document.querySelectorAll('.task-check:checked')).map(cb => cb.value);
+    }
+
+    async function bulkToggle() {
+      const ids = getSelected();
+      if (!ids.length) return showToast('Selecione tarefas', 'error');
+      const token = localStorage.getItem('token');
+      for (const id of ids) {
+        await fetch(`${API_URL}/api/tasks/${id}/toggle`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
+      }
+      await Promise.all([loadTasks(), loadPendingCount()]);
+      showToast(`${ids.length} concluída(s)`, 'success');
+    }
+
+    async function bulkDelete() {
+      const ids = getSelected();
+      if (!ids.length) return showToast('Selecione tarefas', 'error');
+      if (!confirm(`Excluir ${ids.length} tarefa(s)?`)) return;
+      const token = localStorage.getItem('token');
+      for (const id of ids) {
+        await fetch(`${API_URL}/api/tasks/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      }
+      await Promise.all([loadTasks(), loadPendingCount()]);
+      showToast(`${ids.length} excluída(s)`, 'success');
+    }
+
+    async function deleteTask(id) {
+      if (!confirm('Excluir?')) return;
+      const token = localStorage.getItem('token');
+      await fetch(`${API_URL}/api/tasks/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      await Promise.all([loadTasks(), loadPendingCount()]);
+    }
+
+    async function toggleTask(id) {
+      const token = localStorage.getItem('token');
+      await fetch(`${API_URL}/api/tasks/${id}/toggle`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
+      await loadTasks();
+      await loadPendingCount();
+    }
+
+    async function generateTasks() {
+      const token = localStorage.getItem('token');
+      const period = document.getElementById('generatePeriod').value;
+      const res = await fetch(`${API_URL}/api/tasks/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ period })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message, 'success');
+        showTab('tasks');
+        await Promise.all([loadTasks(), loadPendingCount()]);
+      }
+    }
+
+    async function repeatTasks() {
+      const token = localStorage.getItem('token');
+      const source = document.getElementById('repeatSource').value;
+      const res = await fetch(`${API_URL}/api/tasks/repeat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ sourcePeriod: source, targetPeriod: source })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message, 'success');
+        showTab('tasks');
+        await Promise.all([loadTasks(), loadPendingCount()]);
+      }
+    }
+
+    async function loadNotifSettings() {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/notifications/settings`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      document.getElementById('notifEnabled').checked = data.email_enabled !== false;
+      document.getElementById('notifTime').value = data.reminder_time || '16:00';
+    }
+
+    async function saveNotifSettings() {
+      const token = localStorage.getItem('token');
+      const enabled = document.getElementById('notifEnabled').checked;
+      const time = document.getElementById('notifTime').value;
+      await fetch(`${API_URL}/api/notifications/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ email_enabled: enabled, reminder_time: time })
+      });
+    }
+
+    async function sendTestEmail() {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/notifications/send-test`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      if (data.sent > 0) showToast('Email enviado!', 'success');
+      else showToast(data.reason || 'Erro', 'error');
+    }
+
+    // Task Picker Modal
+    const defaultTasks = {
+      'Sala de estar': ['Aspirar sofá', 'Limpar tv', 'Organizar revista', 'Limpar lustre', 'Passar pano nos móveis'],
+      'Lavabo': ['Limpar pia', 'Limpar espelho', 'Trocar toalha', 'Reabastecer papel higiênico'],
+      'Hall': ['Limpar piso', 'Limpar quadro', 'Verificar correio', 'Organizar sapato'],
+      'Corredor': ['Aspirar piso', 'Limpar quadro', 'Organizar calçados'],
+      'Varanda': ['Varrer piso', 'Limpar vidro', 'Regar plantas', 'Limpar grade'],
+      'Suíte': ['Trocar lençóis', 'Organizar guarda-roupa', 'Limpar espelho', 'Arrumar cama'],
+      'Escritório': ['Organizar mesa', 'Limpar computador', 'Arquivar documentos', 'Limpar estante'],
+      'Quarto': ['Arrumar cama', 'Trocar lençóis', 'Organizar guarda-roupa', 'Aspirar piso', 'Limpar espelho'],
+      'Banheiro social': ['Limpar vaso', 'Limpar pia', 'Limpar espelho', 'Trocar toalha', 'Reabastecer papel higiênico'],
+      'Banheiro suite': ['Limpar vaso', 'Limpar pia', 'Limpar box', 'Trocar toalha', 'Reabastecer papel higiênico'],
+      'Cozinha': ['Lavar louça', 'Limpar fogão', 'Limpar geladeira', 'Organizar despensa', 'Limpar piso'],
+      'Área de serviço': ['Lavar roupa', 'Secar roupa', 'Passar ferro', 'Organizar produtos'],
+      'Geral': ['Tirar lixo', 'Regar plantas', 'Alimentar bichos', 'Dar água fresca', 'Verificar contas']
+    };
+
+    function openTaskPicker() {
+      const suggestionsEl = document.getElementById('taskSuggestions');
+      let html = '<div class="room-group">';
+      
+      for (const [room, tasks] of Object.entries(defaultTasks)) {
+        html += `<div class="room-title">${room}</div>`;
+        html += `<div class="room-tasks">`;
+        for (const task of tasks) {
+          html += `<div class="suggestion-item" onclick="addFromPicker('${task.replace(/'/g, "\\'")}', '${room}', getSelectedDate())">${task}</div>`;
+        }
+        html += `</div>`;
+      }
+      html += '</div>';
+      suggestionsEl.innerHTML = html;
+      document.getElementById('taskPickerModal').style.display = 'flex';
+    }
+
+    function closeTaskPicker() {
+      document.getElementById('taskPickerModal').style.display = 'none';
+    }
+
+    async function addQuickTask() {
+      const desc = document.getElementById('quickTask').value.trim();
+      if (!desc) return showToast('Digite uma tarefa', 'error');
+      const room = document.getElementById('quickTaskRoom').value;
+      const dueDate = getSelectedDate();
+      await addFromPicker(desc, room, dueDate);
+      document.getElementById('quickTask').value = '';
+    }
+
+    async function addFromPicker(desc, room, dueDate) {
+      const token = localStorage.getItem('token');
+      const date = dueDate || new Date().toISOString().split('T')[0];
+      const res = await fetch(`${API_URL}/api/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ description: desc, room: room, due_date: date })
+      });
+      if (res.ok) {
+        closeTaskPicker();
+        await loadTasks();
+        await loadPendingCount();
+        showToast('Tarefa adicionada', 'success');
+      }
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    window.onload = async () => {
+      // Inicializa date picker com hoje
+      document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+      
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const res = await fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${token}` } });
+          if (res.ok) initApp();
+          else localStorage.removeItem('token');
+        } catch (e) {
+          localStorage.removeItem('token');
+        }
+      }
+    };
+  </script>
+</body>
+</html>
