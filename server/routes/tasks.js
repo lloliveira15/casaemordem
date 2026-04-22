@@ -4,6 +4,14 @@ const Task = require('../models/Task');
 const Household = require('../models/Household');
 const authMiddleware = require('../middleware/auth');
 
+// Returns a date as YYYY-MM-DD in the process timezone (America/Sao_Paulo)
+const toLocalDateString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const getHousehold = async (req, res, next) => {
   const household = await Household.findByUserId(req.user.userId);
   if (!household) {
@@ -21,7 +29,7 @@ router.post('/', authMiddleware, getHousehold, async (req, res) => {
       return res.status(400).json({ error: 'Descrição é obrigatória' });
     }
 
-    const date = due_date || new Date().toISOString().split('T')[0];
+    const date = due_date || toLocalDateString(new Date());
     const sql = `
       INSERT INTO tasks (household_id, description, room, assigned_to, due_date, completed)
       VALUES (?, ?, ?, ?, ?, 0)
@@ -59,8 +67,8 @@ const getStartEndDates = (period) => {
   }
 
   return {
-    start: startDate.toISOString().split('T')[0],
-    end: endDate.toISOString().split('T')[0]
+    start: toLocalDateString(startDate),
+    end: toLocalDateString(endDate)
   };
 };
 
@@ -119,34 +127,34 @@ router.post('/repeat', authMiddleware, getHousehold, async (req, res) => {
     if (sourcePeriod === 'month') {
       const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const prevEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-      sourceStart = prevMonth.toISOString().split('T')[0];
-      sourceEnd = prevEnd.toISOString().split('T')[0];
+      sourceStart = toLocalDateString(prevMonth);
+      sourceEnd = toLocalDateString(prevEnd);
     } else if (sourcePeriod === 'week') {
       sourceStart = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
       sourceStart.setDate(sourceStart.getDate() - sourceStart.getDay() + 1);
       sourceEnd = new Date(sourceStart);
       sourceEnd.setDate(sourceStart.getDate() + 6);
-      sourceStart = sourceStart.toISOString().split('T')[0];
-      sourceEnd = sourceEnd.toISOString().split('T')[0];
+      sourceStart = toLocalDateString(sourceStart);
+      sourceEnd = toLocalDateString(sourceEnd);
     } else if (sourcePeriod === 'day') {
       const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      sourceStart = sourceEnd = yesterday.toISOString().split('T')[0];
+      sourceStart = sourceEnd = toLocalDateString(yesterday);
     }
 
     if (targetPeriod === 'month') {
       const year = now.getFullYear();
       const month = now.getMonth();
-      targetStart = new Date(year, month, 1).toISOString().split('T')[0];
-      targetEnd = new Date(year, month + 1, 0).toISOString().split('T')[0];
+      targetStart = toLocalDateString(new Date(year, month, 1));
+      targetEnd = toLocalDateString(new Date(year, month + 1, 0));
     } else if (targetPeriod === 'week') {
       targetStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       targetStart.setDate(targetStart.getDate() - targetStart.getDay() + 1);
       targetEnd = new Date(targetStart);
       targetEnd.setDate(targetStart.getDate() + 6);
-      targetStart = targetStart.toISOString().split('T')[0];
-      targetEnd = targetEnd.toISOString().split('T')[0];
+      targetStart = toLocalDateString(targetStart);
+      targetEnd = toLocalDateString(targetEnd);
     } else if (targetPeriod === 'day') {
-      targetStart = targetEnd = now.toISOString().split('T')[0];
+      targetStart = targetEnd = toLocalDateString(now);
     }
 
     const result = await Task.copyFromPeriod(req.householdId, sourceStart, sourceEnd, targetStart, targetEnd);
