@@ -3,6 +3,15 @@ const Task = require('../models/Task');
 const Household = require('../models/Household');
 const db = require('../config/database');
 
+// Returns today's date as YYYY-MM-DD in the process timezone (America/Sao_Paulo)
+const getLocalDateString = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 class NotificationService {
   static getTransporter() {
     return nodemailer.createTransport({
@@ -25,7 +34,7 @@ class NotificationService {
         return { sent: 0, reason: 'Email não configurado' };
       }
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateString();
       
       const tasks = await Task.findByHousehold(householdId, {
         date: today,
@@ -102,7 +111,7 @@ Acesse o app para marcar como concluídas.
   }
 
   static async getPendingTasks(householdId) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateString();
     return await Task.findByHousehold(householdId, {
       date: today,
       completed: false
