@@ -52,13 +52,15 @@ router.get('/settings', authMiddleware, getHousehold, async (req, res) => {
     if (!settings) {
       return res.json({
         email_enabled: true,
-        reminder_time: '16:00'
+        reminder_time: '16:00',
+        reminder_freq: 'daily'
       });
     }
 
     res.json({
       email_enabled: settings.email_enabled,
-      reminder_time: settings.reminder_time
+      reminder_time: settings.reminder_time,
+      reminder_freq: settings.reminder_freq || 'daily'
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,16 +70,16 @@ router.get('/settings', authMiddleware, getHousehold, async (req, res) => {
 // PUT /api/notifications/settings - Update notification settings
 router.put('/settings', authMiddleware, getHousehold, async (req, res) => {
   try {
-    const { email_enabled, reminder_time } = req.body;
+    const { email_enabled, reminder_time, reminder_freq } = req.body;
     const db = require('../config/database');
 
     const sql = `
-      INSERT OR REPLACE INTO notification_settings (household_id, email_enabled, reminder_time)
-      VALUES (?, ?, ?)
+      INSERT OR REPLACE INTO notification_settings (household_id, email_enabled, reminder_time, reminder_freq)
+      VALUES (?, ?, ?, ?)
     `;
 
     await new Promise((resolve, reject) => {
-      db.run(sql, [req.householdId, email_enabled ? 1 : 0, reminder_time || '16:00'], (err) => {
+      db.run(sql, [req.householdId, email_enabled ? 1 : 0, reminder_time || '16:00', reminder_freq || 'daily'], (err) => {
         if (err) reject(err);
         else resolve();
       });

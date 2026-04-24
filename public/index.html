@@ -885,6 +885,208 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* Config Sub-tabs */
+    .config-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .config-tab-btn {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .config-tab-btn:hover {
+      background: var(--slate-200);
+      color: var(--slate-800);
+    }
+
+    .config-tab-btn.active {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .config-tab-btn i {
+      font-size: 16px;
+    }
+
+    .subtab-content {
+      display: none;
+    }
+
+    .subtab-content.active {
+      display: block;
+    }
+
+    /* Template Groups */
+    .template-group {
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .template-group.visible {
+      display: block;
+    }
+
+    .template-group-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--slate-200);
+      margin-bottom: 12px;
+    }
+
+    .template-group-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Template List View */
+    .template-list-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+    }
+
+    .template-list-view.scrollable {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .template-list-pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--slate-200);
+    }
+
+    .template-list-pagination .info {
+      font-size: 12px;
+      color: var(--slate-500);
+    }
+
+    .template-list-pagination .btn-nav {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--slate-200);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .template-list-pagination .btn-nav:hover {
+      background: var(--slate-100);
+    }
+
+    .template-list-pagination .btn-nav:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .template-list-item {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .template-list-item .room-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+    }
+
+    /* Template Filter Tabs */
+    .template-filter-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .template-filter-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--slate-200);
+      background: #fff;
+      color: var(--slate-600);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .template-filter-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .template-filter-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .template-filter-btn .count {
+      background: rgba(0,0,0,0.1);
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+
+    .template-filter-btn.active .count {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Template Room Tabs */
+    .template-room-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .template-room-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid var(--slate-200);
+      background: #fff;
+      color: var(--slate-600);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .template-room-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .template-room-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -999,14 +1201,26 @@
 
         <!-- Config Tab -->
         <div class="tab-panel" id="configPanel">
-          <div class="grid-layout">
-            <!-- Casa -->
+          <!-- Sub-tabs -->
+          <div class="config-tabs">
+            <button class="config-tab-btn active" id="configTabCasa" onclick="switchConfigTab('casa')">
+              <i class="ph ph-house-line"></i> Minha Casa
+            </button>
+            <button class="config-tab-btn" id="configTabTemplates" onclick="switchConfigTab('templates')">
+              <i class="ph ph-clipboard-text"></i> Templates
+            </button>
+            <button class="config-tab-btn" id="configTabNotif" onclick="switchConfigTab('notif')">
+              <i class="ph ph-bell"></i> Notificações
+            </button>
+            <button class="config-tab-btn" id="configTabGerar" onclick="switchConfigTab('gerar')">
+              <i class="ph ph-calendar-plus"></i> Gerar Tarefas
+            </button>
+          </div>
+
+          <!-- Minha Casa -->
+          <div class="subtab-content active" id="subtabCasa">
             <div class="card">
               <div class="card-title">
-                <i class="ph ph-house-line"></i>
-                Minha Casa
-              </div>
-              <div class="house-label">
                 <i class="ph ph-qr-code"></i>
                 Código para convidar
               </div>
@@ -1017,17 +1231,19 @@
               </button>
               <div class="members" id="membersList"></div>
             </div>
+          </div>
 
-            <!-- Templates -->
+          <!-- Templates -->
+          <div class="subtab-content" id="subtabTemplates">
+            <!-- Formulário para criar -->
             <div class="card">
               <div class="card-title">
-                <i class="ph ph-template"></i>
-                Templates
+                <i class="ph ph-plus"></i>
+                Novo Template
               </div>
               <div class="form-group">
-                <label for="newTaskDesc">Nova tarefa</label>
-                <input type="text" id="newTaskDesc" placeholder="Ex: Lavar louça…" list="templatesList" autocomplete="off">
-                <datalist id="templatesDatalist"></datalist>
+                <label for="newTaskDesc">Descrição</label>
+                <input type="text" id="newTaskDesc" placeholder="Ex: Lavar louça…" autocomplete="off">
               </div>
               <div class="form-group">
                 <label for="newTaskRoom">Ambiente</label>
@@ -1081,14 +1297,24 @@
                 <i class="ph ph-plus"></i>
                 Adicionar
               </button>
-              <div id="templatesList"></div>
             </div>
 
-            <!-- Notificações -->
+            <!-- Lista de templates -->
+            <div class="card">
+              <div class="card-title">
+                <i class="ph ph-list"></i>
+                Templates Cadastrados
+              </div>
+              <div id="templatesList"></div>
+            </div>
+          </div>
+
+          <!-- Notificações -->
+          <div class="subtab-content" id="subtabNotif">
             <div class="card">
               <div class="card-title">
                 <i class="ph ph-bell"></i>
-                Notificações
+                Configurações de Email
               </div>
               <div class="setting-row">
                 <span class="setting-label">Email diário</span>
@@ -1098,6 +1324,15 @@
                 </label>
               </div>
               <div class="form-group" style="margin-bottom:0">
+                <label for="notifFreq">Frequência</label>
+                <select id="notifFreq" onchange="saveNotifSettings()">
+                  <option value="daily">1x ao dia</option>
+                  <option value="every2h">A cada 2 horas</option>
+                  <option value="every4h">A cada 4 horas</option>
+                  <option value="every6h">A cada 6 horas</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0" id="notifTimeGroup">
                 <label for="notifTime">Horário</label>
                 <select id="notifTime" onchange="saveNotifSettings()">
                   <option value="08:00">08:00</option>
@@ -1111,8 +1346,10 @@
                 Enviar email de teste
               </button>
             </div>
+          </div>
 
-            <!-- Gerar Tarefas -->
+          <!-- Gerar Tarefas -->
+          <div class="subtab-content" id="subtabGerar">
             <div class="card">
               <div class="card-title">
                 <i class="ph ph-calendar-plus"></i>
@@ -1212,6 +1449,18 @@
       if (tab === 'tasks') loadTasks();
     }
 
+    function switchConfigTab(tab) {
+      const tabs = ['casa', 'templates', 'notif', 'gerar'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('configTab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const content = document.getElementById('subtab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn && content) {
+          btn.classList.toggle('active', tab === t);
+          content.classList.toggle('active', tab === t);
+        }
+      });
+    }
+
     async function handleRegister() {
       const username = document.getElementById('regUsername').value;
       const email = document.getElementById('regEmail').value;
@@ -1287,40 +1536,167 @@
       }
     }
 
+const PAGE_SIZE = 12;
+    const templatePagination = {};
+    const templateAllData = {};
+
     async function loadTemplates() {
       const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/api/templates`, { headers: { 'Authorization': `Bearer ${token}` } });
       const templates = await res.json();
+
       const freqLabels = { daily: 'Diária', weekly: 'Semanal', biweekly: 'Quinzenal', monthly: 'Mensal' };
       const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-      let html = '<div class="template-list">';
-      for (const t of templates) {
-        const freqText = t.frequency === 'weekly' && t.day_value != null 
-          ? `${freqLabels[t.frequency]} - ${dayNames[t.day_value]}`
-          : freqLabels[t.frequency];
-        const roomTag = t.room ? `<span class="room-tag">${t.room}</span>` : '';
-        html += `
-          <div class="template-item">
-            <div>
-              <div class="template-desc">${t.description}</div>
-              <div class="template-meta">${roomTag} ${freqText}${t.assigned_to ? ' · ' + t.assigned_to : ''}</div>
-            </div>
-            <button class="template-delete" onclick="deleteTemplate(${t.id})" aria-label="Excluir">
-              <i class="ph ph-trash"></i>
-            </button>
-          </div>
-        `;
+
+      const groups = {
+        daily: templates.filter(t => t.frequency === 'daily'),
+        weekly: templates.filter(t => t.frequency === 'weekly'),
+        biweekly: templates.filter(t => t.frequency === 'biweekly'),
+        monthly: templates.filter(t => t.frequency === 'monthly')
+      };
+
+      templateAllData.daily = groups.daily;
+      templateAllData.weekly = groups.weekly;
+      templateAllData.biweekly = groups.biweekly;
+      templateAllData.monthly = groups.monthly;
+
+      let html = '<div class="template-filter-tabs">';
+      for (const freq of ['daily', 'weekly', 'biweekly', 'monthly']) {
+        if (groups[freq].length === 0) continue;
+        html += `<button class="template-filter-btn active" onclick="filterTemplates('${freq}')" id="filter${freq}">${freqLabels[freq]}<span class="count">${groups[freq].length}</span></button>`;
       }
       html += '</div>';
+
+      for (const freq of ['daily', 'weekly', 'biweekly', 'monthly']) {
+        const items = groups[freq];
+        if (items.length === 0) continue;
+
+        const rooms = [...new Set(items.map(t => t.room).filter(Boolean))];
+        
+        templatePagination[freq] = { page: 0, room: null };
+        
+        html += `<div class="template-group visible" id="group${freq}">
+          <div class="template-group-header">${freqLabels[freq]}</div>`;
+          
+        if (rooms.length > 0) {
+          html += '<div class="template-room-tabs" id="rooms' + freq + '">';
+          html += `<button class="template-room-btn active" onclick="filterTemplatesByRoom('${freq}', null)" id="room${freq}all">Todos (${items.length})</button>`;
+          for (const room of rooms) {
+            const count = items.filter(t => t.room === room).length;
+            const safeId = room.replace(/[^a-zA-Z0-9]/g, '_');
+            html += `<button class="template-room-btn" onclick="filterTemplatesByRoom('${freq}', '${room.replace(/'/g, "\\'")}')" id="room${freq}${safeId}">${room} (${count})</button>`;
+          }
+          html += '</div>';
+        }
+
+        html += `<div class="template-list-view" id="view${freq}"></div></div>`;
+      }
+
       document.getElementById('templatesList').innerHTML = templates.length ? html : '<div class="empty-text" style="padding:16px 0">Nenhum template</div>';
       
-      // Popula datalist para autocomplete
-      const datalist = document.getElementById('templatesDatalist');
-      datalist.innerHTML = '';
-      for (const t of templates) {
-        const option = document.createElement('option');
-        option.value = t.description;
-        datalist.appendChild(option);
+      setTimeout(() => {
+        ['daily', 'weekly', 'biweekly', 'monthly'].forEach(freq => {
+          if (groups[freq].length > 0) renderTemplateFilteredPage(freq);
+        });
+      }, 0);
+    }
+
+    function filterTemplatesByRoom(freq, room) {
+      const pag = templatePagination[freq];
+      if (!pag) return;
+
+      document.querySelectorAll('#rooms' + freq + ' .template-room-btn').forEach(btn => btn.classList.remove('active'));
+
+      if (room === null) {
+        const btnAll = document.getElementById('room' + freq + 'all');
+        if (btnAll) btnAll.classList.add('active');
+      } else {
+        const btnId = 'room' + freq + room.replace(/[^a-zA-Z0-9]/g, '_');
+        const btn = document.getElementById(btnId);
+        if (btn) btn.classList.add('active');
+      }
+
+      pag.room = room;
+      pag.page = 0;
+
+      renderTemplateFilteredPage(freq);
+    }
+
+    function renderTemplateFilteredPage(freq) {
+      const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      const pag = templatePagination[freq];
+      const allItems = templateAllData[freq];
+      const filtered = allItems.filter(t => pag.room === null || t.room === pag.room);
+      const sorted = filtered.sort((a, b) => {
+        if (freq === 'weekly' && a.day_value !== b.day_value) return a.day_value - b.day_value;
+        if (freq === 'monthly' && a.day_value !== b.day_value) return a.day_value - b.day_value;
+        return 0;
+      });
+
+      pag.total = sorted.length;
+      const start = pag.page * PAGE_SIZE;
+      const end = Math.min(start + PAGE_SIZE, sorted.length);
+
+      let html = '';
+      for (let i = start; i < end; i++) {
+        const t = sorted[i];
+        const dayLabel = (t.frequency === 'weekly' && t.day_value != null) ? dayNames[t.day_value] :
+                    (t.frequency === 'monthly' && t.day_value != null) ? t.day_value + 'º dia' : '';
+        const roomTag = t.room ? `<span class="room-tag">${t.room}</span>` : '';
+        html += `
+          <div class="template-list-item">
+            <div class="template-desc">${t.description}</div>
+            <div class="template-meta">${roomTag}${dayLabel ? ' · ' + dayLabel : ''}${t.assigned_to ? ' · ' + t.assigned_to : ''}</div>
+            <button class="template-delete" onclick="deleteTemplate(${t.id})" style="margin-top:8px">
+              <i class="ph ph-trash"></i>
+            </button>
+          </div>`;
+      }
+
+      if (sorted.length > PAGE_SIZE) {
+        const hasPrev = pag.page > 0;
+        const hasNext = end < sorted.length;
+        html += `</div>
+        <div class="template-list-pagination">
+          <button class="btn-nav" onclick="prevTemplates('${freq}')" id="prev${freq}" ${hasPrev ? '' : 'disabled'}>&larr; Anterior</button>
+          <span class="info" id="info${freq}">${start + 1}-${end} de ${sorted.length}</span>
+          <button class="btn-nav" onclick="nextTemplates('${freq}')" id="next${freq}" ${hasNext ? '' : 'disabled'}>Próxima &rarr;</button>
+        </div>`;
+      }
+
+      const view = document.getElementById('view' + freq);
+      if (view) view.innerHTML = html;
+    }
+
+    function nextTemplates(freq) {
+      const pag = templatePagination[freq];
+      if (!pag) return;
+      const filtered = templateAllData[freq].filter(t => pag.room === null || t.room === pag.room);
+      const maxPage = Math.floor((filtered.length - 1) / PAGE_SIZE);
+      if (pag.page < maxPage) {
+        pag.page++;
+        renderTemplateFilteredPage(freq);
+      }
+    }
+
+    function prevTemplates(freq) {
+      const pag = templatePagination[freq];
+      if (!pag || pag.page <= 0) return;
+      pag.page--;
+      renderTemplateFilteredPage(freq);
+    }
+
+    function filterTemplates(freq) {
+      document.querySelectorAll('.template-filter-btn').forEach(btn => btn.classList.remove('active'));
+      const btn = document.getElementById('filter' + freq);
+      if (btn) btn.classList.add('active');
+      document.querySelectorAll('.template-group').forEach(g => g.classList.remove('visible'));
+      const group = document.getElementById('group' + freq);
+      if (group) group.classList.add('visible');
+      if (templatePagination[freq]) {
+        templatePagination[freq].page = 0;
+        templatePagination[freq].room = null;
+        renderTemplateFilteredPage(freq);
       }
     }
 
@@ -1590,16 +1966,31 @@
       const data = await res.json();
       document.getElementById('notifEnabled').checked = data.email_enabled !== false;
       document.getElementById('notifTime').value = data.reminder_time || '16:00';
+      if (data.reminder_freq) {
+        document.getElementById('notifFreq').value = data.reminder_freq;
+        toggleNotifTimeGroup(data.reminder_freq);
+      }
+    }
+
+    function toggleNotifTimeGroup(freq) {
+      const timeGroup = document.getElementById('notifTimeGroup');
+      if (timeGroup) {
+        timeGroup.style.display = freq === 'daily' ? 'block' : 'none';
+      }
     }
 
     async function saveNotifSettings() {
       const token = localStorage.getItem('token');
       const enabled = document.getElementById('notifEnabled').checked;
+      const freq = document.getElementById('notifFreq').value;
       const time = document.getElementById('notifTime').value;
+      
+      toggleNotifTimeGroup(freq);
+      
       await fetch(`${API_URL}/api/notifications/settings`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ email_enabled: enabled, reminder_time: time })
+        body: JSON.stringify({ email_enabled: enabled, reminder_time: time, reminder_freq: freq })
       });
     }
 

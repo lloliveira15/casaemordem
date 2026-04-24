@@ -123,10 +123,14 @@ db.serialize(() => {
       household_id INTEGER NOT NULL UNIQUE,
       email_enabled INTEGER DEFAULT 1,
       reminder_time TEXT DEFAULT '16:00',
+      reminder_freq TEXT DEFAULT 'daily',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(household_id) REFERENCES households(id)
     )
   `);
+
+  // Adicionar coluna reminder_freq se não existir
+  db.run('ALTER TABLE notification_settings ADD COLUMN reminder_freq TEXT', () => {});
 
   console.log('📊 Tabelas verificadas/criadas com sucesso');
 });
