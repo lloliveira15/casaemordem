@@ -106,6 +106,22 @@ class User {
       });
     });
   }
+
+  // Atualizar senha
+  static updatePassword(userId, newPassword) {
+    return new Promise((resolve, reject) => {
+      const saltRounds = 10;
+      bcrypt.hash(newPassword, saltRounds, (err, hashedPassword) => {
+        if (err) return reject(err);
+        
+        const sql = 'UPDATE users SET password_hash = ? WHERE id = ?';
+        db.run(sql, [hashedPassword, userId], function(err) {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    });
+  }
 }
 
 module.exports = User;

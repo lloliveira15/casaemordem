@@ -1110,6 +1110,9 @@
             <i class="ph ph-sign-in"></i>
             Entrar
           </button>
+          <div class="toggle-link" style="margin-top:8px">
+            <button onclick="showForgotPassword()">Esqueci minha senha</button>
+          </div>
           <div class="toggle-link">
             Não tem conta?
             <button onclick="showAuth('register')">Criar conta</button>
@@ -1135,6 +1138,23 @@
           </button>
           <div class="toggle-link">
             Já tem conta?
+            <button onclick="showAuth('login')">Fazer login</button>
+          </div>
+        </div>
+
+        <div id="forgotForm" style="display:none">
+          <h1 class="auth-title">Esqueci minha senha</h1>
+          <p class="auth-subtitle">Digite seu email para receber o link de redefinição</p>
+          <div class="form-group">
+            <label for="forgotEmail">Email</label>
+            <input type="email" id="forgotEmail" placeholder="seu@email.com" autocomplete="email">
+          </div>
+          <button class="btn btn-primary" onclick="handleForgotPassword()">
+            <i class="ph ph-envelope"></i>
+            Enviar link
+          </button>
+          <div class="toggle-link">
+            Lembrou a senha?
             <button onclick="showAuth('login')">Fazer login</button>
           </div>
         </div>
@@ -1439,6 +1459,34 @@
     function showAuth(tab) {
       document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
       document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('forgotForm').style.display = tab === 'forgot' ? 'block' : 'none';
+    }
+
+    function showForgotPassword() {
+      showAuth('forgot');
+    }
+
+    async function handleForgotPassword() {
+      const email = document.getElementById('forgotEmail').value;
+      if (!email) return showToast('Digite seu email', 'error');
+      
+      try {
+        const res = await fetch(`${API_URL}/auth/forgot-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          showToast(data.message, 'success');
+          showAuth('login');
+        } else {
+          showToast(data.error, 'error');
+        }
+      } catch (e) {
+        showToast('Erro ao solicitar redefinição', 'error');
+      }
     }
 
     function showTab(tab) {

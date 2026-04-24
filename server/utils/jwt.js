@@ -8,14 +8,15 @@ if (!JWT_SECRET) {
 
 class JwtUtil {
   // Gerar token
-  static generateToken(userId, username) {
+  static generateToken(userId, username, options = {}, expiresIn = '7d') {
     const payload = {
       userId,
       username,
+      ...options,
       iat: Math.floor(Date.now() / 1000)
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn });
     return token;
   }
 

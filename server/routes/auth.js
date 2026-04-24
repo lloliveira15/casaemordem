@@ -72,6 +72,71 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Logout realizado. Remova o token do localStorage.' });
 });
 
+// POST /auth/forgot-password - Solicitar redefinição de senha
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email é obrigatório' });
+    }
+
+    // Buscar usuário
+    const user = await User.findByEmail(email);
+    if (!user) {
+      // Não revelar se o email existe
+      return res.json({ message: 'Se o email existir, você receberá um link para redefinir a senha' });
+    }
+
+    // Gerar token de redefinição (válido por 1 hora)
+    const resetToken = JwtUtil.generateToken(user.id, user.username, { type: 'reset' }, 3600);
+    
+    // TODO: Enviar email com link de redefinição
+    // Por enquanto, retornamos o token para teste
+    console.log(`🔑 Token de reset para ${email}: ${resetToken}`);
+    
+    res.json({ 
+      message: 'Se o email existir, você receberá um link para redefinir a senha',
+      // Remover em produção:
+      debug_token: resetToken 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /auth/reset-password - Redefinir senha com token
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    
+    if (!token || !newPassword) {
+      return res.status(400).json({ error: 'Token e nova senha são obrigatórios' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' });
+    }
+
+    // Verificar token
+    const decoded = JwtUtil.verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Token expirado ou inválido' });
+    }
+
+    if (decoded.type !== 'reset') {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+
+    // Atualizar senha
+    await User.updatePassword(decoded.userId, newPassword);
+    
+    res.json({ message: 'Senha atualizada com sucesso' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET /auth/me - Get current user from token
 router.get('/me', (req, res) => {
   const authHeader = req.headers.authorization;
