@@ -831,6 +831,96 @@
       background: var(--primary-light);
     }
 
+    /* Desktop widgets */
+    .widget {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .widget-title {
+      font-size: 12px;
+      color: var(--primary-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .widget-pending-count {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 4px 0;
+    }
+
+    .widget-progress-bar {
+      height: 6px;
+      background: var(--border-light);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .widget-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .widget-progress-fill.primary {
+      background: var(--primary);
+    }
+
+    .widget-member-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      background: var(--primary-light);
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--primary-dark);
+      font-weight: 500;
+    }
+
+    .widget-member-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      border: 1.5px dashed var(--border);
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--primary-subtle);
+      font-weight: 500;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .widget-member-add:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .completed-header {
+      margin: 16px 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 767px) {
+      .widget-column {
+        display: none;
+      }
+    }
+
     /* Bulk Actions */
     .bulk-actions {
       display: flex;
@@ -1994,6 +2084,22 @@
       }
       
       document.getElementById('productivityList').innerHTML = html;
+
+      // Update widget productivity
+      const widgetProd = document.getElementById('widgetProductivity');
+      if (widgetProd && members.length > 0) {
+        let wHtml = '';
+        for (const m of members) {
+          const rate = m.total > 0 ? Math.round((m.completed / m.total) * 100) : 0;
+          const barColor = rate >= 70 ? 'var(--primary)' : rate >= 40 ? 'var(--progress-secondary)' : 'var(--primary-subtle)';
+          wHtml += `
+            <div style="margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--primary-dark)">${m.username || 'N/A'}</span><span style="color:var(--primary);font-weight:600">${rate}%</span></div>
+              <div style="height:6px;background:var(--border-light);border-radius:3px;overflow:hidden"><div style="height:100%;width:${rate}%;background:${barColor};border-radius:3px"></div></div>
+            </div>`;
+        }
+        widgetProd.innerHTML = wHtml;
+      }
     }
 
     async function handleRegister() {
@@ -2174,6 +2280,17 @@
           </div>`;
         }
         document.getElementById('membersList').innerHTML = html;
+      }
+      // Populate widget members
+      const widgetMembers = document.getElementById('widgetMembers');
+      if (widgetMembers && data.members) {
+        let mHtml = '';
+        for (const m of data.members) {
+          const crown = m.role === 'admin' ? '👑 ' : '';
+          mHtml += `<span class="widget-member-tag">${crown}${m.username}</span>`;
+        }
+        mHtml += `<button class="widget-member-add" onclick="showInviteForm()">+ Convidar</button>`;
+        widgetMembers.innerHTML = mHtml;
       }
     }
 
@@ -2510,7 +2627,6 @@ const PAGE_SIZE = 12;
       const token = localStorage.getItem('token');
       const selectedDate = getSelectedDate();
       
-      // Atualiza visual dos botões de data rápida
       const quickBtns = document.querySelectorAll('.quick-date');
       quickBtns.forEach(btn => btn.classList.remove('active'));
       
@@ -2529,34 +2645,32 @@ const PAGE_SIZE = 12;
       const tasks = await res.json();
       const pending = tasks.filter(t => !t.completed);
       const completed = tasks.filter(t => t.completed);
-      let html = '';
+      
+      let taskHtml = '';
       
       if (pending.length > 0) {
-        html += `
+        taskHtml += `
           <div class="bulk-actions">
             <button class="btn btn-secondary btn-sm" onclick="selectAllTasks()">Todas</button>
-            <button class="btn btn-primary btn-sm" style="background:var(--emerald)" onclick="bulkToggle()">Feitas</button>
-            <button class="btn btn-secondary btn-sm" style="background:var(--rose);color:#fff" onclick="bulkDelete()">Excluir</button>
+            <button class="btn btn-primary btn-sm" onclick="bulkToggle()" style="background:var(--primary)">Feitas</button>
+            <button class="btn btn-secondary btn-sm" onclick="bulkDelete()" style="background:#d9534f;color:#fff">Excluir</button>
           </div>
           <div class="task-list">
         `;
-        for (const t of pending) html += buildTaskRow(t, false);
-        html += '</div>';
+        for (const t of pending) taskHtml += buildTaskRow(t, false);
+        taskHtml += '</div>';
       }
       if (completed.length > 0) {
-        html += `
-          <div style="margin:24px 0 12px;font-size:14px;font-weight:600;color:var(--slate-500)">
-            <i class="ph ph-check-circle"></i> Concluídas (${completed.length})
-          </div>
+        taskHtml += `
+          <div class="completed-header">✅ Concluídas (${completed.length})</div>
           <div class="task-list">
         `;
-        for (const t of completed) html += buildTaskRow(t, true);
-        html += '</div>';
+        for (const t of completed) taskHtml += buildTaskRow(t, true);
+        taskHtml += '</div>';
       }
-      if (!html) {
-        const parts = selectedDate.split('-');
-      const dateFormatted = new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
-        html = `
+      if (!taskHtml) {
+        const dateFormatted = new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+        taskHtml = `
           <div class="empty">
             <i class="ph ph-clipboard-text"></i>
             <div class="empty-title">Nenhuma tarefa</div>
@@ -2564,7 +2678,36 @@ const PAGE_SIZE = 12;
           </div>
         `;
       }
-      document.getElementById('tasksList').innerHTML = html;
+      
+      const totalTasks = pending.length + completed.length;
+      const completionRate = totalTasks > 0 ? Math.round(completed.length / totalTasks * 100) : 0;
+      
+      const widgetsHtml = `
+        <div class="widget">
+          <div class="widget-title">⏳ Pendentes hoje</div>
+          <div class="widget-pending-count">${pending.length}</div>
+          <div class="widget-progress-bar">
+            <div class="widget-progress-fill primary" style="width:${completionRate}%"></div>
+          </div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">📊 Produtividade</div>
+          <div id="widgetProductivity">Carregando...</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">👥 Membros</div>
+          <div id="widgetMembers" style="display:flex;gap:8px;flex-wrap:wrap">Carregando...</div>
+        </div>
+      `;
+      
+      const fullHtml = `
+        <div class="dashboard-grid">
+          <div>${taskHtml}</div>
+          <div class="widget-column">${widgetsHtml}</div>
+        </div>
+      `;
+      
+      document.getElementById('tasksList').innerHTML = fullHtml;
     }
 
     function buildTaskRow(task, isCompleted) {
