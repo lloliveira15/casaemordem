@@ -37,18 +37,17 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--slate-50);
-      color: var(--slate-800);
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.5;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 16px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      max-width: 100%;
     }
 
     html {
@@ -56,11 +55,9 @@
       color-scheme: light;
     }
 
-
-
     @media (min-width: 768px) {
       .container {
-        max-width: 100%;
+        flex-direction: row;
       }
     }
 
@@ -100,8 +97,8 @@
     /* Main App */
     .app-section {
       display: none;
+      flex: 1;
       min-height: 100vh;
-      width: 100%;
     }
 
     .app-section.active {
@@ -109,11 +106,19 @@
       flex-direction: column;
     }
 
+    @media (min-width: 768px) {
+      .app-section.active {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+    }
+
     /* Header */
     .header {
-      background: #fff;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--slate-200);
+      background: var(--surface);
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -127,64 +132,171 @@
     }
 
     .logo {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      color: var(--blue);
+      color: var(--primary-dark);
     }
 
     .badge {
-      background: var(--blue);
+      background: var(--primary);
       color: #fff;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 700;
-      padding: 4px 12px;
-      border-radius: var(--radius-sm);
+      padding: 2px 10px;
+      border-radius: 10px;
     }
 
     .badge-label {
-      font-size: 13px;
-      color: var(--slate-500);
+      font-size: 12px;
+      color: var(--primary-muted);
     }
 
-    /* Nav */
-    .nav {
+    /* Sidebar (desktop only) */
+    .sidebar {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        width: 220px;
+        min-width: 220px;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        min-height: 100vh;
+      }
+
+      .sidebar-header {
+        padding: 24px 20px 16px;
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .sidebar-logo {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-dark);
+      }
+
+      .sidebar-tagline {
+        font-size: 12px;
+        color: var(--primary-muted);
+        margin-top: 2px;
+      }
+
+      .sidebar-nav {
+        padding: 12px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .sidebar-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: none;
+        background: transparent;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        text-align: left;
+      }
+
+      .sidebar-btn:hover {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .sidebar-btn.active {
+        background: var(--primary-light);
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .sidebar-btn i {
+        font-size: 20px;
+      }
+
+      .sidebar-footer {
+        padding: 16px 20px;
+        border-top: 1px solid var(--border-light);
+      }
+
+      .sidebar-user {
+        font-size: 14px;
+        color: var(--primary-dark);
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      .sidebar-logout {
+        background: none;
+        border: none;
+        color: var(--primary-subtle);
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 0;
+      }
+
+      .sidebar-logout:hover {
+        color: var(--primary);
+      }
+    }
+
+    /* Bottom Nav (mobile only) */
+    .bottom-nav {
       display: flex;
-      background: var(--slate-50);
-      padding: 8px;
-      gap: 4px;
-      border-bottom: 1px solid var(--slate-200);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 6px 8px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
     }
 
-    .nav-btn {
+    @media (min-width: 768px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+
+    .bottom-nav-btn {
       flex: 1;
-      padding: 14px;
-      font-size: 14px;
-      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 8px;
       border: none;
       background: transparent;
-      color: var(--slate-500);
-      border-radius: var(--radius-sm);
+      color: var(--primary-muted);
+      font-size: 10px;
+      font-weight: 500;
       cursor: pointer;
+      border-radius: var(--radius-sm);
       transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
-    .nav-btn:hover {
-      background: var(--slate-100);
-      color: var(--slate-700);
-    }
-
-    .nav-btn.active {
-      background: #fff;
-      color: var(--blue);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-
-    .nav-btn i {
+    .bottom-nav-btn i {
       font-size: 20px;
+    }
+
+    .bottom-nav-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
     }
 
     /* Content */
@@ -1354,7 +1466,7 @@
       <!-- Header -->
       <header class="header">
         <div class="header-left">
-          <span class="logo">Casa em Ordem</span>
+          <span class="logo">🌸 Casa em Ordem</span>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
           <span class="badge-label">Pendentes hoje</span>
@@ -1362,19 +1474,41 @@
         </div>
       </header>
 
-      <!-- Nav -->
-      <nav class="nav">
-        <button class="nav-btn active" id="navTasks" onclick="showTab('tasks')">
+      <!-- Desktop Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo">🌸 Casa em Ordem</div>
+          <div class="sidebar-tagline">Gerencie sua casa</div>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="sidebar-btn active" id="sideTasks" onclick="showTab('tasks')">
+            <i class="ph ph-list-checks"></i> Tarefas
+          </button>
+          <button class="sidebar-btn" id="sideConfig" onclick="showTab('config')">
+            <i class="ph ph-gear-six"></i> Configurações
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user" id="sidebarUser">👑 Carregando...</div>
+          <button class="sidebar-logout" onclick="handleLogout()">
+            <i class="ph ph-sign-out"></i> Sair
+          </button>
+        </div>
+      </aside>
+
+      <!-- Mobile Bottom Nav -->
+      <nav class="bottom-nav" id="bottomNav">
+        <button class="bottom-nav-btn active" id="mobTasks" onclick="showTab('tasks')">
           <i class="ph ph-list-checks"></i>
-          Tarefas
+          <span>Tarefas</span>
         </button>
-        <button class="nav-btn" id="navConfig" onclick="showTab('config')">
+        <button class="bottom-nav-btn" id="mobConfig" onclick="showTab('config')">
           <i class="ph ph-gear-six"></i>
-          Config
+          <span>Config</span>
         </button>
-        <button class="nav-btn" onclick="handleLogout()">
+        <button class="bottom-nav-btn" onclick="handleLogout()">
           <i class="ph ph-sign-out"></i>
-          Sair
+          <span>Sair</span>
         </button>
       </nav>
 
