@@ -2035,23 +2035,25 @@
     }
 
     function showTab(tab) {
-      // Toggle old nav buttons (keep for backward compat)
-      document.getElementById('navTasks').classList.toggle('active', tab === 'tasks');
-      document.getElementById('navConfig').classList.toggle('active', tab === 'config');
-      
       // Toggle sidebar buttons
-      document.getElementById('sideTasks').classList.toggle('active', tab === 'tasks');
-      document.getElementById('sideConfig').classList.toggle('active', tab === 'config');
+      const sideTasks = document.getElementById('sideTasks');
+      const sideConfig = document.getElementById('sideConfig');
+      if (sideTasks) sideTasks.classList.toggle('active', tab === 'tasks');
+      if (sideConfig) sideConfig.classList.toggle('active', tab === 'config');
       
       // Toggle bottom nav buttons
-      document.getElementById('mobTasks').classList.toggle('active', tab === 'tasks');
-      document.getElementById('mobConfig').classList.toggle('active', tab === 'config');
+      const mobTasks = document.getElementById('mobTasks');
+      const mobConfig = document.getElementById('mobConfig');
+      if (mobTasks) mobTasks.classList.toggle('active', tab === 'tasks');
+      if (mobConfig) mobConfig.classList.toggle('active', tab === 'config');
       
       // Toggle panels
-      document.getElementById('tasksPanel').classList.toggle('active', tab === 'tasks');
-      document.getElementById('configPanel').classList.toggle('active', tab === 'config');
+      const tasksPanel = document.getElementById('tasksPanel');
+      const configPanel = document.getElementById('configPanel');
+      if (tasksPanel) tasksPanel.classList.toggle('active', tab === 'tasks');
+      if (configPanel) configPanel.classList.toggle('active', tab === 'config');
       
-      if (tab === 'tasks') loadTasks();
+      if (tab === 'tasks' && typeof loadTasks === 'function') loadTasks();
     }
 
     function switchConfigTab(tab) {
