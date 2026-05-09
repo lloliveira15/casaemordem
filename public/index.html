@@ -2033,10 +2033,22 @@
     }
 
     function showTab(tab) {
+      // Toggle old nav buttons (keep for backward compat)
       document.getElementById('navTasks').classList.toggle('active', tab === 'tasks');
       document.getElementById('navConfig').classList.toggle('active', tab === 'config');
+      
+      // Toggle sidebar buttons
+      document.getElementById('sideTasks').classList.toggle('active', tab === 'tasks');
+      document.getElementById('sideConfig').classList.toggle('active', tab === 'config');
+      
+      // Toggle bottom nav buttons
+      document.getElementById('mobTasks').classList.toggle('active', tab === 'tasks');
+      document.getElementById('mobConfig').classList.toggle('active', tab === 'config');
+      
+      // Toggle panels
       document.getElementById('tasksPanel').classList.toggle('active', tab === 'tasks');
       document.getElementById('configPanel').classList.toggle('active', tab === 'config');
+      
       if (tab === 'tasks') loadTasks();
     }
 
@@ -2170,6 +2182,11 @@
         
         // Seção para editar próprio perfil
         const currentUser = data.members.find(m => m.id === data.currentUserId);
+        // Populate sidebar user
+        const sidebarUser = document.getElementById('sidebarUser');
+        if (sidebarUser && currentUser) {
+          sidebarUser.textContent = `👑 ${currentUser.username}`;
+        }
         if (currentUser) {
           const phone = currentUser.phone || '';
           const phoneDisplay = currentUser.phone ? currentUser.phone : '—';
