@@ -14,25 +14,41 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --blue: #2563eb;
-      --blue-dark: #1d4ed8;
-      --blue-light: #3b82f6;
-      --slate-50: #f8fafc;
-      --slate-100: #f1f5f9;
-      --slate-200: #e2e8f0;
-      --slate-300: #cbd5e1;
-      --slate-400: #94a3b8;
-      --slate-500: #64748b;
-      --slate-600: #475569;
-      --slate-700: #334155;
-      --slate-800: #1e293b;
-      --slate-900: #0f172a;
-      --amber: #f59e0b;
-      --emerald: #10b981;
-      --rose: #f43f5e;
+:root {
+      --primary: #9b6b9d;
+      --primary-dark: #5c3d5e;
+      --primary-light: #f5eff5;
+      --primary-muted: #8b6b8d;
+      --primary-subtle: #b89bb8;
+      --border: #e8dce8;
+      --border-light: #f0e8f0;
+      --bg: #f9f5f9;
+      --surface: #ffffff;
+      --text: #3d2d3f;
+      --text-muted: #6b4b6d;
+      --dashed: #d5b8d5;
+      --progress-secondary: #c4aac4;
       --radius: 12px;
       --radius-sm: 8px;
+      --radius-lg: 14px;
+      --shadow: 0 1px 3px rgba(91,61,94,0.08);
+      --shadow-hover: 0 2px 8px rgba(91,61,94,0.12);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--slate-50);
+      color: var(--slate-800);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     html {
@@ -40,19 +56,7 @@
       color-scheme: light;
     }
 
-    body {
-      background: var(--slate-100);
-      min-height: 100vh;
-      color: var(--slate-900);
-      line-height: 1.5;
-    }
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr;
-      min-height: 100vh;
-      max-width: 100%;
-    }
 
     @media (min-width: 768px) {
       .container {
@@ -458,6 +462,123 @@
     .member i {
       color: var(--amber);
       font-size: 14px;
+    }
+
+    .member-notif {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--slate-50);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--slate-200);
+    }
+
+    .member-notif input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .member-notif.disabled {
+      opacity: 0.5;
+    }
+
+    .members-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--slate-500);
+    }
+
+    .member-card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .member-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .member-card-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .btn-edit {
+      background: none;
+      border: none;
+      color: var(--slate-500);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .btn-edit:hover {
+      background: var(--slate-100);
+      color: var(--blue);
+    }
+
+    .member-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .member-card-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .member-card-field:last-child {
+      border-bottom: none;
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: var(--slate-500);
+    }
+
+    .field-value {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .member-card-edit {
+      padding-top: 12px;
+      border-top: 1px solid var(--slate-200);
+      margin-top: 12px;
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .toggle-switch.small {
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle-switch.small .toggle-slider {
+      height: 16px;
+      width: 16px;
     }
 
     /* Tasks */
@@ -1016,6 +1137,49 @@
       padding: 2px 6px;
     }
 
+    /* Produtividade */
+    .produt-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .produt-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .produt-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--slate-500);
+      margin-bottom: 8px;
+    }
+
+    .produt-bar {
+      height: 8px;
+      background: var(--slate-200);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .produt-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .produt-rate {
+      font-size: 12px;
+      font-weight: 600;
+      text-align: right;
+    }
+
     /* Template Filter Tabs */
     .template-filter-tabs {
       display: flex;
@@ -1132,6 +1296,10 @@
             <label for="regPassword">Senha</label>
             <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
           </div>
+          <div class="form-group">
+            <label for="regPhone">Telefone (opcional)</label>
+            <input type="tel" id="regPhone" placeholder="(11) 99999-9999" autocomplete="tel">
+          </div>
           <button class="btn btn-primary" onclick="handleRegister()">
             <i class="ph ph-user-plus"></i>
             Criar conta
@@ -1156,6 +1324,26 @@
           <div class="toggle-link">
             Lembrou a senha?
             <button onclick="showAuth('login')">Fazer login</button>
+          </div>
+        </div>
+
+        <div id="resetForm" style="display:none">
+          <h1 class="auth-title">Redefinir senha</h1>
+          <p class="auth-subtitle">Crie uma nova senha para sua conta</p>
+          <div class="form-group">
+            <label for="resetPassword">Nova senha</label>
+            <input type="password" id="resetPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="resetConfirm">Confirmar senha</label>
+            <input type="password" id="resetConfirm" placeholder="Repita a senha" autocomplete="new-password">
+          </div>
+          <button class="btn btn-primary" onclick="handleResetPassword()">
+            <i class="ph ph-check-circle"></i>
+            Redefinir senha
+          </button>
+          <div class="toggle-link">
+            <button onclick="showAuth('login')">Voltar ao login</button>
           </div>
         </div>
       </div>
@@ -1234,6 +1422,9 @@
             </button>
             <button class="config-tab-btn" id="configTabGerar" onclick="switchConfigTab('gerar')">
               <i class="ph ph-calendar-plus"></i> Gerar Tarefas
+            </button>
+            <button class="config-tab-btn" id="configTabProdut" onclick="switchConfigTab('produt')">
+              <i class="ph ph-chart-bar"></i> Produtividade
             </button>
           </div>
 
@@ -1333,6 +1524,28 @@
           <div class="subtab-content" id="subtabNotif">
             <div class="card">
               <div class="card-title">
+                <i class="ph ph-envelope"></i>
+                Configuração de Email
+              </div>
+              <div class="form-group">
+                <label for="smtpEmail">Seu email SMTP</label>
+                <input type="email" id="smtpEmail" placeholder="seu@gmail.com" autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="smtpPass">Senha de aplicativo</label>
+                <input type="password" id="smtpPass" placeholder="Senha de 16 caracteres">
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="saveSmtpConfig()">
+                <i class="ph ph-floppy-disk"></i>
+                Salvar credenciais
+              </button>
+              <p style="font-size:12px;color:var(--slate-500);margin-top:8px">
+                Crie uma senha de aplicativo em: minha conta Google → Segurança → Verificação em 2 etapas → Senhas de App
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
                 <i class="ph ph-bell"></i>
                 Configurações de Email
               </div>
@@ -1404,6 +1617,25 @@
               </button>
             </div>
           </div>
+
+          <!-- Produtividade -->
+          <div class="subtab-content" id="subtabProdut">
+            <div class="card">
+              <div class="card-title">
+                <i class="ph ph-chart-bar"></i>
+                Produtividade por Membro
+              </div>
+              <div class="form-group">
+                <label for="produtPeriod">Período</label>
+                <select id="produtPeriod" onchange="loadProductivity()">
+                  <option value="week">Esta semana</option>
+                  <option value="month" selected>Este mês</option>
+                  <option value="year">Este ano</option>
+                </select>
+              </div>
+              <div id="productivityList"></div>
+            </div>
+          </div>
         </div>
       </main>
     </section>
@@ -1460,6 +1692,7 @@
       document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
       document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
       document.getElementById('forgotForm').style.display = tab === 'forgot' ? 'block' : 'none';
+      document.getElementById('resetForm').style.display = tab === 'reset' ? 'block' : 'none';
     }
 
     function showForgotPassword() {
@@ -1489,6 +1722,41 @@
       }
     }
 
+    async function handleResetPassword() {
+      const password = document.getElementById('resetPassword').value;
+      const confirm = document.getElementById('resetConfirm').value;
+
+      if (!password || !confirm) return showToast('Preencha todos os campos', 'error');
+      if (password.length < 6) return showToast('Senha deve ter no mínimo 6 caracteres', 'error');
+      if (password !== confirm) return showToast('Senhas não conferem', 'error');
+
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('reset');
+      if (!token) {
+        showToast('Link inválido ou expirado', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/auth/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, newPassword: password })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast('Senha redefinida com sucesso! Faça login.', 'success');
+          window.history.replaceState({}, '', window.location.pathname);
+          showAuth('login');
+        } else {
+          showToast(data.error, 'error');
+        }
+      } catch (e) {
+        showToast('Erro ao redefinir senha', 'error');
+      }
+    }
+
     function showTab(tab) {
       document.getElementById('navTasks').classList.toggle('active', tab === 'tasks');
       document.getElementById('navConfig').classList.toggle('active', tab === 'config');
@@ -1498,7 +1766,7 @@
     }
 
     function switchConfigTab(tab) {
-      const tabs = ['casa', 'templates', 'notif', 'gerar'];
+      const tabs = ['casa', 'templates', 'notif', 'gerar', 'produt'];
       tabs.forEach(t => {
         const btn = document.getElementById('configTab' + t.charAt(0).toUpperCase() + t.slice(1));
         const content = document.getElementById('subtab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -1507,17 +1775,55 @@
           content.classList.toggle('active', tab === t);
         }
       });
+      if (tab === 'produt') loadProductivity();
+    }
+
+    async function loadProductivity() {
+      const token = localStorage.getItem('token');
+      const period = document.getElementById('produtPeriod').value;
+      
+      const res = await fetch(`${API_URL}/api/tasks/stats?period=${period}`, { 
+        headers: { 'Authorization': `Bearer ${token}` } 
+      });
+      const data = await res.json();
+      
+      const members = data.byMember || [];
+      if (members.length === 0) {
+        document.getElementById('productivityList').innerHTML = '<div class="empty-text">Sem dados</div>';
+        return;
+      }
+      
+      let html = '';
+      for (const m of members) {
+        const rate = m.total > 0 ? Math.round((m.completed / m.total) * 100) : 0;
+        const barColor = rate >= 70 ? 'var(--emerald)' : rate >= 40 ? 'var(--amber)' : 'var(--rose)';
+        
+        html += `<div class="produt-card">
+          <div class="produt-name">${m.username || 'Não atribuído'}</div>
+          <div class="produt-stats">
+            <span>${m.completed || 0} concluídas</span>
+            <span>${m.pending || 0} pendentes</span>
+          </div>
+          <div class="produt-bar">
+            <div class="produt-bar-fill" style="width:${rate}%;background:${barColor}"></div>
+          </div>
+          <div class="produt-rate">${rate}%</div>
+        </div>`;
+      }
+      
+      document.getElementById('productivityList').innerHTML = html;
     }
 
     async function handleRegister() {
       const username = document.getElementById('regUsername').value;
       const email = document.getElementById('regEmail').value;
       const password = document.getElementById('regPassword').value;
+      const phone = document.getElementById('regPhone').value;
       try {
         const res = await fetch(`${API_URL}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password })
+          body: JSON.stringify({ username, email, password, phone })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
@@ -1563,12 +1869,179 @@
       const data = await res.json();
       if (data.hasHousehold) {
         document.getElementById('inviteCode').textContent = data.household.invite_code;
-        let html = '';
+        let html = '<div class="members-header"><span>Cadastro de membros</span></div>';
+        
+        if (data.isAdmin) {
+          html += `<button class="btn btn-secondary btn-sm" onclick="showInviteForm()" style="margin-bottom:16px">
+            <i class="ph ph-user-plus"></i> Convidar membro
+          </button>`;
+        }
+        
+        // Seção para editar próprio perfil
+        const currentUser = data.members.find(m => m.id === data.currentUserId);
+        if (currentUser) {
+          const phone = currentUser.phone || '';
+          const phoneDisplay = currentUser.phone ? currentUser.phone : '—';
+          const emailDisplay = currentUser.email || '—';
+          
+          html += `<div class="member-card" id="memberCard${currentUser.id}">
+            <div class="member-card-header">
+              <span class="member-card-name">${currentUser.username} (Você)</span>
+              <button class="btn-edit" onclick="editMember(${currentUser.id})" title="Editar">
+                <i class="ph ph-pencil-simple"></i>
+              </button>
+            </div>
+            <div class="member-card-body" id="memberBody${currentUser.id}">
+              <div class="member-card-field">
+                <span class="field-label">Email</span>
+                <span class="field-value">${emailDisplay}</span>
+              </div>
+              <div class="member-card-field">
+                <span class="field-label">Telefone</span>
+                <span class="field-value" id="phoneDisplay${currentUser.id}">${phoneDisplay}</span>
+              </div>
+              <div class="member-card-field">
+                <span class="field-label">Notificações</span>
+                <span class="field-value">${currentUser.notifications_enabled ? 'Ativadas' : 'Desativadas'}</span>
+              </div>
+            </div>
+            <div class="member-card-edit" id="memberEdit${currentUser.id}" style="display:none">
+              <div class="form-group">
+                <label>Nome</label>
+                <input type="text" id="editName${currentUser.id}" value="${currentUser.username}">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="editEmail${currentUser.id}" value="${currentUser.email || ''}">
+              </div>
+              <div class="form-group">
+                <label>Telefone</label>
+                <input type="tel" id="editPhone${currentUser.id}" value="${phone}" placeholder="(11) 99999-9999">
+              </div>
+              <div class="edit-actions">
+                <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${currentUser.id})">Cancelar</button>
+                <button class="btn btn-primary btn-sm" onclick="saveMember(${currentUser.id})">Salvar</button>
+              </div>
+            </div>
+          </div>`;
+        }
+        
+        // Demais membros
         for (const m of data.members) {
-          html += `<span class="member">${m.username} ${m.role === 'admin' ? '<i class="ph-fill ph-crown"></i>' : ''}</span>`;
+          // Já mostrei o usuário atual acima
+          continue;
+        }
+        
+        // ... demembros (simplificado sem duplicar o atual)
+        let outros = data.members.filter(m => m.id !== data.currentUserId);
+        for (const m of outros) {
+          const crown = m.role === 'admin' ? '<i class="ph-fill ph-crown"></i>' : '';
+          const phone = m.phone || '';
+          const phoneDisplay = m.phone ? m.phone : '—';
+          const emailDisplay = m.email || '—';
+          
+          const canEdit = data.isAdmin && m.role !== 'admin';
+          
+          html += `<div class="member-card" id="memberCard${m.id}">
+            <div class="member-card-header">
+              <span class="member-card-name">${m.username} ${crown}</span>
+              ${canEdit ? `
+                <button class="btn-edit" onclick="editMember(${m.id})" title="Editar">
+                  <i class="ph ph-pencil-simple"></i>
+                </button>
+              ` : ''}
+            </div>
+            <div class="member-card-body" id="memberBody${m.id}">
+              <div class="member-card-field">
+                <span class="field-label">Email</span>
+                <span class="field-value">${emailDisplay}</span>
+              </div>
+              <div class="member-card-field">
+                <span class="field-label">Telefone</span>
+                <span class="field-value" id="phoneDisplay${m.id}">${phoneDisplay}</span>
+              </div>
+              <div class="member-card-field">
+                <span class="field-label">Notificações</span>
+                ${canEdit ? `
+                  <label class="toggle-switch small">
+                    <input type="checkbox" ${m.notifications_enabled ? 'checked' : ''} 
+                      onchange="toggleMemberNotification(${m.id}, this.checked)">
+                    <span class="toggle-slider"></span>
+                  </label>
+                ` : `<span class="field-value">${m.notifications_enabled ? 'Ativadas' : 'Desativadas'}</span>`}
+              </div>
+            </div>
+            <div class="member-card-edit" id="memberEdit${m.id}" style="display:none">
+              <div class="form-group">
+                <label>Nome</label>
+                <input type="text" id="editName${m.id}" value="${m.username}">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="editEmail${m.id}" value="${m.email || ''}">
+              </div>
+              <div class="form-group">
+                <label>Telefone</label>
+                <input type="tel" id="editPhone${m.id}" value="${phone}" placeholder="(11) 99999-9999">
+              </div>
+              <div class="edit-actions">
+                <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${m.id})">Cancelar</button>
+                <button class="btn btn-primary btn-sm" onclick="saveMember(${m.id})">Salvar</button>
+              </div>
+            </div>
+          </div>`;
         }
         document.getElementById('membersList').innerHTML = html;
       }
+    }
+
+    async function toggleMemberNotification(memberId, enabled) {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/household/members/${memberId}/notifications`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ enabled })
+      });
+      if (res.ok) {
+        showToast(enabled ? 'Notificações ativadas' : 'Notificações desativadas', 'success');
+      }
+    }
+
+    function editMember(memberId) {
+      document.getElementById('memberBody' + memberId).style.display = 'none';
+      document.getElementById('memberEdit' + memberId).style.display = 'block';
+    }
+
+    function cancelEdit(memberId) {
+      document.getElementById('memberBody' + memberId).style.display = 'block';
+      document.getElementById('memberEdit' + memberId).style.display = 'none';
+    }
+
+    async function saveMember(memberId) {
+      const token = localStorage.getItem('token');
+      const username = document.getElementById('editName' + memberId).value;
+      const email = document.getElementById('editEmail' + memberId).value;
+      const phone = document.getElementById('editPhone' + memberId).value;
+      const notifications_enabled = document.querySelector('#memberEdit' + memberId + ' input[type="checkbox"]')?.checked;
+      
+      const res = await fetch(`${API_URL}/api/household/members/${memberId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ username, email, phone, notifications_enabled })
+      });
+      
+      if (res.ok) {
+        showToast('Membro atualizado', 'success');
+        loadHousehold();
+      } else {
+        const data = await res.json();
+        showToast(data.error || 'Erro ao atualizar', 'error');
+      }
+    }
+
+    function showInviteForm() {
+      const code = document.getElementById('inviteCode').textContent;
+      alert('Compartilhe este código com o membro:\n\n' + code + '\n\nO membro deve usar este código ao se cadastrar.');
     }
 
     async function regenerateCode() {
@@ -2043,11 +2516,60 @@ const PAGE_SIZE = 12;
     }
 
     async function sendTestEmail() {
+      const smtpEmail = document.getElementById('smtpEmail').value;
+      const smtpPass = document.getElementById('smtpPass').value;
+      
+      if (smtpEmail && smtpPass) {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/api/admin/smtp`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Credenciais salvas! Enviando teste...', 'success');
+          setTimeout(sendTestEmailReal, 1000);
+          return;
+        } else {
+          showToast(data.error || 'Erro ao salvar', 'error');
+          return;
+        }
+      }
+      
+      sendTestEmailReal();
+    }
+
+    async function sendTestEmailReal() {
       const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/api/notifications/send-test`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
       const data = await res.json();
       if (data.sent > 0) showToast('Email enviado!', 'success');
       else showToast(data.reason || 'Erro', 'error');
+    }
+
+    async function saveSmtpConfig() {
+      const smtpEmail = document.getElementById('smtpEmail').value;
+      const smtpPass = document.getElementById('smtpPass').value;
+      
+      if (!smtpEmail || !smtpPass) {
+        showToast('Preencha email e senha', 'error');
+        return;
+      }
+      
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/admin/smtp`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        showToast('Credenciais salvas!', 'success');
+      } else {
+        showToast(data.error || 'Erro ao salvar', 'error');
+      }
     }
 
     // Task Picker Modal
@@ -2123,6 +2645,13 @@ const PAGE_SIZE = 12;
     }
 
     window.onload = async () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('reset')) {
+        document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+        showAuth('reset');
+        return;
+      }
+
       // Inicializa date picker com hoje
       document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
       
