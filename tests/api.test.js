@@ -77,6 +77,21 @@ describe('Tasks API', () => {
       
       expect([200, 201]).toContain(res.status);
     });
+
+    it('should reject duplicate task on same date', async () => {
+      await request(app)
+        .post('/api/tasks')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ description: 'Duplicate me', due_date: '2024-06-01' });
+
+      const res = await request(app)
+        .post('/api/tasks')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ description: 'Duplicate me', due_date: '2024-06-01' });
+
+      expect(res.status).toBe(409);
+      expect(res.body.error).toContain('já existe');
+    });
   });
 
   describe('PUT /api/tasks/:id/toggle', () => {

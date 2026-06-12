@@ -30,6 +30,12 @@ router.post('/', authMiddleware, getHousehold, async (req, res) => {
     }
 
     const date = due_date || toLocalDateString(new Date());
+
+    const existing = await Task.findByDescriptionAndDate(req.householdId, description.trim(), date);
+    if (existing) {
+      return res.status(409).json({ error: 'Já existe uma tarefa com essa descrição para esta data' });
+    }
+
     const sql = `
       INSERT INTO tasks (household_id, description, room, assigned_to, due_date, completed)
       VALUES (?, ?, ?, ?, ?, 0)
@@ -239,6 +245,34 @@ router.get('/stats', authMiddleware, getHousehold, async (req, res) => {
     }
 
     const stats = await Task.getStats(req.householdId, start, end);
+    const byMember = await Task.getStatsByMember(req.householdId, start, end);
+    
+    res.json({
+      ...stats,
+      byMember
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/tasks/stats/:memberId - Get stats for specific member
+router.get('/stats/:memberId', authMiddleware, getHousehold, async (req, res) => {
+  try {
+    const { startDate, endDate, period } = req.query;
+    const memberId = parseInt(req.params.memberId);
+
+    let start, end;
+    if (startDate && endDate) {
+      start = startDate;
+      end = endDate;
+    } else {
+      const dates = getStartEndDates(period || 'month');
+      start = dates.start;
+      end = dates.end;
+    }
+
+    const stats = await Task.getMemberStats(req.householdId, memberId, start, end);
     res.json(stats);
   } catch (error) {
     res.status(500).json({ error: error.message });

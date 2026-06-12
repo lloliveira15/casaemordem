@@ -2,6 +2,26 @@ const db = require('../config/database');
 const TaskTemplate = require('./TaskTemplate');
 
 class Task {
+  static findByTemplateAndDate(householdId, templateId, dueDate) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT id FROM tasks WHERE household_id = ? AND template_id = ? AND due_date = ?';
+      db.get(sql, [householdId, templateId, dueDate], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+  }
+
+  static findByDescriptionAndDate(householdId, description, dueDate) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT id FROM tasks WHERE household_id = ? AND description = ? AND due_date = ?';
+      db.get(sql, [householdId, description, dueDate], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+  }
+
   static generateFromTemplates(householdId, startDate, endDate) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -16,8 +36,12 @@ class Task {
         const tasksToInsert = [];
 
         for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-          const currentDate = d.toISOString().split('T')[0];
-          const dayOfWeek = d.getDay(); // 0 = domingo
+          const localDate = new Date(d.getTime());
+          const year = localDate.getFullYear();
+          const month = String(localDate.getMonth() + 1).padStart(2, '0');
+          const day = String(localDate.getDate()).padStart(2, '0');
+          const currentDate = `${year}-${month}-${day}`;
+          const dayOfWeek = localDate.getDay(); // 0 = domingo
           const dayOfMonth = d.getDate();
           const weekOfMonth = Math.ceil(dayOfMonth / 7); // 1-5
           const isFirstHalf = dayOfMonth <= 15; // true = 1ª quincena
@@ -39,6 +63,9 @@ class Task {
             }
 
             if (shouldGenerate) {
+              const existing = await this.findByTemplateAndDate(householdId, template.id, currentDate);
+              if (existing) continue;
+
               tasksToInsert.push({
                 household_id: householdId,
                 template_id: template.id,
@@ -209,6 +236,55 @@ class Task {
     });
   }
 
+  static getStatsByMember(householdId, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+      const sql = `
+        SELECT 
+          u.id,
+          u.username,
+          COUNT(t.id) as total,
+          SUM(CASE WHEN t.completed = 1 THEN 1 ELSE 0 END) as completed,
+          SUM(CASE WHEN t.completed = 0 THEN 1 ELSE 0 END) as pending
+        FROM users u
+        LEFT JOIN tasks t ON t.household_id = u.household_id 
+          AND t.assigned_to = u.username
+          AND t.due_date BETWEEN ? AND ?
+        WHERE u.household_id = ?
+        GROUP BY u.id, u.username
+        ORDER BY completed DESC
+      `;
+
+      db.all(sql, [startDate, endDate, householdId], (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+
+  static getMemberStats(householdId, memberUserId, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+      const sql = `
+        SELECT 
+          u.username,
+          COUNT(t.id) as total,
+          SUM(CASE WHEN t.completed = 1 THEN 1 ELSE 0 END) as completed,
+          SUM(CASE WHEN t.completed = 0 THEN 1 ELSE 0 END) as pending,
+          SUM(CASE WHEN t.completed = 1 THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(t.id), 0) as completion_rate
+        FROM users u
+        LEFT JOIN tasks t ON t.household_id = u.household_id 
+          AND t.assigned_to = u.username
+          AND t.due_date BETWEEN ? AND ?
+        WHERE u.household_id = ? AND u.id = ?
+        GROUP BY u.id, u.username
+      `;
+
+      db.get(sql, [startDate, endDate, householdId, memberUserId], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+  }
+
   static getHistory(householdId, month) {
     return new Promise((resolve, reject) => {
       const [year, mon] = month.split('-');
@@ -272,6 +348,14 @@ class Task {
 
           for (const targetDate of targetDatesOfDay) {
             for (const task of sourceTasksOfDay) {
+              if (task.template_id) {
+                const existing = await this.findByTemplateAndDate(householdId, task.template_id, targetDate);
+                if (existing) continue;
+              } else {
+                const existing = await this.findByDescriptionAndDate(householdId, task.description, targetDate);
+                if (existing) continue;
+              }
+
               await new Promise((res, rej) => {
                 db.run(insertSql, [
                   householdId, task.template_id, task.description,
