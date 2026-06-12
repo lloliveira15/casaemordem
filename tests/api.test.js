@@ -1,21 +1,26 @@
-const request = require('supertest');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+process.env.JWT_SECRET = 'test-secret';
+process.env.DB_PATH = ':memory:';
 
-const API_URL = 'http://localhost:3000';
-const JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
+const request = require('supertest');
+const app = require('../server/app');
+
+let testToken;
+
+beforeAll(async () => {
+  const res = await request(app)
+    .post('/auth/register')
+    .send({ username: 'TestUser', email: 'testuser@example.com', password: '123456' });
+  testToken = res.body.token;
+});
 
 describe('Auth API', () => {
-  let token;
-  let testUser = { id: 1, username: 'TestUser', email: 'test@example.com', password: '123456', household_id: 1 };
-
   describe('POST /auth/register', () => {
-    it('should register a new user or reject if exists', async () => {
-      const res = await request(API_URL)
+    it('should register a new user', async () => {
+      const res = await request(app)
         .post('/auth/register')
-        .send({ username: 'NewUser', email: 'new2@example.com', password: '123456' });
+        .send({ username: 'NewUser', email: 'newuser@example.com', password: '123456' });
       
-      expect([200, 201, 400]).toContain(res.status);
+      expect([200, 201]).toContain(res.status);
       if (res.status !== 400) {
         expect(res.body).toHaveProperty('token');
       }
@@ -24,18 +29,18 @@ describe('Auth API', () => {
 
   describe('POST /auth/login', () => {
     it('should login with valid credentials', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .post('/auth/login')
-        .send({ email: 'new@example.com', password: '123456' });
+        .send({ email: 'testuser@example.com', password: '123456' });
       
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('token');
     });
 
     it('should reject invalid password', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .post('/auth/login')
-        .send({ email: 'new@example.com', password: 'wrong' });
+        .send({ email: 'testuser@example.com', password: 'wrong' });
       
       expect(res.status).toBe(401);
     });
@@ -46,15 +51,15 @@ describe('Tasks API', () => {
   let authToken;
 
   beforeAll(async () => {
-    const res = await request(API_URL)
+    const res = await request(app)
       .post('/auth/login')
-      .send({ email: 'new@example.com', password: '123456' });
+      .send({ email: 'testuser@example.com', password: '123456' });
     authToken = res.body.token;
   });
 
   describe('GET /api/tasks', () => {
     it('should get tasks for a date', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .get('/api/tasks?date=2024-01-01')
         .set('Authorization', `Bearer ${authToken}`);
       
@@ -65,7 +70,7 @@ describe('Tasks API', () => {
 
   describe('POST /api/tasks', () => {
     it('should create a new task', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .post('/api/tasks')
         .set('Authorization', `Bearer ${authToken}`)
         .send({ description: 'Test task', due_date: '2024-01-01', room: 'Cozinha' });
@@ -76,13 +81,13 @@ describe('Tasks API', () => {
 
   describe('PUT /api/tasks/:id/toggle', () => {
     it('should toggle task completion', async () => {
-      const createRes = await request(API_URL)
+      const createRes = await request(app)
         .post('/api/tasks')
         .set('Authorization', `Bearer ${authToken}`)
         .send({ description: 'Toggle test', due_date: '2024-01-01' });
       
       const taskId = createRes.body.id;
-      const toggleRes = await request(API_URL)
+      const toggleRes = await request(app)
         .put(`/api/tasks/${taskId}/toggle`)
         .set('Authorization', `Bearer ${authToken}`);
       
@@ -95,15 +100,15 @@ describe('Templates API', () => {
   let authToken;
 
   beforeAll(async () => {
-    const res = await request(API_URL)
+    const res = await request(app)
       .post('/auth/login')
-      .send({ email: 'new@example.com', password: '123456' });
+      .send({ email: 'testuser@example.com', password: '123456' });
     authToken = res.body.token;
   });
 
   describe('GET /api/templates', () => {
     it('should get all templates', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .get('/api/templates')
         .set('Authorization', `Bearer ${authToken}`);
       
@@ -114,7 +119,7 @@ describe('Templates API', () => {
 
   describe('POST /api/templates', () => {
     it('should create a new template', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .post('/api/templates')
         .set('Authorization', `Bearer ${authToken}`)
         .send({ description: 'Test template', room: 'Cozinha', frequency: 'daily' });
@@ -128,15 +133,15 @@ describe('Household API', () => {
   let authToken;
 
   beforeAll(async () => {
-    const res = await request(API_URL)
+    const res = await request(app)
       .post('/auth/login')
-      .send({ email: 'new@example.com', password: '123456' });
+      .send({ email: 'testuser@example.com', password: '123456' });
     authToken = res.body.token;
   });
 
   describe('GET /api/household', () => {
     it('should get household info', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .get('/api/household')
         .set('Authorization', `Bearer ${authToken}`);
       
@@ -146,7 +151,7 @@ describe('Household API', () => {
 
   describe('POST /api/household/generate-code', () => {
     it('should generate new invite code', async () => {
-      const res = await request(API_URL)
+      const res = await request(app)
         .post('/api/household/generate-code')
         .set('Authorization', `Bearer ${authToken}`);
       
