@@ -12,18 +12,18 @@ function generateInviteCode() {
 
 class User {
   // Criar novo usuário
-  static create(username, email, password) {
+  static create(username, email, password, phone = null) {
     return new Promise((resolve, reject) => {
       const saltRounds = 10;
       bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
         if (err) return reject(err);
 
         const sql = `
-          INSERT INTO users (username, email, password_hash)
-          VALUES (?, ?, ?)
+          INSERT INTO users (username, email, password_hash, phone)
+          VALUES (?, ?, ?, ?)
         `;
 
-        db.run(sql, [username, email, hashedPassword], function(err) {
+        db.run(sql, [username, email, hashedPassword, phone], function(err) {
           if (err) {
             if (err.message.includes('UNIQUE')) {
               reject(new Error('Usuário ou email já existem'));
@@ -43,7 +43,7 @@ class User {
             db.run(createHousehold, [householdName, userId, inviteCode], function(err) {
               if (err) {
                 console.error('Erro ao criar household:', err);
-                resolve({ id: userId, username, email });
+                resolve({ id: userId, username, email, phone });
               } else {
                 const householdId = this.lastID;
 
@@ -54,7 +54,7 @@ class User {
                   if (err) {
                     console.error('Erro ao associar usuário ao household:', err);
                   }
-                  resolve({ id: userId, username, email, household_id: householdId });
+                  resolve({ id: userId, username, email, phone, household_id: householdId });
                 });
               }
             });
@@ -119,6 +119,28 @@ class User {
           if (err) reject(err);
           else resolve();
         });
+      });
+    });
+  }
+
+  // Atualizar perfil
+  static updateProfile(userId, username, phone) {
+    return new Promise((resolve, reject) => {
+      const sql = 'UPDATE users SET username = ?, phone = ? WHERE id = ?';
+      db.run(sql, [username, phone || null, userId], function(err) {
+        if (err) reject(err);
+        else resolve({ updated: this.changes });
+      });
+    });
+  }
+
+  // Buscar usuário por ID (completo)
+  static findByIdFull(id) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM users WHERE id = ?';
+      db.get(sql, [id], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
       });
     });
   }

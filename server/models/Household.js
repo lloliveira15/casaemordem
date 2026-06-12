@@ -87,7 +87,7 @@ class Household {
   static getMembers(householdId) {
     return new Promise((resolve, reject) => {
       const sql = `
-        SELECT u.id, u.username, u.email, hm.role, hm.joined_at
+        SELECT u.id, u.username, u.email, u.phone, hm.role, hm.joined_at, hm.notifications_enabled
         FROM users u
         JOIN household_members hm ON u.id = hm.user_id
         WHERE hm.household_id = ?
@@ -119,6 +119,67 @@ class Household {
       db.get(sql, [userId], (err, row) => {
         if (err) reject(err);
         else resolve(row);
+      });
+    });
+  }
+
+  static findByEmailExcludeMember(email, excludeUserId) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT id FROM users WHERE email = ? AND id != ?';
+      db.get(sql, [email, excludeUserId], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+  }
+
+  static updateMemberNotification(householdId, memberUserId, enabled) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        'UPDATE household_members SET notifications_enabled = ? WHERE household_id = ? AND user_id = ?',
+        [enabled ? 1 : 0, householdId, memberUserId],
+        function(err) {
+          if (err) return reject(err);
+          resolve({ updated: this.changes });
+        }
+      );
+    });
+  }
+
+  static updateMember(householdId, memberUserId, username, email, phone) {
+    return new Promise((resolve, reject) => {
+      // Build dynamic update query
+      let sql = 'UPDATE users SET ';
+      let params = [];
+      
+      if (username !== undefined) {
+        sql += 'username = ?, ';
+        params.push(username);
+      }
+      if (email !== undefined && email !== '') {
+        sql += 'email = ?, ';
+        params.push(email);
+      }
+      if (phone !== undefined) {
+        sql += 'phone = ?, ';
+        params.push(phone || null);
+      }
+      
+      // Remove trailing comma
+      sql = sql.replace(/, $/, ' ');
+      sql += 'WHERE id = ? AND household_id = ?';
+      params.push(memberUserId, householdId);
+      
+      db.run(sql, params, function(err) {
+        if (err) {
+          if (err.message.includes('UNIQUE')) {
+            reject(new Error('Email ou nome de usuário já existem'));
+          } else {
+            reject(err);
+          }
+        } else {
+          resolve({ updated: this.changes });
+        }
       });
     });
   }
