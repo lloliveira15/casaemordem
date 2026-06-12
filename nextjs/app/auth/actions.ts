@@ -30,7 +30,7 @@ export async function register(formData: FormData): Promise<{ error: string } | 
   })
 
   if (error) return { error: error.message }
-  redirect("/auth/login?registered=true")
+  redirect("/app/dashboard")
 }
 
 export async function logout(): Promise<void> {
