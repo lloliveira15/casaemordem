@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const JwtUtil = require('../utils/jwt');
+const NotificationService = require('../services/notification');
 
 // POST /auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, phone } = req.body;
 
     // Validações básicas
     if (!username || !email || !password) {
@@ -18,14 +19,14 @@ router.post('/register', async (req, res) => {
     }
 
     // Criar usuário
-    const newUser = await User.create(username, email, password);
+    const newUser = await User.create(username, email, password, phone);
 
     // Gerar token
     const token = JwtUtil.generateToken(newUser.id, newUser.username);
 
     res.status(201).json({
       message: 'Usuário registrado com sucesso',
-      user: { id: newUser.id, username: newUser.username, email: newUser.email },
+      user: { id: newUser.id, username: newUser.username, email: newUser.email, phone: newUser.phone },
       token
     });
   } catch (error) {
@@ -45,13 +46,13 @@ router.post('/login', async (req, res) => {
     // Buscar usuário
     const user = await User.findByEmail(email);
     if (!user) {
-      return res.status(401).json({ error: 'Email ou senha incorretos' });
+      return res.status(401).json({ error: 'Conta não encontrada. Verifique o email ou crie uma nova conta.' });
     }
 
     // Verificar senha
     const isPasswordValid = await User.verifyPassword(password, user.password_hash);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Email ou senha incorretos' });
+      return res.status(401).json({ error: 'Senha incorreta. Tente novamente.' });
     }
 
     // Gerar token
@@ -91,15 +92,17 @@ router.post('/forgot-password', async (req, res) => {
     // Gerar token de redefinição (válido por 1 hora)
     const resetToken = JwtUtil.generateToken(user.id, user.username, { type: 'reset' }, 3600);
     
-    // TODO: Enviar email com link de redefinição
-    // Por enquanto, retornamos o token para teste
-    console.log(`🔑 Token de reset para ${email}: ${resetToken}`);
+    // Enviar email
+    const result = await NotificationService.sendPasswordResetEmail(email, resetToken);
     
-    res.json({ 
-      message: 'Se o email existir, você receberá um link para redefinir a senha',
-      // Remover em produção:
-      debug_token: resetToken 
-    });
+    if (result.sent > 0) {
+      res.json({ message: 'Email de redefinição enviado! Verifique sua caixa de entrada.' });
+    } else {
+      res.json({ 
+        message: 'Se o email existir, você receberá um link para redefinir a senha',
+        debug_token: resetToken 
+      });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -157,6 +160,29 @@ router.get('/me', (req, res) => {
   res.json({
     user: { id: decoded.userId, username: decoded.username }
   });
+});
+
+// PUT /auth/profile - Update current user profile
+router.put('/profile', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Sem token' });
+    }
+
+    const token = JwtUtil.extractTokenFromHeader(authHeader);
+    const decoded = JwtUtil.verifyToken(token);
+    if (!decoded) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
+
+    const { username, phone } = req.body;
+    await User.updateProfile(decoded.userId, username, phone);
+
+    res.json({ message: 'Perfil atualizado com sucesso' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 module.exports = router;
