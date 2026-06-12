@@ -53,8 +53,16 @@ class User {
                 db.run(linkUser, [householdId, userId], (err) => {
                   if (err) {
                     console.error('Erro ao associar usuário ao household:', err);
+                    return resolve({ id: userId, username, email, phone });
                   }
-                  resolve({ id: userId, username, email, phone, household_id: householdId });
+                  db.run(
+                    'INSERT INTO household_members (household_id, user_id, role) VALUES (?, ?, ?)',
+                    [householdId, userId, 'admin'],
+                    (err2) => {
+                      if (err2) console.error('Erro ao inserir membro:', err2);
+                      resolve({ id: userId, username, email, phone, household_id: householdId });
+                    }
+                  );
                 });
               }
             });
