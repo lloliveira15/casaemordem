@@ -1,6 +1,9 @@
 import { login } from "../actions"
 
-export default function LoginPage() {
+export default async function LoginPage(props: { searchParams?: Promise<{ erro?: string }> }) {
+  const searchParams = props.searchParams ? await props.searchParams : {}
+  const erro = searchParams.erro
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
@@ -8,7 +11,8 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold">Casa em Ordem</h1>
           <p className="text-muted-foreground">Entre na sua conta</p>
         </div>
-        <form action={login as (formData: FormData) => Promise<void>} className="space-y-4">
+        {erro && <p className="text-destructive text-sm text-center">{erro}</p>}
+        <form action={login as unknown as (fd: FormData) => Promise<never | void>} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
             <input

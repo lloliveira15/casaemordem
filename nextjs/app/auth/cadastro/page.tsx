@@ -1,6 +1,9 @@
 import { register } from "../actions"
 
-export default function RegisterPage() {
+export default async function RegisterPage(props: { searchParams?: Promise<{ erro?: string }> }) {
+  const searchParams = props.searchParams ? await props.searchParams : {}
+  const erro = searchParams.erro
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
@@ -8,7 +11,8 @@ export default function RegisterPage() {
           <h1 className="text-2xl font-bold">Criar Conta</h1>
           <p className="text-muted-foreground">Organize sua casa com seu parceiro(a)</p>
         </div>
-        <form action={register as unknown as (formData: FormData) => Promise<void>} className="space-y-4">
+        {erro && <p className="text-destructive text-sm text-center">{erro}</p>}
+        <form action={register as unknown as (fd: FormData) => Promise<never | void>} className="space-y-4">
           <div>
             <label htmlFor="username" className="block text-sm font-medium mb-1">Nome</label>
             <input id="username" name="username" type="text" required className="w-full px-3 py-2 border rounded-md bg-background" />
