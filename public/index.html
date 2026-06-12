@@ -132,10 +132,21 @@
       gap: 12px;
     }
 
+    @media (min-width: 768px) {
+      .header-left {
+        display: none;
+      }
+    }
+
     .logo {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--primary-dark);
+    }
+
+    .logo i {
+      font-size: 24px;
+      vertical-align: middle;
     }
 
     .badge {
@@ -222,7 +233,7 @@
       }
 
       .sidebar-btn i {
-        font-size: 20px;
+        font-size: 24px;
       }
 
       .sidebar-footer {
@@ -291,7 +302,7 @@
     }
 
     .bottom-nav-btn i {
-      font-size: 20px;
+      font-size: 24px;
     }
 
     .bottom-nav-btn.active {
@@ -343,8 +354,8 @@
     }
 
     .date-btn {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border: 1px solid var(--border);
       background: var(--surface);
       border-radius: 50%;
@@ -352,7 +363,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
       color: var(--primary-muted);
       transition: all 0.2s;
     }
@@ -433,7 +444,7 @@
     }
 
     .card-title i {
-      font-size: 18px;
+      font-size: 22px;
     }
 
     /* Forms */
@@ -850,6 +861,13 @@
       letter-spacing: 0.5px;
       font-weight: 600;
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .widget-title i {
+      font-size: 18px;
     }
 
     .widget-pending-count {
@@ -916,6 +934,10 @@
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    .completed-header i {
+      font-size: 18px;
     }
 
     @media (max-width: 767px) {
@@ -1604,56 +1626,40 @@
       </div>
     </section>
 
+    <!-- Desktop Sidebar (antes do app-section para ficar à esquerda) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><i class="ph ph-flower-tulip"></i> Casa em Ordem</div>
+        <div class="sidebar-tagline">Gerencie sua casa</div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-btn active" id="sideTasks" onclick="showTab('tasks')">
+          <i class="ph ph-list-checks"></i> Tarefas
+        </button>
+        <button class="sidebar-btn" id="sideConfig" onclick="showTab('config')">
+          <i class="ph ph-gear-six"></i> Configurações
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="sidebarUser"><i class="ph ph-crown"></i> Carregando...</div>
+        <button class="sidebar-logout" onclick="handleLogout()">
+          <i class="ph ph-sign-out"></i> Sair
+        </button>
+      </div>
+    </aside>
+
     <!-- App Section -->
     <section class="app-section" id="dashboard">
       <!-- Header -->
       <header class="header">
         <div class="header-left">
-          <span class="logo">🌸 Casa em Ordem</span>
+          <span class="logo"><i class="ph ph-flower-tulip"></i> Casa em Ordem</span>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
           <span class="badge-label">Pendentes hoje</span>
           <span class="badge" id="pendingCount">0</span>
         </div>
       </header>
-
-      <!-- Desktop Sidebar -->
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <div class="sidebar-logo">🌸 Casa em Ordem</div>
-          <div class="sidebar-tagline">Gerencie sua casa</div>
-        </div>
-        <nav class="sidebar-nav">
-          <button class="sidebar-btn active" id="sideTasks" onclick="showTab('tasks')">
-            <i class="ph ph-list-checks"></i> Tarefas
-          </button>
-          <button class="sidebar-btn" id="sideConfig" onclick="showTab('config')">
-            <i class="ph ph-gear-six"></i> Configurações
-          </button>
-        </nav>
-        <div class="sidebar-footer">
-          <div class="sidebar-user" id="sidebarUser">👑 Carregando...</div>
-          <button class="sidebar-logout" onclick="handleLogout()">
-            <i class="ph ph-sign-out"></i> Sair
-          </button>
-        </div>
-      </aside>
-
-      <!-- Mobile Bottom Nav -->
-      <nav class="bottom-nav" id="bottomNav">
-        <button class="bottom-nav-btn active" id="mobTasks" onclick="showTab('tasks')">
-          <i class="ph ph-list-checks"></i>
-          <span>Tarefas</span>
-        </button>
-        <button class="bottom-nav-btn" id="mobConfig" onclick="showTab('config')">
-          <i class="ph ph-gear-six"></i>
-          <span>Config</span>
-        </button>
-        <button class="bottom-nav-btn" onclick="handleLogout()">
-          <i class="ph ph-sign-out"></i>
-          <span>Sair</span>
-        </button>
-      </nav>
 
       <!-- Content -->
       <main class="content">
@@ -1713,6 +1719,7 @@
                 Código para convidar
               </div>
               <div class="house-code" id="inviteCode">------</div>
+              <div id="inviteQR" style="margin:16px 0;text-align:center"></div>
               <button class="btn btn-secondary btn-sm" onclick="regenerateCode()">
                 <i class="ph ph-arrows-clockwise"></i>
                 Gerar novo código
@@ -1804,13 +1811,19 @@
                 <i class="ph ph-envelope"></i>
                 Configuração de Email
               </div>
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5">
+                <i class="ph ph-info" style="vertical-align:middle;margin-right:4px"></i>
+                As mesmas credenciais SMTP são usadas para notificações
+                e para o <strong>"Esqueci minha senha"</strong>.
+                Altere abaixo se necessário.
+              </p>
               <div class="form-group">
-                <label for="smtpEmail">Seu email SMTP</label>
+                <label for="smtpEmail">Email SMTP</label>
                 <input type="email" id="smtpEmail" placeholder="seu@gmail.com" autocomplete="email">
               </div>
               <div class="form-group">
                 <label for="smtpPass">Senha de aplicativo</label>
-                <input type="password" id="smtpPass" placeholder="Senha de 16 caracteres">
+                <input type="password" id="smtpPass" placeholder="Nova senha (deixe em branco para manter)">
               </div>
               <button class="btn btn-primary btn-sm" onclick="saveSmtpConfig()">
                 <i class="ph ph-floppy-disk"></i>
@@ -1916,6 +1929,22 @@
         </div>
       </main>
     </section>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="bottom-nav-btn active" id="mobTasks" onclick="showTab('tasks')">
+        <i class="ph ph-list-checks"></i>
+        <span>Tarefas</span>
+      </button>
+      <button class="bottom-nav-btn" id="mobConfig" onclick="showTab('config')">
+        <i class="ph ph-gear-six"></i>
+        <span>Config</span>
+      </button>
+      <button class="bottom-nav-btn" onclick="handleLogout()">
+        <i class="ph ph-sign-out"></i>
+        <span>Sair</span>
+      </button>
+    </nav>
   </div>
 
   <!-- Toast -->
@@ -1963,7 +1992,7 @@
 
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <script>
-    const API_URL = 'http://localhost:3000';
+    const API_URL = '';
 
     function showAuth(tab) {
       document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
@@ -2176,6 +2205,7 @@
       const data = await res.json();
       if (data.hasHousehold) {
         document.getElementById('inviteCode').textContent = data.household.invite_code;
+        generateInviteQR(data.household.invite_code);
         let html = '<div class="members-header"><span>Cadastro de membros</span></div>';
         
         if (data.isAdmin) {
@@ -2189,7 +2219,7 @@
         // Populate sidebar user
         const sidebarUser = document.getElementById('sidebarUser');
         if (sidebarUser && currentUser) {
-          sidebarUser.textContent = `👑 ${currentUser.username}`;
+          sidebarUser.innerHTML = `<i class="ph ph-crown"></i> ${currentUser.username}`;
         }
         if (currentUser) {
           const phone = currentUser.phone || '';
@@ -2310,7 +2340,7 @@
       if (widgetMembers && data.members) {
         let mHtml = '';
         for (const m of data.members) {
-          const crown = m.role === 'admin' ? '👑 ' : '';
+          const crown = m.role === 'admin' ? '<i class="ph ph-crown"></i> ' : '';
           mHtml += `<span class="widget-member-tag">${crown}${m.username}</span>`;
         }
         mHtml += `<button class="widget-member-add" onclick="showInviteForm()">+ Convidar</button>`;
@@ -2364,7 +2394,9 @@
 
     function showInviteForm() {
       const code = document.getElementById('inviteCode').textContent;
-      alert('Compartilhe este código com o membro:\n\n' + code + '\n\nO membro deve usar este código ao se cadastrar.');
+      const link = window.location.origin + '?invite=' + encodeURIComponent(code);
+      const msg = 'Compartilhe o QR Code ou o link abaixo com o membro:\n\n' + link + '\n\nOu use o código: ' + code;
+      alert(msg);
     }
 
     async function regenerateCode() {
@@ -2376,11 +2408,25 @@
       const data = await res.json();
       if (res.ok) {
         document.getElementById('inviteCode').textContent = data.invite_code;
+        generateInviteQR(data.invite_code);
         showToast('Novo código gerado!', 'success');
       }
     }
 
-const PAGE_SIZE = 12;
+    function generateInviteQR(code) {
+      const container = document.getElementById('inviteQR');
+      container.innerHTML = '';
+      const url = window.location.origin + '?invite=' + encodeURIComponent(code);
+      const img = document.createElement('img');
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(url);
+      img.alt = 'QR Code para convidar';
+      img.style.width = '160px';
+      img.style.height = '160px';
+      img.style.borderRadius = '8px';
+      container.appendChild(img);
+    }
+
+    const PAGE_SIZE = 12;
     const templatePagination = {};
     const templateAllData = {};
 
@@ -2686,7 +2732,7 @@ const PAGE_SIZE = 12;
       }
       if (completed.length > 0) {
         taskHtml += `
-          <div class="completed-header">✅ Concluídas (${completed.length})</div>
+          <div class="completed-header"><i class="ph ph-check-circle"></i> Concluídas (${completed.length})</div>
           <div class="task-list">
         `;
         for (const t of completed) taskHtml += buildTaskRow(t, true);
@@ -2708,18 +2754,18 @@ const PAGE_SIZE = 12;
       
       const widgetsHtml = `
         <div class="widget">
-          <div class="widget-title">⏳ Pendentes hoje</div>
+          <div class="widget-title"><i class="ph ph-hourglass"></i> Pendentes hoje</div>
           <div class="widget-pending-count">${pending.length}</div>
           <div class="widget-progress-bar">
             <div class="widget-progress-fill primary" style="width:${completionRate}%"></div>
           </div>
         </div>
         <div class="widget">
-          <div class="widget-title">📊 Produtividade</div>
+          <div class="widget-title"><i class="ph ph-chart-bar"></i> Produtividade</div>
           <div id="widgetProductivity">Carregando...</div>
         </div>
         <div class="widget">
-          <div class="widget-title">👥 Membros</div>
+          <div class="widget-title"><i class="ph ph-users"></i> Membros</div>
           <div id="widgetMembers" style="display:flex;gap:8px;flex-wrap:wrap">Carregando...</div>
         </div>
       `;
@@ -2843,6 +2889,12 @@ const PAGE_SIZE = 12;
         document.getElementById('notifFreq').value = data.reminder_freq;
         toggleNotifTimeGroup(data.reminder_freq);
       }
+      // Pre-fill SMTP email from .env
+      const smtpRes = await fetch(`${API_URL}/api/admin/smtp`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const smtpData = await smtpRes.json();
+      if (smtpData.smtp_user) {
+        document.getElementById('smtpEmail').value = smtpData.smtp_user;
+      }
     }
 
     function toggleNotifTimeGroup(freq) {
@@ -2871,12 +2923,12 @@ const PAGE_SIZE = 12;
       const smtpEmail = document.getElementById('smtpEmail').value;
       const smtpPass = document.getElementById('smtpPass').value;
       
-      if (smtpEmail && smtpPass) {
+      if (smtpEmail) {
         const token = localStorage.getItem('token');
         const res = await fetch(`${API_URL}/api/admin/smtp`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass })
+          body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass || undefined })
         });
         const data = await res.json();
         if (res.ok) {
@@ -2904,8 +2956,8 @@ const PAGE_SIZE = 12;
       const smtpEmail = document.getElementById('smtpEmail').value;
       const smtpPass = document.getElementById('smtpPass').value;
       
-      if (!smtpEmail || !smtpPass) {
-        showToast('Preencha email e senha', 'error');
+      if (!smtpEmail) {
+        showToast('Preencha o email SMTP', 'error');
         return;
       }
       
@@ -2913,7 +2965,7 @@ const PAGE_SIZE = 12;
       const res = await fetch(`${API_URL}/api/admin/smtp`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass })
+        body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass || undefined })
       });
       const data = await res.json();
       
