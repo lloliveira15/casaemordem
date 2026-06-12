@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Household = require('../models/Household');
 const JwtUtil = require('../utils/jwt');
 const NotificationService = require('../services/notification');
+const db = require('../config/database');
 
 // POST /auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, phone } = req.body;
+    const { username, email, password, phone, invite_code } = req.body;
 
-    // Validações básicas
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'Username, email e password são obrigatórios' });
     }
@@ -18,10 +19,17 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' });
     }
 
-    // Criar usuário
     const newUser = await User.create(username, email, password, phone);
 
-    // Gerar token
+    if (invite_code) {
+      const household = await Household.findByInviteCode(invite_code.toUpperCase());
+      if (household) {
+        await Household.join(household.id, newUser.id);
+        await db.run('DELETE FROM household_members WHERE user_id = ? AND household_id != ?', [newUser.id, household.id]);
+        await db.run('DELETE FROM households WHERE id != ? AND admin_id = ?', [household.id, newUser.id]);
+      }
+    }
+
     const token = JwtUtil.generateToken(newUser.id, newUser.username);
 
     res.status(201).json({

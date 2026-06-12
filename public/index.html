@@ -1577,6 +1577,11 @@
             <label for="regPhone">Telefone (opcional)</label>
             <input type="tel" id="regPhone" placeholder="(11) 99999-9999" autocomplete="tel">
           </div>
+          <div class="form-group" style="margin-bottom:4px">
+            <label for="regInvite">Código de convite (opcional)</label>
+            <input type="text" id="regInvite" placeholder="Ex: ABC123" maxlength="6" style="text-transform:uppercase;letter-spacing:4px;text-align:center;font-weight:700">
+            <small style="color:var(--text-muted);font-size:12px">Já tem um convite? Digite o código para entrar na casa</small>
+          </div>
           <button class="btn btn-primary" onclick="handleRegister()">
             <i class="ph ph-user-plus"></i>
             Criar conta
@@ -1719,7 +1724,7 @@
                 Código para convidar
               </div>
               <div class="house-code" id="inviteCode">------</div>
-              <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">
+              <div id="householdActions" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">
                 <button class="btn btn-secondary btn-sm" onclick="copyInviteCode()">
                   <i class="ph ph-copy"></i>
                   Copiar código
@@ -1742,7 +1747,20 @@
                   <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inviteEmailForm').style.display='none'">Cancelar</button>
                 </div>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="regenerateCode()">
+              <div id="joinHouseholdSection" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px">
+                <div style="font-size:14px;font-weight:600;margin-bottom:12px;text-align:center">
+                  <i class="ph ph-sign-in"></i> Entrar em uma casa
+                </div>
+                <div style="display:flex;gap:8px;max-width:320px;margin:0 auto">
+                  <input type="text" id="joinCodeInput" placeholder="Código de convite" maxlength="6" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;text-align:center;letter-spacing:4px;font-weight:700;text-transform:uppercase">
+                  <button class="btn btn-primary btn-sm" onclick="joinHousehold()">
+                    <i class="ph ph-check"></i>
+                    Entrar
+                  </button>
+                </div>
+                <div id="joinError" style="color:var(--danger);font-size:13px;text-align:center;margin-top:8px;display:none"></div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="regenerateCode()" id="regenerateCodeBtn">
                 <i class="ph ph-arrows-clockwise"></i>
                 Gerar novo código
               </button>
@@ -2177,11 +2195,14 @@
       const email = document.getElementById('regEmail').value;
       const password = document.getElementById('regPassword').value;
       const phone = document.getElementById('regPhone').value;
+      const invite_code = document.getElementById('regInvite').value.trim().toUpperCase();
+      const body = { username, email, password, phone };
+      if (invite_code) body.invite_code = invite_code;
       try {
         const res = await fetch(`${API_URL}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password, phone })
+          body: JSON.stringify(body)
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
@@ -2356,6 +2377,18 @@
           </div>`;
         }
         document.getElementById('membersList').innerHTML = html;
+        document.getElementById('householdActions').style.display = 'flex';
+        document.getElementById('inviteQR').style.display = 'block';
+        document.getElementById('regenerateCodeBtn').style.display = 'inline-flex';
+        document.getElementById('joinHouseholdSection').style.display = 'none';
+      } else {
+        document.getElementById('inviteCode').textContent = '------';
+        document.getElementById('inviteQR').innerHTML = '';
+        document.getElementById('inviteQR').style.display = 'none';
+        document.getElementById('householdActions').style.display = 'none';
+        document.getElementById('regenerateCodeBtn').style.display = 'none';
+        document.getElementById('membersList').innerHTML = '<div class="members-header"><span>Você não tem uma casa</span></div>';
+        document.getElementById('joinHouseholdSection').style.display = 'block';
       }
       // Populate widget members
       const widgetMembers = document.getElementById('widgetMembers');
@@ -2484,6 +2517,37 @@
         document.getElementById('inviteEmailInput').value = '';
       } else {
         showToast(data.error || 'Erro ao enviar convite', 'error');
+      }
+    }
+
+    async function joinHousehold() {
+      const token = localStorage.getItem('token');
+      const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
+      const errEl = document.getElementById('joinError');
+      if (!code) {
+        errEl.textContent = 'Digite um código de convite';
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      const btn = document.querySelector('#joinHouseholdSection .btn-primary');
+      btn.disabled = true;
+      btn.innerHTML = 'Entrando...';
+      const res = await fetch(`${API_URL}/api/household/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ invite_code: code })
+      });
+      const data = await res.json();
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ph ph-check"></i> Entrar';
+      if (res.ok) {
+        showToast('Você entrou na casa!', 'success');
+        document.getElementById('joinCodeInput').value = '';
+        loadHousehold();
+      } else {
+        errEl.textContent = data.error || 'Erro ao entrar na casa';
+        errEl.style.display = 'block';
       }
     }
 
