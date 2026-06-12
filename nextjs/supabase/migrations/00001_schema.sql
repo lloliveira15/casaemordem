@@ -85,10 +85,10 @@ CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO profiles (id, username, email)
-  VALUES (NEW.id, NEW.raw_user_meta_data->>'username', NEW.email);
+  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'username', split_part(NEW.email, '@', 1)), NEW.email);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -104,7 +104,7 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
 
 CREATE TRIGGER on_profile_created
   AFTER INSERT ON profiles
@@ -124,7 +124,7 @@ BEGIN
 
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = 'public';
 
 CREATE TRIGGER on_household_created
   AFTER INSERT ON households
