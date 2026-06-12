@@ -444,11 +444,6 @@ async function loadHousehold() {
       </div>`;
     }
     
-    // Demais membros
-    for (const m of data.members) {
-      continue;
-    }
-    
     let outros = data.members.filter(m => m.id !== data.currentUserId);
     for (const m of outros) {
       const crown = m.role === 'admin' ? '<i class="ph-fill ph-crown"></i>' : '';
@@ -508,7 +503,6 @@ async function loadHousehold() {
       </div>`;
     }
     document.getElementById('membersList').innerHTML = html;
-    document.getElementById('householdActions').style.display = 'flex';
     document.getElementById('inviteQR').style.display = 'block';
     document.getElementById('regenerateCodeBtn').style.display = 'inline-flex';
     document.getElementById('joinHouseholdSection').style.display = 'none';
@@ -516,7 +510,6 @@ async function loadHousehold() {
     document.getElementById('inviteCode').textContent = '------';
     document.getElementById('inviteQR').innerHTML = '';
     document.getElementById('inviteQR').style.display = 'none';
-    document.getElementById('householdActions').style.display = 'none';
     document.getElementById('regenerateCodeBtn').style.display = 'none';
     document.getElementById('membersList').innerHTML = '<div class="members-header"><span>Você não tem uma casa</span></div>';
     document.getElementById('joinHouseholdSection').style.display = 'block';
@@ -1172,23 +1165,26 @@ async function addQuickTaskInline() {
 
   const btn = document.querySelector('.quick-add-bar .btn-primary');
   setLoading(btn, true);
+  try {
+    const res = await fetch(`${API_URL}/api/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ description: desc, room: room, due_date: date })
+    });
 
-  const res = await fetch(`${API_URL}/api/tasks`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify({ description: desc, room: room, due_date: date })
-  });
-
-  setLoading(btn, false);
-
-  if (res.ok) {
-    if (input) input.value = '';
-    await loadTasks();
-    await loadPendingCount();
-    showToast('Tarefa adicionada', 'success');
-  } else {
-    const data = await res.json();
-    showToast(data.error || 'Erro', 'error');
+    if (res.ok) {
+      if (input) input.value = '';
+      await loadTasks();
+      await loadPendingCount();
+      showToast('Tarefa adicionada', 'success');
+    } else {
+      const data = await res.json();
+      showToast(data.error || 'Erro', 'error');
+    }
+  } catch (e) {
+    showToast('Erro ao adicionar tarefa', 'error');
+  } finally {
+    setLoading(btn, false);
   }
 }
 
@@ -1447,9 +1443,14 @@ async function addQuickTask() {
   const dueDate = getSelectedDate();
   const btn = document.querySelector('#taskPickerModal .btn-primary');
   setLoading(btn, true);
-  await addFromPicker(desc, room, dueDate);
-  setLoading(btn, false);
-  document.getElementById('quickTask').value = '';
+  try {
+    await addFromPicker(desc, room, dueDate);
+    document.getElementById('quickTask').value = '';
+  } catch (e) {
+    showToast('Erro ao adicionar tarefa', 'error');
+  } finally {
+    setLoading(btn, false);
+  }
 }
 
 async function addFromPicker(desc, room, dueDate) {
