@@ -3,1532 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#9b6b9d" />
+  <meta name="theme-color" content="#7C3AED" />
   <meta name="description" content="Gerencie tarefas domésticas com sua família" />
   <title>Casa em Ordem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
-  <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-:root {
-      --primary: #9b6b9d;
-      --primary-dark: #5c3d5e;
-      --primary-light: #f5eff5;
-      --primary-muted: #8b6b8d;
-      --primary-subtle: #b89bb8;
-      --border: #e8dce8;
-      --border-light: #f0e8f0;
-      --bg: #f9f5f9;
-      --surface: #ffffff;
-      --text: #3d2d3f;
-      --text-muted: #6b4b6d;
-      --dashed: #d5b8d5;
-      --progress-secondary: #c4aac4;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --radius-lg: 14px;
-      --shadow: 0 1px 3px rgba(91,61,94,0.08);
-      --shadow-hover: 0 2px 8px rgba(91,61,94,0.12);
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-
-    .container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      max-width: 100%;
-    }
-
-    html {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color-scheme: light;
-    }
-
-    @media (min-width: 768px) {
-      .container {
-        flex-direction: row;
-      }
-    }
-
-    /* Auth Container */
-    .auth-section {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
-      min-height: 100vh;
-      width: 100%;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 400px;
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-
-    .auth-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-
-    .auth-subtitle {
-      color: var(--primary-muted);
-      font-size: 15px;
-      margin-bottom: 32px;
-    }
-
-    /* Main App */
-    .app-section {
-      display: none;
-      flex: 1;
-      min-height: 100vh;
-    }
-
-    .app-section.active {
-      display: flex;
-      flex-direction: column;
-    }
-
-    @media (min-width: 768px) {
-      .app-section.active {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-    }
-
-    /* Header */
-    .header {
-      background: var(--surface);
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    @media (min-width: 768px) {
-      .header-left {
-        display: none;
-      }
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-
-    .logo i {
-      font-size: 24px;
-      vertical-align: middle;
-    }
-
-    .badge {
-      background: var(--primary);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 2px 10px;
-      border-radius: 10px;
-    }
-
-    .badge-label {
-      font-size: 12px;
-      color: var(--primary-muted);
-    }
-
-    /* Sidebar (desktop only) */
-    .sidebar {
-      display: none;
-    }
-
-    @media (min-width: 768px) {
-      .sidebar {
-        display: flex;
-        flex-direction: column;
-        width: 220px;
-        min-width: 220px;
-        background: var(--surface);
-        border-right: 1px solid var(--border);
-        min-height: 100vh;
-      }
-
-      .sidebar-header {
-        padding: 24px 20px 16px;
-        border-bottom: 1px solid var(--border-light);
-      }
-
-      .sidebar-logo {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--primary-dark);
-      }
-
-      .sidebar-tagline {
-        font-size: 12px;
-        color: var(--primary-muted);
-        margin-top: 2px;
-      }
-
-      .sidebar-nav {
-        padding: 12px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .sidebar-btn {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border: none;
-        background: transparent;
-        border-radius: var(--radius-sm);
-        color: var(--text-muted);
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        width: 100%;
-        text-align: left;
-      }
-
-      .sidebar-btn:hover {
-        background: var(--primary-light);
-        color: var(--primary-dark);
-      }
-
-      .sidebar-btn.active {
-        background: var(--primary-light);
-        color: var(--primary);
-        font-weight: 600;
-      }
-
-      .sidebar-btn i {
-        font-size: 24px;
-      }
-
-      .sidebar-footer {
-        padding: 16px 20px;
-        border-top: 1px solid var(--border-light);
-      }
-
-      .sidebar-user {
-        font-size: 14px;
-        color: var(--primary-dark);
-        font-weight: 500;
-        margin-bottom: 4px;
-      }
-
-      .sidebar-logout {
-        background: none;
-        border: none;
-        color: var(--primary-subtle);
-        font-size: 13px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 0;
-      }
-
-      .sidebar-logout:hover {
-        color: var(--primary);
-      }
-    }
-
-    /* Bottom Nav (mobile only) */
-    .bottom-nav {
-      display: flex;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 6px 8px;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-    }
-
-    @media (min-width: 768px) {
-      .bottom-nav {
-        display: none;
-      }
-    }
-
-    .bottom-nav-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      padding: 8px;
-      border: none;
-      background: transparent;
-      color: var(--primary-muted);
-      font-size: 10px;
-      font-weight: 500;
-      cursor: pointer;
-      border-radius: var(--radius-sm);
-      transition: all 0.2s;
-    }
-
-    .bottom-nav-btn i {
-      font-size: 24px;
-    }
-
-    .bottom-nav-btn.active {
-      background: var(--primary-light);
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    /* Content */
-    .content {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-    }
-
-    @media (min-width: 768px) {
-      .content {
-        padding: 28px 32px;
-      }
-    }
-
-    /* Dashboard grid layout */
-    .dashboard-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    @media (min-width: 768px) {
-      .dashboard-grid {
-        display: grid;
-        grid-template-columns: 1.8fr 1fr;
-        gap: 28px;
-        align-content: start;
-      }
-    }
-
-    /* Date Navigation */
-    .date-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--surface);
-      padding: 12px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      margin-bottom: 14px;
-    }
-
-    .date-btn {
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: var(--primary-muted);
-      transition: all 0.2s;
-    }
-
-    .date-btn:hover {
-      background: var(--primary-light);
-      border-color: var(--primary);
-    }
-
-    .date-nav input[type="date"] {
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--primary-dark);
-      text-align: center;
-    }
-
-    .quick-dates {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      margin-bottom: 14px;
-    }
-
-    .quick-date {
-      padding: 5px 14px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 16px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .quick-date:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .quick-date.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-
-    .tab-panel {
-      display: none;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    /* Cards */
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-title i {
-      font-size: 22px;
-    }
-
-    /* Forms */
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 12px 14px;
-      font-size: 15px;
-      border: 2px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fff;
-      color: var(--text);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      -webkit-appearance: none;
-    }
-
-    .form-group input::placeholder {
-      color: var(--primary-subtle);
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(155, 107, 157, 0.1);
-    }
-
-    .form-group select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 40px;
-    }
-
-    /* Buttons */
-    .btn {
-      width: 100%;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 600;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-secondary {
-      background: var(--primary-light);
-      color: var(--text-muted);
-    }
-
-    .btn-secondary:hover {
-      background: var(--border);
-    }
-
-    .btn-sm {
-      padding: 10px 14px;
-      font-size: 14px;
-    }
-
-    .btn-icon {
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      border-radius: 50%;
-    }
-
-    .btn:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    /* Toggle */
-    .toggle-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: var(--primary-muted);
-    }
-
-    .toggle-link button {
-      background: none;
-      border: none;
-      color: var(--primary);
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* House Code */
-    .house-code {
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: 6px;
-      color: var(--primary);
-      text-align: center;
-      margin: 16px 0;
-    }
-
-    .house-label {
-      font-size: 13px;
-      color: var(--primary-muted);
-      text-align: center;
-    }
-
-    /* Members */
-    .members {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .member {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      border: 1px solid var(--border);
-    }
-
-    .member i {
-      color: var(--primary);
-      font-size: 14px;
-    }
-
-    .member-notif {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      border: 1px solid var(--border);
-    }
-
-    .member-notif input {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .member-notif.disabled {
-      opacity: 0.5;
-    }
-
-    .members-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 16px;
-      margin-bottom: 8px;
-      font-size: 13px;
-      color: var(--primary-muted);
-    }
-
-    .member-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .member-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .member-card-name {
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--primary-dark);
-    }
-
-    .btn-edit {
-      background: none;
-      border: none;
-      color: var(--primary-muted);
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 4px;
-    }
-
-    .btn-edit:hover {
-      background: var(--border-light);
-      color: var(--primary);
-    }
-
-    .member-card-body {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .member-card-field {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .member-card-field:last-child {
-      border-bottom: none;
-    }
-
-    .field-label {
-      font-size: 13px;
-      color: var(--primary-muted);
-    }
-
-    .field-value {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .member-card-edit {
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      margin-top: 12px;
-    }
-
-    .edit-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .toggle-switch.small {
-      width: 36px;
-      height: 20px;
-    }
-
-    .toggle-switch.small .toggle-slider {
-      height: 16px;
-      width: 16px;
-    }
-
-    /* Tasks */
-    .task-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .task-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      background: var(--surface);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-    }
-
-    .task-item:hover {
-      box-shadow: var(--shadow-hover);
-    }
-
-    .task-item.completed {
-      opacity: 0.55;
-    }
-
-    .task-item.completed .task-desc {
-      text-decoration: line-through;
-    }
-
-    .task-check {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    .task-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .task-desc {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .task-meta {
-      font-size: 12px;
-      color: var(--primary-muted);
-      margin-top: 2px;
-    }
-
-    .task-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .task-assignee {
-      padding: 3px 10px;
-      background: var(--primary-light);
-      border-radius: 12px;
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .task-action {
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: var(--primary-light);
-      color: var(--primary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      font-size: 16px;
-    }
-
-    .task-action:hover {
-      color: #fff;
-    }
-
-    .task-action.done:hover {
-      background: var(--primary);
-    }
-
-    .task-action.delete:hover {
-      background: #d9534f;
-    }
-
-    .btn-add-task {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px dashed var(--dashed);
-      border-radius: var(--radius);
-      background: var(--surface);
-      color: var(--primary);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .btn-add-task:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    /* Desktop widgets */
-    .widget {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      border: 1px solid var(--border);
-      margin-bottom: 14px;
-    }
-
-    .widget-title {
-      font-size: 12px;
-      color: var(--primary-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .widget-title i {
-      font-size: 18px;
-    }
-
-    .widget-pending-count {
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin: 4px 0;
-    }
-
-    .widget-progress-bar {
-      height: 6px;
-      background: var(--border-light);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .widget-progress-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.3s;
-    }
-
-    .widget-progress-fill.primary {
-      background: var(--primary);
-    }
-
-    .widget-member-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 12px;
-      background: var(--primary-light);
-      border-radius: 14px;
-      font-size: 12px;
-      color: var(--primary-dark);
-      font-weight: 500;
-    }
-
-    .widget-member-add {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 12px;
-      border: 1.5px dashed var(--border);
-      border-radius: 14px;
-      font-size: 12px;
-      color: var(--primary-subtle);
-      font-weight: 500;
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .widget-member-add:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .completed-header {
-      margin: 16px 0 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .completed-header i {
-      font-size: 18px;
-    }
-
-    @media (max-width: 767px) {
-      .widget-column {
-        display: none;
-      }
-    }
-
-    /* Bulk Actions */
-    .bulk-actions {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .bulk-actions .btn {
-      padding: 8px 14px;
-      font-size: 12px;
-    }
-
-    /* Empty State */
-    .empty {
-      text-align: center;
-      padding: 48px 24px;
-    }
-
-    .empty i {
-      font-size: 56px;
-      color: var(--border);
-      margin-bottom: 16px;
-    }
-
-    .empty-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .empty-text {
-      font-size: 14px;
-      color: var(--primary-muted);
-    }
-
-    /* Templates */
-    .template-list {
-      margin-top: 16px;
-    }
-
-    .template-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px;
-      background: var(--primary-light);
-      border-radius: var(--radius-sm);
-      margin-bottom: 8px;
-    }
-
-    .template-desc {
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    .template-meta {
-      font-size: 13px;
-      color: var(--primary-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .room-tag {
-      display: inline-block;
-      background: var(--primary);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 10px;
-    }
-
-    .template-delete {
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: transparent;
-      color: var(--primary-subtle);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .template-delete:hover {
-      background: #d9534f;
-      color: #fff;
-    }
-
-    /* Settings Row */
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .setting-row:last-child {
-      border-bottom: none;
-    }
-
-    .setting-label {
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    .toggle-switch {
-      position: relative;
-      width: 44px;
-      height: 24px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background: var(--border);
-      border-radius: 24px;
-      transition: 0.2s;
-    }
-
-    .toggle-slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.2s;
-    }
-
-    .toggle-switch input:checked + .toggle-slider {
-      background: var(--primary);
-    }
-
-    .toggle-switch input:checked + .toggle-slider:before {
-      transform: translateX(20px);
-    }
-
-    /* Toast */
-    .toast-container {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 0 20px;
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .toast {
-      padding: 14px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 500;
-      color: #fff;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: slideUp 0.3s ease;
-    }
-
-    .toast.success { background: var(--primary); }
-    .toast.error { background: #d9534f; }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Divider */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 20px 0;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: var(--surface);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 450px;
-      max-height: 80vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .modal-header h2 {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--primary-dark);
-    }
-
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: transparent;
-      color: var(--primary-muted);
-      cursor: pointer;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-
-    .modal-close:hover {
-      background: var(--border-light);
-    }
-
-    .modal-body {
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .modal-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--primary-muted);
-      margin-bottom: 12px;
-    }
-
-    /* Task Suggestions */
-    .task-suggestions {
-      max-height: 350px;
-      overflow-y: auto;
-    }
-
-    .room-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .room-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 8px 0 4px;
-      border-bottom: 1px solid var(--border-light);
-      margin-top: 8px;
-    }
-
-    .room-title:first-child {
-      margin-top: 0;
-    }
-
-    .room-tasks {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-    }
-
-    .suggestion-item {
-      padding: 10px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .suggestion-item:hover {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-
-    /* Grid for desktop */
-    @media (min-width: 1024px) {
-      .grid-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-
-      .grid-layout .card {
-        margin-bottom: 0;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    /* Config Sub-tabs */
-    .config-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .config-tab-btn {
-      padding: 10px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      border: none;
-      background: var(--primary-light);
-      color: var(--text-muted);
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .config-tab-btn:hover {
-      background: var(--border);
-      color: var(--primary-dark);
-    }
-
-    .config-tab-btn.active {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .config-tab-btn i {
-      font-size: 16px;
-    }
-
-    .subtab-content {
-      display: none;
-    }
-
-    .subtab-content.active {
-      display: block;
-    }
-
-    /* Template Groups */
-    .template-group {
-      margin-bottom: 20px;
-      display: none;
-    }
-
-    .template-group.visible {
-      display: block;
-    }
-
-    .template-group-header {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--primary-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 12px;
-    }
-
-    .template-group-items {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    /* Template List View */
-    .template-list-view {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 8px;
-    }
-
-    .template-list-view.scrollable {
-      max-height: 300px;
-      overflow-y: auto;
-      padding-right: 8px;
-    }
-
-    .template-list-pagination {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .template-list-pagination .info {
-      font-size: 12px;
-      color: var(--primary-muted);
-    }
-
-    .template-list-pagination .btn-nav {
-      padding: 6px 12px;
-      font-size: 12px;
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .template-list-pagination .btn-nav:hover {
-      background: var(--border-light);
-    }
-
-    .template-list-pagination .btn-nav:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .template-list-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
-      font-size: 13px;
-    }
-
-    .template-list-item .room-tag {
-      font-size: 10px;
-      padding: 2px 6px;
-    }
-
-    /* Produtividade */
-    .produt-card {
-      background: var(--primary-light);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      margin-bottom: 8px;
-    }
-
-    .produt-name {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--primary-dark);
-      margin-bottom: 6px;
-    }
-
-    .produt-stats {
-      display: flex;
-      gap: 12px;
-      font-size: 12px;
-      color: var(--primary-muted);
-      margin-bottom: 8px;
-    }
-
-    .produt-bar {
-      height: 8px;
-      background: var(--border-light);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .produt-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.3s;
-    }
-
-    .produt-rate {
-      font-size: 12px;
-      font-weight: 600;
-      text-align: right;
-      color: var(--primary-dark);
-    }
-
-    /* Template Filter Tabs */
-    .template-filter-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-
-    .template-filter-btn {
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text-muted);
-      border-radius: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .template-filter-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .template-filter-btn.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
-    .template-filter-btn .count {
-      background: rgba(0,0,0,0.1);
-      padding: 2px 6px;
-      border-radius: 10px;
-      margin-left: 4px;
-    }
-
-    .template-filter-btn.active .count {
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* Template Room Tabs */
-    .template-room-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .template-room-btn {
-      padding: 4px 10px;
-      font-size: 11px;
-      font-weight: 500;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text-muted);
-      border-radius: 12px;
-      cursor: pointer;
-    }
-
-    .template-room-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .template-room-btn.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
   <div class="container">
@@ -1548,8 +31,8 @@
             <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
           </div>
           <button class="btn btn-primary" onclick="handleLogin()">
-            <i class="ph ph-sign-in"></i>
-            Entrar
+            <span class="spinner"></span>
+            <span class="btn-text"><i class="ph ph-sign-in"></i> Entrar</span>
           </button>
           <div class="toggle-link" style="margin-top:8px">
             <button onclick="showForgotPassword()">Esqueci minha senha</button>
@@ -1583,8 +66,8 @@
             <small style="color:var(--text-muted);font-size:12px">Já tem um convite? Digite o código para entrar na casa</small>
           </div>
           <button class="btn btn-primary" onclick="handleRegister()">
-            <i class="ph ph-user-plus"></i>
-            Criar conta
+            <span class="spinner"></span>
+            <span class="btn-text"><i class="ph ph-user-plus"></i> Criar conta</span>
           </button>
           <div class="toggle-link">
             Já tem conta?
@@ -1600,8 +83,8 @@
             <input type="email" id="forgotEmail" placeholder="seu@email.com" autocomplete="email">
           </div>
           <button class="btn btn-primary" onclick="handleForgotPassword()">
-            <i class="ph ph-envelope"></i>
-            Enviar link
+            <span class="spinner"></span>
+            <span class="btn-text"><i class="ph ph-envelope"></i> Enviar link</span>
           </button>
           <div class="toggle-link">
             Lembrou a senha?
@@ -1621,8 +104,8 @@
             <input type="password" id="resetConfirm" placeholder="Repita a senha" autocomplete="new-password">
           </div>
           <button class="btn btn-primary" onclick="handleResetPassword()">
-            <i class="ph ph-check-circle"></i>
-            Redefinir senha
+            <span class="spinner"></span>
+            <span class="btn-text"><i class="ph ph-check-circle"></i> Redefinir senha</span>
           </button>
           <div class="toggle-link">
             <button onclick="showAuth('login')">Voltar ao login</button>
@@ -1631,151 +114,192 @@
       </div>
     </section>
 
-    <!-- Desktop Sidebar (antes do app-section para ficar à esquerda) -->
+    <!-- NEW: Sidebar with 4 nav items -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo"><i class="ph ph-flower-tulip"></i> Casa em Ordem</div>
-        <div class="sidebar-tagline">Gerencie sua casa</div>
       </div>
       <nav class="sidebar-nav">
-        <button class="sidebar-btn active" id="sideTasks" onclick="showTab('tasks')">
+        <button class="sidebar-btn active" data-page="dashboard" onclick="showPage('dashboard')">
+          <i class="ph ph-house"></i> Dashboard
+        </button>
+        <button class="sidebar-btn" data-page="tasks" onclick="showPage('tasks')">
           <i class="ph ph-list-checks"></i> Tarefas
         </button>
-        <button class="sidebar-btn" id="sideConfig" onclick="showTab('config')">
-          <i class="ph ph-gear-six"></i> Configurações
+        <button class="sidebar-btn" data-page="members" onclick="showPage('members')">
+          <i class="ph ph-users"></i> Membros
+        </button>
+        <button class="sidebar-btn" data-page="config" onclick="showPage('config')">
+          <i class="ph ph-gear-six"></i> Config
         </button>
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user" id="sidebarUser"><i class="ph ph-crown"></i> Carregando...</div>
+        <button class="sidebar-theme" onclick="toggleTheme()">
+          <i class="ph ph-moon theme-toggle-icon"></i>
+          <span class="theme-toggle-label">Modo escuro</span>
+        </button>
         <button class="sidebar-logout" onclick="handleLogout()">
           <i class="ph ph-sign-out"></i> Sair
         </button>
       </div>
     </aside>
 
-    <!-- App Section -->
-    <section class="app-section" id="dashboard">
-      <!-- Header -->
-      <header class="header">
-        <div class="header-left">
-          <span class="logo"><i class="ph ph-flower-tulip"></i> Casa em Ordem</span>
+    <!-- NEW: Main Area -->
+    <div class="main-area">
+      <!-- NEW: Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <span class="topbar-title" id="pageTitle">Dashboard</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span class="badge-label">Pendentes hoje</span>
+        <div class="topbar-right">
+          <span class="badge-label">Pendentes</span>
           <span class="badge" id="pendingCount">0</span>
+          <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">
+            <i class="ph ph-moon theme-toggle-icon"></i>
+          </button>
         </div>
       </header>
 
-      <!-- Content -->
+      <!-- NEW: Page Content -->
       <main class="content">
-        <!-- Tasks Tab -->
-        <div class="tab-panel active" id="tasksPanel">
-          <!-- Date Navigation -->
-          <div class="date-nav">
-            <button class="date-btn" onclick="changeDate(-1)">
-              <i class="ph ph-caret-left"></i>
-            </button>
-            <input type="date" id="taskDate" onchange="loadTasks()">
-            <button class="date-btn" onclick="changeDate(1)">
-              <i class="ph ph-caret-right"></i>
-            </button>
+
+        <!-- PAGE: DASHBOARD -->
+        <section class="page active" id="pageDashboard">
+          <div class="widgets-row" id="widgetsRow">
+            <div class="widget-card" id="widgetPending">
+              <div class="widget-label">Pendentes hoje</div>
+              <div class="widget-value" id="dashboardPendingCount">—</div>
+              <div class="widget-progress-bar">
+                <div class="widget-progress-fill" id="dashboardProgressFill" style="width:0%"></div>
+              </div>
+              <div class="widget-sub" id="dashboardProgressText">0% concluído</div>
+            </div>
+            <div class="widget-card" id="widgetProductivity">
+              <div class="widget-label">Produtividade</div>
+              <div class="widget-value" id="dashboardProductivityPct">—</div>
+              <div class="widget-sub" id="dashboardProductivityText">Carregando...</div>
+            </div>
+            <div class="widget-card" id="widgetMembers">
+              <div class="widget-label">Membros</div>
+              <div class="widget-members-list" id="dashboardMembersList"></div>
+            </div>
           </div>
-          <div class="quick-dates">
-            <button class="quick-date" onclick="setDate(-1)">Ontem</button>
-            <button class="quick-date active" onclick="setDate(0)">Hoje</button>
-            <button class="quick-date" onclick="setDate(1)">Amanhã</button>
-            <button class="quick-date" onclick="openDatePicker()">
+
+          <div class="section-header">
+            <h2 class="section-title">Tarefas de hoje</h2>
+          </div>
+          <div id="dashboardTasksList"></div>
+        </section>
+
+        <!-- PAGE: TASKS -->
+        <section class="page" id="pageTasks">
+          <div class="date-nav-row">
+            <button class="date-pill" onclick="setDate(-1)">Ontem</button>
+            <button class="date-pill active" onclick="setDate(0)">Hoje</button>
+            <button class="date-pill" onclick="setDate(1)">Amanhã</button>
+            <button class="date-pill date-pill-icon" onclick="openDatePicker()">
               <i class="ph ph-calendar-blank"></i>
             </button>
+            <input type="date" id="taskDate" onchange="loadTasks()" style="display:none">
           </div>
-          <button class="btn-add-task" onclick="openTaskPicker()">
-            <i class="ph ph-plus"></i>
-            Adicionar tarefa
-          </button>
+          <div class="progress-row">
+            <span class="progress-text" id="progressText">0 de 0 concluídas</span>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          </div>
           <div id="tasksList"></div>
-        </div>
-
-        <!-- Config Tab -->
-        <div class="tab-panel" id="configPanel">
-          <!-- Sub-tabs -->
-          <div class="config-tabs">
-            <button class="config-tab-btn active" id="configTabCasa" onclick="switchConfigTab('casa')">
-              <i class="ph ph-house-line"></i> Minha Casa
+          <div class="quick-add-bar">
+            <input type="text" id="quickTaskInput" placeholder="Adicionar tarefa..." autocomplete="off">
+            <select id="quickTaskRoomSelect">
+              <option value="">Cômodo</option>
+              <option value="Cozinha">Cozinha</option>
+              <option value="Sala de estar">Sala de estar</option>
+              <option value="Quarto">Quarto</option>
+              <option value="Banheiro social">Banheiro social</option>
+              <option value="Banheiro suite">Banheiro suite</option>
+              <option value="Suíte">Suíte</option>
+              <option value="Varanda">Varanda</option>
+              <option value="Área de serviço">Área de serviço</option>
+              <option value="Hall">Hall</option>
+              <option value="Corredor">Corredor</option>
+              <option value="Lavabo">Lavabo</option>
+              <option value="Escritório">Escritório</option>
+              <option value="Geral">Geral</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="addQuickTaskInline()">
+              <span class="spinner"></span>
+              <span class="btn-text">+</span>
             </button>
-            <button class="config-tab-btn" id="configTabTemplates" onclick="switchConfigTab('templates')">
+          </div>
+        </section>
+
+        <!-- PAGE: MEMBERS -->
+        <section class="page" id="pageMembers">
+          <div class="card">
+            <div class="card-title"><i class="ph ph-qr-code"></i> Código da Casa</div>
+            <div class="house-code" id="inviteCode">------</div>
+            <div class="invite-actions">
+              <button class="btn btn-secondary btn-sm" onclick="copyInviteCode()">
+                <i class="ph ph-copy"></i> Copiar código
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="showInviteEmailForm()">
+                <i class="ph ph-envelope"></i> Convidar por email
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="regenerateCode()" id="regenerateCodeBtn">
+                <i class="ph ph-arrows-clockwise"></i> Novo código
+              </button>
+            </div>
+            <div id="inviteQR" style="text-align:center;margin:16px 0" onclick="copyInviteLink()" title="Clique para copiar link"></div>
+            <div id="inviteEmailForm" style="display:none">
+              <div style="display:flex;gap:8px;margin-bottom:8px">
+                <input type="email" id="inviteEmailInput" placeholder="Email do convidado" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg-alt);color:var(--text)">
+                <button class="btn btn-primary btn-sm" onclick="sendInviteEmail()">
+                  <span class="spinner"></span>
+                  <span class="btn-text">Enviar</span>
+                </button>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inviteEmailForm').style.display='none'">Cancelar</button>
+            </div>
+            <div id="joinHouseholdSection" style="display:none;padding:16px;background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;margin-bottom:16px">
+              <div style="font-size:14px;font-weight:600;margin-bottom:12px;text-align:center">
+                <i class="ph ph-sign-in"></i> Entrar em uma casa
+              </div>
+              <div style="display:flex;gap:8px;max-width:320px;margin:0 auto">
+                <input type="text" id="joinCodeInput" placeholder="Código" maxlength="6" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;text-align:center;letter-spacing:4px;font-weight:700;text-transform:uppercase">
+                <button class="btn btn-primary btn-sm" onclick="joinHousehold()">
+                  <span class="spinner"></span>
+                  <span class="btn-text">Entrar</span>
+                </button>
+              </div>
+              <div id="joinError" style="color:var(--destructive);font-size:13px;text-align:center;margin-top:8px;display:none"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ph ph-users"></i> Membros</div>
+            <div class="members-list" id="membersList"></div>
+          </div>
+        </section>
+
+        <!-- PAGE: CONFIG -->
+        <section class="page" id="pageConfig">
+          <div class="config-tabs">
+            <button class="config-tab-btn active" id="configTabTemplates" onclick="switchConfigTab('templates')">
               <i class="ph ph-clipboard-text"></i> Templates
             </button>
             <button class="config-tab-btn" id="configTabNotif" onclick="switchConfigTab('notif')">
               <i class="ph ph-bell"></i> Notificações
             </button>
             <button class="config-tab-btn" id="configTabGerar" onclick="switchConfigTab('gerar')">
-              <i class="ph ph-calendar-plus"></i> Gerar Tarefas
+              <i class="ph ph-calendar-plus"></i> Gerar
             </button>
             <button class="config-tab-btn" id="configTabProdut" onclick="switchConfigTab('produt')">
               <i class="ph ph-chart-bar"></i> Produtividade
             </button>
           </div>
 
-          <!-- Minha Casa -->
-          <div class="subtab-content active" id="subtabCasa">
+          <div class="subtab-content active" id="subtabTemplates">
             <div class="card">
-              <div class="card-title">
-                <i class="ph ph-qr-code"></i>
-                Código para convidar
-              </div>
-              <div class="house-code" id="inviteCode">------</div>
-              <div id="householdActions" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">
-                <button class="btn btn-secondary btn-sm" onclick="copyInviteCode()">
-                  <i class="ph ph-copy"></i>
-                  Copiar código
-                </button>
-                <button class="btn btn-secondary btn-sm" onclick="showInviteEmailForm()">
-                  <i class="ph ph-envelope"></i>
-                  Enviar convite por email
-                </button>
-              </div>
-              <div id="inviteQR" style="margin:16px 0;text-align:center;cursor:pointer" onclick="copyInviteLink()" title="Clique para copiar link"></div>
-              <div id="inviteEmailForm" style="display:none;margin-bottom:16px">
-                <div style="display:flex;gap:8px;max-width:400px;margin:0 auto">
-                  <input type="email" id="inviteEmailInput" placeholder="Email do convidado" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px">
-                  <button class="btn btn-primary btn-sm" onclick="sendInviteEmail()">
-                    <i class="ph ph-paper-plane-right"></i>
-                    Enviar
-                  </button>
-                </div>
-                <div style="text-align:center;margin-top:8px">
-                  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inviteEmailForm').style.display='none'">Cancelar</button>
-                </div>
-              </div>
-              <div id="joinHouseholdSection" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px">
-                <div style="font-size:14px;font-weight:600;margin-bottom:12px;text-align:center">
-                  <i class="ph ph-sign-in"></i> Entrar em uma casa
-                </div>
-                <div style="display:flex;gap:8px;max-width:320px;margin:0 auto">
-                  <input type="text" id="joinCodeInput" placeholder="Código de convite" maxlength="6" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;text-align:center;letter-spacing:4px;font-weight:700;text-transform:uppercase">
-                  <button class="btn btn-primary btn-sm" onclick="joinHousehold()">
-                    <i class="ph ph-check"></i>
-                    Entrar
-                  </button>
-                </div>
-                <div id="joinError" style="color:var(--danger);font-size:13px;text-align:center;margin-top:8px;display:none"></div>
-              </div>
-              <button class="btn btn-secondary btn-sm" onclick="regenerateCode()" id="regenerateCodeBtn">
-                <i class="ph ph-arrows-clockwise"></i>
-                Gerar novo código
-              </button>
-              <div class="members" id="membersList"></div>
-            </div>
-          </div>
-
-          <!-- Templates -->
-          <div class="subtab-content" id="subtabTemplates">
-            <!-- Formulário para criar -->
-            <div class="card">
-              <div class="card-title">
-                <i class="ph ph-plus"></i>
-                Novo Template
-              </div>
+              <div class="card-title"><i class="ph ph-plus"></i> Novo Template</div>
               <div class="form-group">
                 <label for="newTaskDesc">Descrição</label>
                 <input type="text" id="newTaskDesc" placeholder="Ex: Lavar louça…" autocomplete="off">
@@ -1801,7 +325,7 @@
               </div>
               <div class="form-group" id="newRoomGroup" style="display:none">
                 <label for="newRoomName">Nome do novo ambiente</label>
-                <input type="text" id="newRoomName" placeholder="Ex: Garagem, Porão...">
+                <input type="text" id="newRoomName" placeholder="Ex: Garagem">
               </div>
               <div class="form-group">
                 <label for="newTaskFreq">Frequência</label>
@@ -1829,56 +353,41 @@
                 <input type="text" id="newTaskAssigned" placeholder="Maria, João…" autocomplete="off">
               </div>
               <button class="btn btn-primary btn-sm" onclick="addTemplate()">
-                <i class="ph ph-plus"></i>
-                Adicionar
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="ph ph-plus"></i> Adicionar</span>
               </button>
             </div>
-
-            <!-- Lista de templates -->
             <div class="card">
-              <div class="card-title">
-                <i class="ph ph-list"></i>
-                Templates Cadastrados
-              </div>
+              <div class="card-title"><i class="ph ph-list"></i> Templates</div>
               <div id="templatesList"></div>
             </div>
           </div>
 
-          <!-- Notificações -->
           <div class="subtab-content" id="subtabNotif">
             <div class="card">
-              <div class="card-title">
-                <i class="ph ph-envelope"></i>
-                Configuração de Email
-              </div>
+              <div class="card-title"><i class="ph ph-envelope"></i> Email SMTP</div>
               <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5">
                 <i class="ph ph-info" style="vertical-align:middle;margin-right:4px"></i>
-                As mesmas credenciais SMTP são usadas para notificações
-                e para o <strong>"Esqueci minha senha"</strong>.
-                Altere abaixo se necessário.
+                Usado para notificações e "Esqueci minha senha".
               </p>
               <div class="form-group">
                 <label for="smtpEmail">Email SMTP</label>
                 <input type="email" id="smtpEmail" placeholder="seu@gmail.com" autocomplete="email">
               </div>
               <div class="form-group">
-                <label for="smtpPass">Senha de aplicativo</label>
-                <input type="password" id="smtpPass" placeholder="Nova senha (deixe em branco para manter)">
+                <label for="smtpPass">Senha de app</label>
+                <input type="password" id="smtpPass" placeholder="Nova senha (deixe vazio para manter)">
               </div>
               <button class="btn btn-primary btn-sm" onclick="saveSmtpConfig()">
-                <i class="ph ph-floppy-disk"></i>
-                Salvar credenciais
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="ph ph-floppy-disk"></i> Salvar</span>
               </button>
-              <p style="font-size:12px;color:var(--primary-muted);margin-top:8px">
-                Crie uma senha de aplicativo em: minha conta Google → Segurança → Verificação em 2 etapas → Senhas de App
+              <p style="font-size:12px;color:var(--text-muted);margin-top:8px">
+                Crie uma senha de app em: minha conta Google → Segurança → Senhas de App
               </p>
             </div>
-
             <div class="card">
-              <div class="card-title">
-                <i class="ph ph-bell"></i>
-                Configurações de Email
-              </div>
+              <div class="card-title"><i class="ph ph-bell"></i> Notificações</div>
               <div class="setting-row">
                 <span class="setting-label">Email diário</span>
                 <label class="toggle-switch">
@@ -1890,9 +399,9 @@
                 <label for="notifFreq">Frequência</label>
                 <select id="notifFreq" onchange="saveNotifSettings()">
                   <option value="daily">1x ao dia</option>
-                  <option value="every2h">A cada 2 horas</option>
-                  <option value="every4h">A cada 4 horas</option>
-                  <option value="every6h">A cada 6 horas</option>
+                  <option value="every2h">A cada 2h</option>
+                  <option value="every4h">A cada 4h</option>
+                  <option value="every6h">A cada 6h</option>
                 </select>
               </div>
               <div class="form-group" style="margin-bottom:0" id="notifTimeGroup">
@@ -1905,19 +414,14 @@
                 </select>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="sendTestEmail()" style="margin-top:16px">
-                <i class="ph ph-envelope"></i>
-                Enviar email de teste
+                <i class="ph ph-envelope"></i> Testar email
               </button>
             </div>
           </div>
 
-          <!-- Gerar Tarefas -->
           <div class="subtab-content" id="subtabGerar">
             <div class="card">
-              <div class="card-title">
-                <i class="ph ph-calendar-plus"></i>
-                Gerar Tarefas
-              </div>
+              <div class="card-title"><i class="ph ph-calendar-plus"></i> Gerar Tarefas</div>
               <div class="form-group">
                 <label for="generatePeriod">Período</label>
                 <select id="generatePeriod">
@@ -1927,12 +431,10 @@
                 </select>
               </div>
               <button class="btn btn-primary btn-sm" onclick="generateTasks()">
-                <i class="ph ph-plus"></i>
-                Gerar tarefas
+                <span class="spinner"></span>
+                <span class="btn-text"><i class="ph ph-plus"></i> Gerar</span>
               </button>
-
               <div class="divider"></div>
-
               <div class="form-group">
                 <label for="repeatSource">Copiar de</label>
                 <select id="repeatSource">
@@ -1942,19 +444,14 @@
                 </select>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="repeatTasks()">
-                <i class="ph ph-copy"></i>
-                Repetir
+                <i class="ph ph-copy"></i> Repetir
               </button>
             </div>
           </div>
 
-          <!-- Produtividade -->
           <div class="subtab-content" id="subtabProdut">
             <div class="card">
-              <div class="card-title">
-                <i class="ph ph-chart-bar"></i>
-                Produtividade por Membro
-              </div>
+              <div class="card-title"><i class="ph ph-chart-bar"></i> Produtividade</div>
               <div class="form-group">
                 <label for="produtPeriod">Período</label>
                 <select id="produtPeriod" onchange="loadProductivity()">
@@ -1966,29 +463,34 @@
               <div id="productivityList"></div>
             </div>
           </div>
-        </div>
-      </main>
-    </section>
+        </section>
 
-    <!-- Mobile Bottom Nav -->
+      </main>
+    </div>
+
+    <!-- NEW: Bottom Nav (4 items) -->
     <nav class="bottom-nav" id="bottomNav">
-      <button class="bottom-nav-btn active" id="mobTasks" onclick="showTab('tasks')">
+      <button class="bottom-nav-btn active" data-page="dashboard" onclick="showPage('dashboard')">
+        <i class="ph ph-house"></i>
+        <span>Início</span>
+      </button>
+      <button class="bottom-nav-btn" data-page="tasks" onclick="showPage('tasks')">
         <i class="ph ph-list-checks"></i>
         <span>Tarefas</span>
       </button>
-      <button class="bottom-nav-btn" id="mobConfig" onclick="showTab('config')">
+      <button class="bottom-nav-btn" data-page="members" onclick="showPage('members')">
+        <i class="ph ph-users"></i>
+        <span>Membros</span>
+      </button>
+      <button class="bottom-nav-btn" data-page="config" onclick="showPage('config')">
         <i class="ph ph-gear-six"></i>
         <span>Config</span>
-      </button>
-      <button class="bottom-nav-btn" onclick="handleLogout()">
-        <i class="ph ph-sign-out"></i>
-        <span>Sair</span>
       </button>
     </nav>
   </div>
 
   <!-- Toast -->
-  <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+  <div class="toast-container" id="toastContainer" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
   <!-- Task Picker Modal -->
   <div class="modal-overlay" id="taskPickerModal" onclick="closeTaskPicker()">
@@ -2021,7 +523,10 @@
         <div class="form-group">
           <label for="quickTask">Tarefa</label>
           <input type="text" id="quickTask" placeholder="Ex: Limpar pia, Aspirar chão..." autocomplete="off" list="templatesDatalist">
-          <button class="btn btn-primary btn-sm" onclick="addQuickTask()" style="margin-top:8px">Adicionar</button>
+          <button class="btn btn-primary btn-sm" onclick="addQuickTask()" style="margin-top:8px">
+            <span class="spinner"></span>
+            <span class="btn-text">Adicionar</span>
+          </button>
         </div>
         <div class="divider"></div>
         <div class="modal-title">Ou escolha uma sugestão</div>
@@ -2031,1197 +536,6 @@
   </div>
 
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-  <script>
-    const API_URL = '';
-
-    function showAuth(tab) {
-      document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-      document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
-      document.getElementById('forgotForm').style.display = tab === 'forgot' ? 'block' : 'none';
-      document.getElementById('resetForm').style.display = tab === 'reset' ? 'block' : 'none';
-    }
-
-    function showForgotPassword() {
-      showAuth('forgot');
-    }
-
-    async function handleForgotPassword() {
-      const email = document.getElementById('forgotEmail').value;
-      if (!email) return showToast('Digite seu email', 'error');
-      
-      try {
-        const res = await fetch(`${API_URL}/auth/forgot-password`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-        
-        if (res.ok) {
-          showToast(data.message, 'success');
-          showAuth('login');
-        } else {
-          showToast(data.error, 'error');
-        }
-      } catch (e) {
-        showToast('Erro ao solicitar redefinição', 'error');
-      }
-    }
-
-    async function handleResetPassword() {
-      const password = document.getElementById('resetPassword').value;
-      const confirm = document.getElementById('resetConfirm').value;
-
-      if (!password || !confirm) return showToast('Preencha todos os campos', 'error');
-      if (password.length < 6) return showToast('Senha deve ter no mínimo 6 caracteres', 'error');
-      if (password !== confirm) return showToast('Senhas não conferem', 'error');
-
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('reset');
-      if (!token) {
-        showToast('Link inválido ou expirado', 'error');
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_URL}/auth/reset-password`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token, newPassword: password })
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          showToast('Senha redefinida com sucesso! Faça login.', 'success');
-          window.history.replaceState({}, '', window.location.pathname);
-          showAuth('login');
-        } else {
-          showToast(data.error, 'error');
-        }
-      } catch (e) {
-        showToast('Erro ao redefinir senha', 'error');
-      }
-    }
-
-    function showTab(tab) {
-      // Toggle sidebar buttons
-      const sideTasks = document.getElementById('sideTasks');
-      const sideConfig = document.getElementById('sideConfig');
-      if (sideTasks) sideTasks.classList.toggle('active', tab === 'tasks');
-      if (sideConfig) sideConfig.classList.toggle('active', tab === 'config');
-      
-      // Toggle bottom nav buttons
-      const mobTasks = document.getElementById('mobTasks');
-      const mobConfig = document.getElementById('mobConfig');
-      if (mobTasks) mobTasks.classList.toggle('active', tab === 'tasks');
-      if (mobConfig) mobConfig.classList.toggle('active', tab === 'config');
-      
-      // Toggle panels
-      const tasksPanel = document.getElementById('tasksPanel');
-      const configPanel = document.getElementById('configPanel');
-      if (tasksPanel) tasksPanel.classList.toggle('active', tab === 'tasks');
-      if (configPanel) configPanel.classList.toggle('active', tab === 'config');
-      
-      if (tab === 'tasks' && typeof loadTasks === 'function') loadTasks();
-    }
-
-    function switchConfigTab(tab) {
-      const tabs = ['casa', 'templates', 'notif', 'gerar', 'produt'];
-      tabs.forEach(t => {
-        const btn = document.getElementById('configTab' + t.charAt(0).toUpperCase() + t.slice(1));
-        const content = document.getElementById('subtab' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (btn && content) {
-          btn.classList.toggle('active', tab === t);
-          content.classList.toggle('active', tab === t);
-        }
-      });
-      if (tab === 'produt') loadProductivity();
-    }
-
-    async function loadProductivity() {
-      const token = localStorage.getItem('token');
-      const period = document.getElementById('produtPeriod').value;
-      
-      const res = await fetch(`${API_URL}/api/tasks/stats?period=${period}`, { 
-        headers: { 'Authorization': `Bearer ${token}` } 
-      });
-      const data = await res.json();
-      
-      const members = data.byMember || [];
-      if (members.length === 0) {
-        document.getElementById('productivityList').innerHTML = '<div class="empty-text">Sem dados</div>';
-        return;
-      }
-      
-      let html = '';
-      for (const m of members) {
-        const rate = m.total > 0 ? Math.round((m.completed / m.total) * 100) : 0;
-        const barColor = rate >= 70 ? 'var(--primary)' : rate >= 40 ? 'var(--progress-secondary)' : 'var(--primary-subtle)';
-        
-        html += `<div class="produt-card">
-          <div class="produt-name">${m.username || 'Não atribuído'}</div>
-          <div class="produt-stats">
-            <span>${m.completed || 0} concluídas</span>
-            <span>${m.pending || 0} pendentes</span>
-          </div>
-          <div class="produt-bar">
-            <div class="produt-bar-fill" style="width:${rate}%;background:${barColor}"></div>
-          </div>
-          <div class="produt-rate">${rate}%</div>
-        </div>`;
-      }
-      
-      document.getElementById('productivityList').innerHTML = html;
-
-      // Update widget productivity
-      const widgetProd = document.getElementById('widgetProductivity');
-      if (widgetProd && members.length > 0) {
-        let wHtml = '';
-        for (const m of members) {
-          const rate = m.total > 0 ? Math.round((m.completed / m.total) * 100) : 0;
-          const barColor = rate >= 70 ? 'var(--primary)' : rate >= 40 ? 'var(--progress-secondary)' : 'var(--primary-subtle)';
-          wHtml += `
-            <div style="margin-bottom:8px">
-              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--primary-dark)">${m.username || 'N/A'}</span><span style="color:var(--primary);font-weight:600">${rate}%</span></div>
-              <div style="height:6px;background:var(--border-light);border-radius:3px;overflow:hidden"><div style="height:100%;width:${rate}%;background:${barColor};border-radius:3px"></div></div>
-            </div>`;
-        }
-        widgetProd.innerHTML = wHtml;
-      }
-    }
-
-    async function handleRegister() {
-      const username = document.getElementById('regUsername').value;
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
-      const phone = document.getElementById('regPhone').value;
-      const invite_code = document.getElementById('regInvite').value.trim().toUpperCase();
-      const body = { username, email, password, phone };
-      if (invite_code) body.invite_code = invite_code;
-      try {
-        const res = await fetch(`${API_URL}/auth/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        localStorage.setItem('token', data.token);
-        initApp();
-      } catch (e) {
-        showToast(e.message, 'error');
-      }
-    }
-
-    async function handleLogin() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-      try {
-        const res = await fetch(`${API_URL}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        localStorage.setItem('token', data.token);
-        initApp();
-      } catch (e) {
-        showToast(e.message, 'error');
-      }
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('token');
-      location.reload();
-    }
-
-    async function initApp() {
-      document.getElementById('authSection').style.display = 'none';
-      document.getElementById('dashboard').classList.add('active');
-      await Promise.all([loadHousehold(), loadTemplates(), loadPendingCount(), loadNotifSettings(), loadTasks()]);
-    }
-
-    async function loadHousehold() {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/household`, { headers: { 'Authorization': `Bearer ${token}` } });
-      const data = await res.json();
-      if (data.hasHousehold) {
-        document.getElementById('inviteCode').textContent = data.household.invite_code;
-        generateInviteQR(data.household.invite_code);
-        let html = '<div class="members-header"><span>Cadastro de membros</span></div>';
-        
-        if (data.isAdmin) {
-          html += `<button class="btn btn-secondary btn-sm" onclick="showInviteForm()" style="margin-bottom:16px">
-            <i class="ph ph-user-plus"></i> Convidar membro
-          </button>`;
-        }
-        
-        // Seção para editar próprio perfil
-        const currentUser = data.members.find(m => m.id === data.currentUserId);
-        // Populate sidebar user
-        const sidebarUser = document.getElementById('sidebarUser');
-        if (sidebarUser && currentUser) {
-          sidebarUser.innerHTML = `<i class="ph ph-crown"></i> ${currentUser.username}`;
-        }
-        if (currentUser) {
-          const phone = currentUser.phone || '';
-          const phoneDisplay = currentUser.phone ? currentUser.phone : '—';
-          const emailDisplay = currentUser.email || '—';
-          
-          html += `<div class="member-card" id="memberCard${currentUser.id}">
-            <div class="member-card-header">
-              <span class="member-card-name">${currentUser.username} (Você)</span>
-              <button class="btn-edit" onclick="editMember(${currentUser.id})" title="Editar">
-                <i class="ph ph-pencil-simple"></i>
-              </button>
-            </div>
-            <div class="member-card-body" id="memberBody${currentUser.id}">
-              <div class="member-card-field">
-                <span class="field-label">Email</span>
-                <span class="field-value">${emailDisplay}</span>
-              </div>
-              <div class="member-card-field">
-                <span class="field-label">Telefone</span>
-                <span class="field-value" id="phoneDisplay${currentUser.id}">${phoneDisplay}</span>
-              </div>
-              <div class="member-card-field">
-                <span class="field-label">Notificações</span>
-                <span class="field-value">${currentUser.notifications_enabled ? 'Ativadas' : 'Desativadas'}</span>
-              </div>
-            </div>
-            <div class="member-card-edit" id="memberEdit${currentUser.id}" style="display:none">
-              <div class="form-group">
-                <label>Nome</label>
-                <input type="text" id="editName${currentUser.id}" value="${currentUser.username}">
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="editEmail${currentUser.id}" value="${currentUser.email || ''}">
-              </div>
-              <div class="form-group">
-                <label>Telefone</label>
-                <input type="tel" id="editPhone${currentUser.id}" value="${phone}" placeholder="(11) 99999-9999">
-              </div>
-              <div class="edit-actions">
-                <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${currentUser.id})">Cancelar</button>
-                <button class="btn btn-primary btn-sm" onclick="saveMember(${currentUser.id})">Salvar</button>
-              </div>
-            </div>
-          </div>`;
-        }
-        
-        // Demais membros
-        for (const m of data.members) {
-          // Já mostrei o usuário atual acima
-          continue;
-        }
-        
-        // ... demembros (simplificado sem duplicar o atual)
-        let outros = data.members.filter(m => m.id !== data.currentUserId);
-        for (const m of outros) {
-          const crown = m.role === 'admin' ? '<i class="ph-fill ph-crown"></i>' : '';
-          const phone = m.phone || '';
-          const phoneDisplay = m.phone ? m.phone : '—';
-          const emailDisplay = m.email || '—';
-          
-          const canEdit = data.isAdmin && m.role !== 'admin';
-          
-          html += `<div class="member-card" id="memberCard${m.id}">
-            <div class="member-card-header">
-              <span class="member-card-name">${m.username} ${crown}</span>
-              ${canEdit ? `
-                <button class="btn-edit" onclick="editMember(${m.id})" title="Editar">
-                  <i class="ph ph-pencil-simple"></i>
-                </button>
-              ` : ''}
-            </div>
-            <div class="member-card-body" id="memberBody${m.id}">
-              <div class="member-card-field">
-                <span class="field-label">Email</span>
-                <span class="field-value">${emailDisplay}</span>
-              </div>
-              <div class="member-card-field">
-                <span class="field-label">Telefone</span>
-                <span class="field-value" id="phoneDisplay${m.id}">${phoneDisplay}</span>
-              </div>
-              <div class="member-card-field">
-                <span class="field-label">Notificações</span>
-                ${canEdit ? `
-                  <label class="toggle-switch small">
-                    <input type="checkbox" ${m.notifications_enabled ? 'checked' : ''} 
-                      onchange="toggleMemberNotification(${m.id}, this.checked)">
-                    <span class="toggle-slider"></span>
-                  </label>
-                ` : `<span class="field-value">${m.notifications_enabled ? 'Ativadas' : 'Desativadas'}</span>`}
-              </div>
-            </div>
-            <div class="member-card-edit" id="memberEdit${m.id}" style="display:none">
-              <div class="form-group">
-                <label>Nome</label>
-                <input type="text" id="editName${m.id}" value="${m.username}">
-              </div>
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="editEmail${m.id}" value="${m.email || ''}">
-              </div>
-              <div class="form-group">
-                <label>Telefone</label>
-                <input type="tel" id="editPhone${m.id}" value="${phone}" placeholder="(11) 99999-9999">
-              </div>
-              <div class="edit-actions">
-                <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${m.id})">Cancelar</button>
-                <button class="btn btn-primary btn-sm" onclick="saveMember(${m.id})">Salvar</button>
-              </div>
-            </div>
-          </div>`;
-        }
-        document.getElementById('membersList').innerHTML = html;
-        document.getElementById('householdActions').style.display = 'flex';
-        document.getElementById('inviteQR').style.display = 'block';
-        document.getElementById('regenerateCodeBtn').style.display = 'inline-flex';
-        document.getElementById('joinHouseholdSection').style.display = 'none';
-      } else {
-        document.getElementById('inviteCode').textContent = '------';
-        document.getElementById('inviteQR').innerHTML = '';
-        document.getElementById('inviteQR').style.display = 'none';
-        document.getElementById('householdActions').style.display = 'none';
-        document.getElementById('regenerateCodeBtn').style.display = 'none';
-        document.getElementById('membersList').innerHTML = '<div class="members-header"><span>Você não tem uma casa</span></div>';
-        document.getElementById('joinHouseholdSection').style.display = 'block';
-      }
-      // Populate widget members
-      const widgetMembers = document.getElementById('widgetMembers');
-      if (widgetMembers && data.members) {
-        let mHtml = '';
-        for (const m of data.members) {
-          const crown = m.role === 'admin' ? '<i class="ph ph-crown"></i> ' : '';
-          mHtml += `<span class="widget-member-tag">${crown}${m.username}</span>`;
-        }
-        mHtml += `<button class="widget-member-add" onclick="showInviteForm()">+ Convidar</button>`;
-        widgetMembers.innerHTML = mHtml;
-      }
-    }
-
-    async function toggleMemberNotification(memberId, enabled) {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/household/members/${memberId}/notifications`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ enabled })
-      });
-      if (res.ok) {
-        showToast(enabled ? 'Notificações ativadas' : 'Notificações desativadas', 'success');
-      }
-    }
-
-    function editMember(memberId) {
-      document.getElementById('memberBody' + memberId).style.display = 'none';
-      document.getElementById('memberEdit' + memberId).style.display = 'block';
-    }
-
-    function cancelEdit(memberId) {
-      document.getElementById('memberBody' + memberId).style.display = 'block';
-      document.getElementById('memberEdit' + memberId).style.display = 'none';
-    }
-
-    async function saveMember(memberId) {
-      const token = localStorage.getItem('token');
-      const username = document.getElementById('editName' + memberId).value;
-      const email = document.getElementById('editEmail' + memberId).value;
-      const phone = document.getElementById('editPhone' + memberId).value;
-      const notifications_enabled = document.querySelector('#memberEdit' + memberId + ' input[type="checkbox"]')?.checked;
-      
-      const res = await fetch(`${API_URL}/api/household/members/${memberId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ username, email, phone, notifications_enabled })
-      });
-      
-      if (res.ok) {
-        showToast('Membro atualizado', 'success');
-        loadHousehold();
-      } else {
-        const data = await res.json();
-        showToast(data.error || 'Erro ao atualizar', 'error');
-      }
-    }
-
-    function showInviteForm() {
-      const code = document.getElementById('inviteCode').textContent;
-      const link = window.location.origin + '?invite=' + encodeURIComponent(code);
-      const msg = 'Compartilhe o QR Code ou o link abaixo com o membro:\n\n' + link + '\n\nOu use o código: ' + code;
-      alert(msg);
-    }
-
-    function copyInviteCode() {
-      const code = document.getElementById('inviteCode').textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast('Código copiado!', 'success');
-      }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = code;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('Código copiado!', 'success');
-      });
-    }
-
-    function copyInviteLink() {
-      const code = document.getElementById('inviteCode').textContent;
-      const link = window.location.origin + '?invite=' + encodeURIComponent(code);
-      navigator.clipboard.writeText(link).then(() => {
-        showToast('Link copiado!', 'success');
-      }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = link;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('Link copiado!', 'success');
-      });
-    }
-
-    function showInviteEmailForm() {
-      const form = document.getElementById('inviteEmailForm');
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-      if (form.style.display === 'block') {
-        document.getElementById('inviteEmailInput').focus();
-      }
-    }
-
-    async function sendInviteEmail() {
-      const token = localStorage.getItem('token');
-      const email = document.getElementById('inviteEmailInput').value.trim();
-      if (!email) {
-        showToast('Digite um email', 'error');
-        return;
-      }
-      const btn = document.querySelector('#inviteEmailForm .btn-primary');
-      btn.disabled = true;
-      btn.textContent = 'Enviando...';
-      const res = await fetch(`${API_URL}/api/household/send-invite`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ email })
-      });
-      const data = await res.json();
-      btn.disabled = false;
-      btn.innerHTML = '<i class="ph ph-paper-plane-right"></i> Enviar';
-      if (res.ok) {
-        showToast('Convite enviado!', 'success');
-        document.getElementById('inviteEmailForm').style.display = 'none';
-        document.getElementById('inviteEmailInput').value = '';
-      } else {
-        showToast(data.error || 'Erro ao enviar convite', 'error');
-      }
-    }
-
-    async function joinHousehold() {
-      const token = localStorage.getItem('token');
-      const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
-      const errEl = document.getElementById('joinError');
-      if (!code) {
-        errEl.textContent = 'Digite um código de convite';
-        errEl.style.display = 'block';
-        return;
-      }
-      errEl.style.display = 'none';
-      const btn = document.querySelector('#joinHouseholdSection .btn-primary');
-      btn.disabled = true;
-      btn.innerHTML = 'Entrando...';
-      const res = await fetch(`${API_URL}/api/household/join`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ invite_code: code })
-      });
-      const data = await res.json();
-      btn.disabled = false;
-      btn.innerHTML = '<i class="ph ph-check"></i> Entrar';
-      if (res.ok) {
-        showToast('Você entrou na casa!', 'success');
-        document.getElementById('joinCodeInput').value = '';
-        loadHousehold();
-      } else {
-        errEl.textContent = data.error || 'Erro ao entrar na casa';
-        errEl.style.display = 'block';
-      }
-    }
-
-    async function regenerateCode() {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/household/generate-code`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById('inviteCode').textContent = data.invite_code;
-        generateInviteQR(data.invite_code);
-        showToast('Novo código gerado!', 'success');
-      }
-    }
-
-    function generateInviteQR(code) {
-      const container = document.getElementById('inviteQR');
-      container.innerHTML = '';
-      const url = window.location.origin + '?invite=' + encodeURIComponent(code);
-      const img = document.createElement('img');
-      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(url);
-      img.alt = 'QR Code para convidar';
-      img.style.width = '160px';
-      img.style.height = '160px';
-      img.style.borderRadius = '8px';
-      container.appendChild(img);
-    }
-
-    const PAGE_SIZE = 12;
-    const templatePagination = {};
-    const templateAllData = {};
-
-    async function loadTemplates() {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/templates`, { headers: { 'Authorization': `Bearer ${token}` } });
-      const templates = await res.json();
-
-      const freqLabels = { daily: 'Diária', weekly: 'Semanal', biweekly: 'Quinzenal', monthly: 'Mensal' };
-      const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-
-      const groups = {
-        daily: templates.filter(t => t.frequency === 'daily'),
-        weekly: templates.filter(t => t.frequency === 'weekly'),
-        biweekly: templates.filter(t => t.frequency === 'biweekly'),
-        monthly: templates.filter(t => t.frequency === 'monthly')
-      };
-
-      templateAllData.daily = groups.daily;
-      templateAllData.weekly = groups.weekly;
-      templateAllData.biweekly = groups.biweekly;
-      templateAllData.monthly = groups.monthly;
-
-      let html = '<div class="template-filter-tabs">';
-      for (const freq of ['daily', 'weekly', 'biweekly', 'monthly']) {
-        if (groups[freq].length === 0) continue;
-        html += `<button class="template-filter-btn active" onclick="filterTemplates('${freq}')" id="filter${freq}">${freqLabels[freq]}<span class="count">${groups[freq].length}</span></button>`;
-      }
-      html += '</div>';
-
-      for (const freq of ['daily', 'weekly', 'biweekly', 'monthly']) {
-        const items = groups[freq];
-        if (items.length === 0) continue;
-
-        const rooms = [...new Set(items.map(t => t.room).filter(Boolean))];
-        
-        templatePagination[freq] = { page: 0, room: null };
-        
-        html += `<div class="template-group visible" id="group${freq}">
-          <div class="template-group-header">${freqLabels[freq]}</div>`;
-          
-        if (rooms.length > 0) {
-          html += '<div class="template-room-tabs" id="rooms' + freq + '">';
-          html += `<button class="template-room-btn active" onclick="filterTemplatesByRoom('${freq}', null)" id="room${freq}all">Todos (${items.length})</button>`;
-          for (const room of rooms) {
-            const count = items.filter(t => t.room === room).length;
-            const safeId = room.replace(/[^a-zA-Z0-9]/g, '_');
-            html += `<button class="template-room-btn" onclick="filterTemplatesByRoom('${freq}', '${room.replace(/'/g, "\\'")}')" id="room${freq}${safeId}">${room} (${count})</button>`;
-          }
-          html += '</div>';
-        }
-
-        html += `<div class="template-list-view" id="view${freq}"></div></div>`;
-      }
-
-      document.getElementById('templatesList').innerHTML = templates.length ? html : '<div class="empty-text" style="padding:16px 0">Nenhum template</div>';
-      
-      setTimeout(() => {
-        ['daily', 'weekly', 'biweekly', 'monthly'].forEach(freq => {
-          if (groups[freq].length > 0) renderTemplateFilteredPage(freq);
-        });
-      }, 0);
-    }
-
-    function filterTemplatesByRoom(freq, room) {
-      const pag = templatePagination[freq];
-      if (!pag) return;
-
-      document.querySelectorAll('#rooms' + freq + ' .template-room-btn').forEach(btn => btn.classList.remove('active'));
-
-      if (room === null) {
-        const btnAll = document.getElementById('room' + freq + 'all');
-        if (btnAll) btnAll.classList.add('active');
-      } else {
-        const btnId = 'room' + freq + room.replace(/[^a-zA-Z0-9]/g, '_');
-        const btn = document.getElementById(btnId);
-        if (btn) btn.classList.add('active');
-      }
-
-      pag.room = room;
-      pag.page = 0;
-
-      renderTemplateFilteredPage(freq);
-    }
-
-    function renderTemplateFilteredPage(freq) {
-      const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-      const pag = templatePagination[freq];
-      const allItems = templateAllData[freq];
-      const filtered = allItems.filter(t => pag.room === null || t.room === pag.room);
-      const sorted = filtered.sort((a, b) => {
-        if (freq === 'weekly' && a.day_value !== b.day_value) return a.day_value - b.day_value;
-        if (freq === 'monthly' && a.day_value !== b.day_value) return a.day_value - b.day_value;
-        return 0;
-      });
-
-      pag.total = sorted.length;
-      const start = pag.page * PAGE_SIZE;
-      const end = Math.min(start + PAGE_SIZE, sorted.length);
-
-      let html = '';
-      for (let i = start; i < end; i++) {
-        const t = sorted[i];
-        const dayLabel = (t.frequency === 'weekly' && t.day_value != null) ? dayNames[t.day_value] :
-                    (t.frequency === 'monthly' && t.day_value != null) ? t.day_value + 'º dia' : '';
-        const roomTag = t.room ? `<span class="room-tag">${t.room}</span>` : '';
-        html += `
-          <div class="template-list-item">
-            <div class="template-desc">${t.description}</div>
-            <div class="template-meta">${roomTag}${dayLabel ? ' · ' + dayLabel : ''}${t.assigned_to ? ' · ' + t.assigned_to : ''}</div>
-            <button class="template-delete" onclick="deleteTemplate(${t.id})" style="margin-top:8px">
-              <i class="ph ph-trash"></i>
-            </button>
-          </div>`;
-      }
-
-      if (sorted.length > PAGE_SIZE) {
-        const hasPrev = pag.page > 0;
-        const hasNext = end < sorted.length;
-        html += `</div>
-        <div class="template-list-pagination">
-          <button class="btn-nav" onclick="prevTemplates('${freq}')" id="prev${freq}" ${hasPrev ? '' : 'disabled'}>&larr; Anterior</button>
-          <span class="info" id="info${freq}">${start + 1}-${end} de ${sorted.length}</span>
-          <button class="btn-nav" onclick="nextTemplates('${freq}')" id="next${freq}" ${hasNext ? '' : 'disabled'}>Próxima &rarr;</button>
-        </div>`;
-      }
-
-      const view = document.getElementById('view' + freq);
-      if (view) view.innerHTML = html;
-    }
-
-    function nextTemplates(freq) {
-      const pag = templatePagination[freq];
-      if (!pag) return;
-      const filtered = templateAllData[freq].filter(t => pag.room === null || t.room === pag.room);
-      const maxPage = Math.floor((filtered.length - 1) / PAGE_SIZE);
-      if (pag.page < maxPage) {
-        pag.page++;
-        renderTemplateFilteredPage(freq);
-      }
-    }
-
-    function prevTemplates(freq) {
-      const pag = templatePagination[freq];
-      if (!pag || pag.page <= 0) return;
-      pag.page--;
-      renderTemplateFilteredPage(freq);
-    }
-
-    function filterTemplates(freq) {
-      document.querySelectorAll('.template-filter-btn').forEach(btn => btn.classList.remove('active'));
-      const btn = document.getElementById('filter' + freq);
-      if (btn) btn.classList.add('active');
-      document.querySelectorAll('.template-group').forEach(g => g.classList.remove('visible'));
-      const group = document.getElementById('group' + freq);
-      if (group) group.classList.add('visible');
-      if (templatePagination[freq]) {
-        templatePagination[freq].page = 0;
-        templatePagination[freq].room = null;
-        renderTemplateFilteredPage(freq);
-      }
-    }
-
-    function toggleDaySelector() {
-      const freq = document.getElementById('newTaskFreq').value;
-      document.getElementById('dayGroup').style.display = freq === 'weekly' ? 'block' : 'none';
-    }
-
-    function toggleNewRoom() {
-      const roomSelect = document.getElementById('newTaskRoom');
-      const newRoomGroup = document.getElementById('newRoomGroup');
-      if (roomSelect.value === '__new__') {
-        newRoomGroup.style.display = 'block';
-        document.getElementById('newRoomName').focus();
-      } else {
-        newRoomGroup.style.display = 'none';
-      }
-    }
-
-    async function addTemplate() {
-      const token = localStorage.getItem('token');
-      const desc = document.getElementById('newTaskDesc').value.trim();
-      let room = document.getElementById('newTaskRoom').value;
-      const newRoomName = document.getElementById('newRoomName').value.trim();
-      
-      // Se selecionou novo ambiente, usa o nome digitado
-      if (room === '__new__') {
-        if (!newRoomName) return showToast('Digite o nome do ambiente', 'error');
-        room = newRoomName;
-        // Adiciona como opção no select
-        const select = document.getElementById('newTaskRoom');
-        const option = document.createElement('option');
-        option.value = room;
-        option.text = room;
-        select.insertBefore(option, select.querySelector('option[value="__new__"]'));
-        document.getElementById('newRoomName').value = '';
-        select.value = room;
-        document.getElementById('newRoomGroup').style.display = 'none';
-      }
-      
-      const freq = document.getElementById('newTaskFreq').value;
-      const assigned = document.getElementById('newTaskAssigned').value.trim();
-      const dayValue = freq === 'weekly' ? parseInt(document.getElementById('newTaskDay').value) : null;
-      if (!desc) return showToast('Digite a descrição', 'error');
-      const res = await fetch(`${API_URL}/api/templates`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ description: desc, room: room, frequency: freq, assigned_to: assigned || null, day_value: dayValue })
-      });
-      if (res.ok) {
-        document.getElementById('newTaskDesc').value = '';
-        document.getElementById('newTaskAssigned').value = '';
-        await loadTemplates();
-        showToast('Template adicionado', 'success');
-      }
-    }
-
-    async function deleteTemplate(id) {
-      if (!confirm('Remover este template?')) return;
-      const token = localStorage.getItem('token');
-      await fetch(`${API_URL}/api/templates/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
-      await loadTemplates();
-      showToast('Template removido', 'success');
-    }
-
-    async function loadPendingCount() {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/notifications/pending`, { headers: { 'Authorization': `Bearer ${token}` } });
-      const data = await res.json();
-      document.getElementById('pendingCount').textContent = data.count;
-    }
-
-    function getSelectedDate() {
-      let val = document.getElementById('taskDate').value;
-      if (!val) {
-        val = new Date().toISOString().split('T')[0];
-      }
-      return val;
-    }
-
-    function changeDate(delta) {
-      const dateInput = document.getElementById('taskDate');
-      const parts = dateInput.value.split('-');
-      const d = new Date(parts[0], parts[1] - 1, parts[2]);
-      d.setDate(d.getDate() + delta);
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      dateInput.value = `${y}-${m}-${day}`;
-      loadTasks();
-    }
-
-    function setDate(delta) {
-      const d = new Date();
-      d.setDate(d.getDate() + delta);
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      document.getElementById('taskDate').value = `${y}-${m}-${day}`;
-      loadTasks();
-    }
-
-    function openDatePicker() {
-      document.getElementById('taskDate').showPicker();
-    }
-
-    async function loadTasks() {
-      const token = localStorage.getItem('token');
-      const selectedDate = getSelectedDate();
-      
-      const quickBtns = document.querySelectorAll('.quick-date');
-      quickBtns.forEach(btn => btn.classList.remove('active'));
-      
-      const parts = selectedDate.split('-');
-      const d = new Date(parts[0], parts[1] - 1, parts[2]);
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      d.setHours(0,0,0,0);
-      
-      const diff = Math.round((d - today) / (1000 * 60 * 60 * 24));
-      if (diff === 0) quickBtns[1].classList.add('active');
-      else if (diff === -1) quickBtns[0].classList.add('active');
-      else if (diff === 1) quickBtns[2].classList.add('active');
-
-      const res = await fetch(`${API_URL}/api/tasks?date=${selectedDate}`, { headers: { 'Authorization': `Bearer ${token}` } });
-      const tasks = await res.json();
-      const pending = tasks.filter(t => !t.completed);
-      const completed = tasks.filter(t => t.completed);
-      
-      let taskHtml = '';
-      
-      if (pending.length > 0) {
-        taskHtml += `
-          <div class="bulk-actions">
-            <button class="btn btn-secondary btn-sm" onclick="selectAllTasks()">Todas</button>
-            <button class="btn btn-primary btn-sm" onclick="bulkToggle()" style="background:var(--primary)">Feitas</button>
-            <button class="btn btn-secondary btn-sm" onclick="bulkDelete()" style="background:#d9534f;color:#fff">Excluir</button>
-          </div>
-          <div class="task-list">
-        `;
-        for (const t of pending) taskHtml += buildTaskRow(t, false);
-        taskHtml += '</div>';
-      }
-      if (completed.length > 0) {
-        taskHtml += `
-          <div class="completed-header"><i class="ph ph-check-circle"></i> Concluídas (${completed.length})</div>
-          <div class="task-list">
-        `;
-        for (const t of completed) taskHtml += buildTaskRow(t, true);
-        taskHtml += '</div>';
-      }
-      if (!taskHtml) {
-        const dateFormatted = new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
-        taskHtml = `
-          <div class="empty">
-            <i class="ph ph-clipboard-text"></i>
-            <div class="empty-title">Nenhuma tarefa</div>
-            <div class="empty-text" style="text-transform:capitalize">${dateFormatted}</div>
-          </div>
-        `;
-      }
-      
-      const totalTasks = pending.length + completed.length;
-      const completionRate = totalTasks > 0 ? Math.round(completed.length / totalTasks * 100) : 0;
-      
-      const widgetsHtml = `
-        <div class="widget">
-          <div class="widget-title"><i class="ph ph-hourglass"></i> Pendentes hoje</div>
-          <div class="widget-pending-count">${pending.length}</div>
-          <div class="widget-progress-bar">
-            <div class="widget-progress-fill primary" style="width:${completionRate}%"></div>
-          </div>
-        </div>
-        <div class="widget">
-          <div class="widget-title"><i class="ph ph-chart-bar"></i> Produtividade</div>
-          <div id="widgetProductivity">Carregando...</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title"><i class="ph ph-users"></i> Membros</div>
-          <div id="widgetMembers" style="display:flex;gap:8px;flex-wrap:wrap">Carregando...</div>
-        </div>
-      `;
-      
-      const fullHtml = `
-        <div class="dashboard-grid">
-          <div>${taskHtml}</div>
-          <div class="widget-column">${widgetsHtml}</div>
-        </div>
-      `;
-      
-      document.getElementById('tasksList').innerHTML = fullHtml;
-    }
-
-    function buildTaskRow(task, isCompleted) {
-      const room = task.room || '';
-      const roomHtml = room ? `<span style="color:var(--primary-muted);font-weight:400;font-size:13px"> · ${room}</span>` : '';
-      const assigneeHtml = task.assigned_to ? `<span class="task-assignee">${task.assigned_to}</span>` : '';
-      return `
-        <div class="task-item ${isCompleted ? 'completed' : ''}">
-          <input type="checkbox" class="task-check" value="${task.id}" ${isCompleted ? 'checked' : ''}>
-          <div class="task-info" onclick="toggleTask(${task.id})" style="cursor:pointer;flex:1">
-            <div class="task-desc">${task.description}${roomHtml}</div>
-            <div class="task-meta">${task.assigned_to || 'Todos'}</div>
-          </div>
-          <div class="task-actions">
-            ${assigneeHtml}
-            ${!isCompleted ? `<button class="task-action done" onclick="toggleTask(${task.id})" aria-label="Concluir">✓</button>` : ''}
-            <button class="task-action delete" onclick="deleteTask(${task.id})" aria-label="Excluir"><i class="ph ph-trash"></i></button>
-          </div>
-        </div>
-      `;
-    }
-
-    function selectAllTasks() {
-      const checkboxes = document.querySelectorAll('.task-check');
-      const all = Array.from(checkboxes).every(cb => cb.checked);
-      checkboxes.forEach(cb => cb.checked = !all);
-    }
-
-    function getSelected() {
-      return Array.from(document.querySelectorAll('.task-check:checked')).map(cb => cb.value);
-    }
-
-    async function bulkToggle() {
-      const ids = getSelected();
-      if (!ids.length) return showToast('Selecione tarefas', 'error');
-      const token = localStorage.getItem('token');
-      for (const id of ids) {
-        await fetch(`${API_URL}/api/tasks/${id}/toggle`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
-      }
-      await Promise.all([loadTasks(), loadPendingCount()]);
-      showToast(`${ids.length} concluída(s)`, 'success');
-    }
-
-    async function bulkDelete() {
-      const ids = getSelected();
-      if (!ids.length) return showToast('Selecione tarefas', 'error');
-      if (!confirm(`Excluir ${ids.length} tarefa(s)?`)) return;
-      const token = localStorage.getItem('token');
-      for (const id of ids) {
-        await fetch(`${API_URL}/api/tasks/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
-      }
-      await Promise.all([loadTasks(), loadPendingCount()]);
-      showToast(`${ids.length} excluída(s)`, 'success');
-    }
-
-    async function deleteTask(id) {
-      if (!confirm('Excluir?')) return;
-      const token = localStorage.getItem('token');
-      await fetch(`${API_URL}/api/tasks/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
-      await Promise.all([loadTasks(), loadPendingCount()]);
-    }
-
-    async function toggleTask(id) {
-      const token = localStorage.getItem('token');
-      await fetch(`${API_URL}/api/tasks/${id}/toggle`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
-      await loadTasks();
-      await loadPendingCount();
-    }
-
-    async function generateTasks() {
-      const token = localStorage.getItem('token');
-      const period = document.getElementById('generatePeriod').value;
-      const res = await fetch(`${API_URL}/api/tasks/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ period })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        showToast(data.message, 'success');
-        showTab('tasks');
-        await Promise.all([loadTasks(), loadPendingCount()]);
-      }
-    }
-
-    async function repeatTasks() {
-      const token = localStorage.getItem('token');
-      const source = document.getElementById('repeatSource').value;
-      const res = await fetch(`${API_URL}/api/tasks/repeat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ sourcePeriod: source, targetPeriod: source })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        showToast(data.message, 'success');
-        showTab('tasks');
-        await Promise.all([loadTasks(), loadPendingCount()]);
-      }
-    }
-
-    async function loadNotifSettings() {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/notifications/settings`, { headers: { 'Authorization': `Bearer ${token}` } });
-      const data = await res.json();
-      document.getElementById('notifEnabled').checked = data.email_enabled !== false;
-      document.getElementById('notifTime').value = data.reminder_time || '16:00';
-      if (data.reminder_freq) {
-        document.getElementById('notifFreq').value = data.reminder_freq;
-        toggleNotifTimeGroup(data.reminder_freq);
-      }
-      // Pre-fill SMTP email from .env
-      const smtpRes = await fetch(`${API_URL}/api/admin/smtp`, { headers: { 'Authorization': `Bearer ${token}` } });
-      const smtpData = await smtpRes.json();
-      if (smtpData.smtp_user) {
-        document.getElementById('smtpEmail').value = smtpData.smtp_user;
-      }
-    }
-
-    function toggleNotifTimeGroup(freq) {
-      const timeGroup = document.getElementById('notifTimeGroup');
-      if (timeGroup) {
-        timeGroup.style.display = freq === 'daily' ? 'block' : 'none';
-      }
-    }
-
-    async function saveNotifSettings() {
-      const token = localStorage.getItem('token');
-      const enabled = document.getElementById('notifEnabled').checked;
-      const freq = document.getElementById('notifFreq').value;
-      const time = document.getElementById('notifTime').value;
-      
-      toggleNotifTimeGroup(freq);
-      
-      await fetch(`${API_URL}/api/notifications/settings`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ email_enabled: enabled, reminder_time: time, reminder_freq: freq })
-      });
-    }
-
-    async function sendTestEmail() {
-      const smtpEmail = document.getElementById('smtpEmail').value;
-      const smtpPass = document.getElementById('smtpPass').value;
-      
-      if (smtpEmail) {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/admin/smtp`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-          body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass || undefined })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          showToast('Credenciais salvas! Enviando teste...', 'success');
-          setTimeout(sendTestEmailReal, 1000);
-          return;
-        } else {
-          showToast(data.error || 'Erro ao salvar', 'error');
-          return;
-        }
-      }
-      
-      sendTestEmailReal();
-    }
-
-    async function sendTestEmailReal() {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/notifications/send-test`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
-      const data = await res.json();
-      if (data.sent > 0) showToast('Email enviado!', 'success');
-      else showToast(data.reason || 'Erro', 'error');
-    }
-
-    async function saveSmtpConfig() {
-      const smtpEmail = document.getElementById('smtpEmail').value;
-      const smtpPass = document.getElementById('smtpPass').value;
-      
-      if (!smtpEmail) {
-        showToast('Preencha o email SMTP', 'error');
-        return;
-      }
-      
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/admin/smtp`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ smtp_user: smtpEmail, smtp_pass: smtpPass || undefined })
-      });
-      const data = await res.json();
-      
-      if (res.ok) {
-        showToast('Credenciais salvas!', 'success');
-      } else {
-        showToast(data.error || 'Erro ao salvar', 'error');
-      }
-    }
-
-    // Task Picker Modal
-    const defaultTasks = {
-      'Sala de estar': ['Aspirar sofá', 'Limpar tv', 'Organizar revista', 'Limpar lustre', 'Passar pano nos móveis'],
-      'Lavabo': ['Limpar pia', 'Limpar espelho', 'Trocar toalha', 'Reabastecer papel higiênico'],
-      'Hall': ['Limpar piso', 'Limpar quadro', 'Verificar correio', 'Organizar sapato'],
-      'Corredor': ['Aspirar piso', 'Limpar quadro', 'Organizar calçados'],
-      'Varanda': ['Varrer piso', 'Limpar vidro', 'Regar plantas', 'Limpar grade'],
-      'Suíte': ['Trocar lençóis', 'Organizar guarda-roupa', 'Limpar espelho', 'Arrumar cama'],
-      'Escritório': ['Organizar mesa', 'Limpar computador', 'Arquivar documentos', 'Limpar estante'],
-      'Quarto': ['Arrumar cama', 'Trocar lençóis', 'Organizar guarda-roupa', 'Aspirar piso', 'Limpar espelho'],
-      'Banheiro social': ['Limpar vaso', 'Limpar pia', 'Limpar espelho', 'Trocar toalha', 'Reabastecer papel higiênico'],
-      'Banheiro suite': ['Limpar vaso', 'Limpar pia', 'Limpar box', 'Trocar toalha', 'Reabastecer papel higiênico'],
-      'Cozinha': ['Lavar louça', 'Limpar fogão', 'Limpar geladeira', 'Organizar despensa', 'Limpar piso'],
-      'Área de serviço': ['Lavar roupa', 'Secar roupa', 'Passar ferro', 'Organizar produtos'],
-      'Geral': ['Tirar lixo', 'Regar plantas', 'Alimentar bichos', 'Dar água fresca', 'Verificar contas']
-    };
-
-    function openTaskPicker() {
-      const suggestionsEl = document.getElementById('taskSuggestions');
-      let html = '<div class="room-group">';
-      
-      for (const [room, tasks] of Object.entries(defaultTasks)) {
-        html += `<div class="room-title">${room}</div>`;
-        html += `<div class="room-tasks">`;
-        for (const task of tasks) {
-          html += `<div class="suggestion-item" onclick="addFromPicker('${task.replace(/'/g, "\\'")}', '${room}', getSelectedDate())">${task}</div>`;
-        }
-        html += `</div>`;
-      }
-      html += '</div>';
-      suggestionsEl.innerHTML = html;
-      document.getElementById('taskPickerModal').style.display = 'flex';
-    }
-
-    function closeTaskPicker() {
-      document.getElementById('taskPickerModal').style.display = 'none';
-    }
-
-    async function addQuickTask() {
-      const desc = document.getElementById('quickTask').value.trim();
-      if (!desc) return showToast('Digite uma tarefa', 'error');
-      const room = document.getElementById('quickTaskRoom').value;
-      const dueDate = getSelectedDate();
-      await addFromPicker(desc, room, dueDate);
-      document.getElementById('quickTask').value = '';
-    }
-
-    async function addFromPicker(desc, room, dueDate) {
-      const token = localStorage.getItem('token');
-      const date = dueDate || new Date().toISOString().split('T')[0];
-      const res = await fetch(`${API_URL}/api/tasks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ description: desc, room: room, due_date: date })
-      });
-      if (res.ok) {
-        closeTaskPicker();
-        await loadTasks();
-        await loadPendingCount();
-        showToast('Tarefa adicionada', 'success');
-      }
-    }
-
-    function showToast(msg, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.textContent = msg;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-
-    window.onload = async () => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('reset')) {
-        document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
-        showAuth('reset');
-        return;
-      }
-
-      // Inicializa date picker com hoje
-      document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
-      
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const res = await fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${token}` } });
-          if (res.ok) initApp();
-          else localStorage.removeItem('token');
-        } catch (e) {
-          localStorage.removeItem('token');
-        }
-      }
-    };
-  </script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
