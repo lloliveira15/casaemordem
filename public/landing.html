@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Casa em Ordem - Organize as tarefas da sua casa com quem você ama" />
+  <title>Casa em Ordem - Organize suas tarefas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+  <nav class="landing-nav" id="landingNav">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="ph ph-flower-tulip"></i>
+        Casa em Ordem
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="#features">Funcionalidades</a>
+        <a href="#testimonials">Depoimentos</a>
+        <a href="#plans">Planos</a>
+        <a href="/login" class="nav-cta">Entrar</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <i class="ph ph-list"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Organize as tarefas da sua casa <span class="gradient-text">com quem você ama</span></h1>
+        <p class="hero-subtitle">Crie, atribua e acompanhe tarefas domésticas em casal. Com templates inteligentes, lembretes por email e relatórios de produtividade, sua casa nunca esteve tão em ordem.</p>
+        <div class="hero-cta">
+          <a href="/login" class="btn btn-primary btn-lg">Criar conta gratuita</a>
+          <a href="#features" class="btn btn-outline btn-lg">Ver funcionalidades</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="hero-mockup">
+          <div class="mockup-header">
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+            <div class="mockup-dot"></div>
+          </div>
+          <div class="mockup-body">
+            <div class="mockup-sidebar">
+              <div class="mockup-logo"><i class="ph ph-flower-tulip"></i></div>
+              <div class="mockup-nav-item active"><i class="ph ph-list-checks"></i></div>
+              <div class="mockup-nav-item"><i class="ph ph-gear-six"></i></div>
+            </div>
+            <div class="mockup-main">
+              <div class="mockup-date"><i class="ph ph-calendar-blank"></i> Hoje</div>
+              <div class="mockup-task"><input type="checkbox" checked><span>Lavar louça</span><span class="mockup-tag">Maria</span></div>
+              <div class="mockup-task"><input type="checkbox"><span>Aspirar sala</span><span class="mockup-tag">João</span></div>
+              <div class="mockup-task"><input type="checkbox"><span>Regar plantas</span><span class="mockup-tag">Maria</span></div>
+              <div class="mockup-task-add">+ Adicionar tarefa</div>
+            </div>
+            <div class="mockup-widget">
+              <div class="mockup-progress">
+                <div class="mockup-progress-bar"><div class="mockup-progress-fill" style="width:33%"></div></div>
+                <span>33%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-number" data-target="10000">0</div>
+          <div class="stat-label">tarefas concluídas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="500">0</div>
+          <div class="stat-label">casas organizadas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="98">0</div>
+          <div class="stat-label">% de satisfação</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <div class="section-header">
+        <span class="section-tag"><i class="ph ph-star"></i> Funcionalidades</span>
+        <h2>Tudo que você precisa para manter a casa em ordem</h2>
+        <p>Ferramentas simples e poderosas para dividir as tarefas domésticas com transparência</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ph ph-list-checks"></i></div>
+          <h3>Tarefas Diárias</h3>
+          <p>Crie e gerencie tarefas por data, ambiente e responsável. Visualize o que precisa ser feito hoje, amanhã ou na semana.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ph ph-clipboard-text"></i></div>
+          <h3>Templates Personalizáveis</h3>
+          <p>Crie modelos de tarefas recorrentes por ambiente e frequência. Economize tempo não precisando digitar sempre as mesmas tarefas.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ph ph-bell"></i></div>
+          <h3>Notificações por Email</h3>
+          <p>Receba lembretes diários das tarefas pendentes. Configure a frequência e o horário ideal para você e seu parceiro.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ph ph-chart-bar"></i></div>
+          <h3>Produtividade por Membro</h3>
+          <p>Acompanhe a taxa de conclusão de cada membro da casa. Veja quem está contribuindo mais com gráficos claros.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ph ph-qr-code"></i></div>
+          <h3>Convite por QR Code</h3>
+          <p>Compartilhe o código da sua casa com outros membros via QR Code, link ou email. Convidar é rápido e prático.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ph ph-calendar-plus"></i></div>
+          <h3>Geração Automática</h3>
+          <p>Gere tarefas para o mês, semana ou dia baseado nos seus templates. Repita tarefas de períodos anteriores com um clique.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+      <div class="section-header">
+        <span class="section-tag"><i class="ph ph-chats"></i> Depoimentos</span>
+        <h2>Quem usa, aprova</h2>
+        <p>Veja o que outros casais estão dizendo sobre o Casa em Ordem</p>
+      </div>
+      <div class="testimonials-carousel" id="testimonialsCarousel">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+          </div>
+          <p class="testimonial-text">"Desde que começamos a usar o Casa em Ordem, as brigas por tarefa doméstica acabaram. Sabemos exatamente quem faz o quê e quando."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#7C3AED">A</div>
+            <div>
+              <strong>Ana e Carlos</strong>
+              <span>Usuários há 6 meses</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+          </div>
+          <p class="testimonial-text">"Os templates semanais são incríveis! Montamos nossa rotina de limpeza uma vez e as tarefas são geradas automaticamente toda semana."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#EA580C">M</div>
+            <div>
+              <strong>Marina e Pedro</strong>
+              <span>Usuários há 3 meses</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+            <i class="ph-fill ph-star"></i>
+          </div>
+          <p class="testimonial-text">"O relatório de produtividade virou nosso aliado. Dá para ver claramente quem está ajudando mais e ajustar a divisão das tarefas."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#059669">R</div>
+            <div>
+              <strong>Rafael e Julia</strong>
+              <span>Usuários há 1 ano</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="carouselPrev" aria-label="Anterior"><i class="ph ph-caret-left"></i></button>
+        <div class="carousel-dots" id="carouselDots"></div>
+        <button class="carousel-btn" id="carouselNext" aria-label="Próximo"><i class="ph ph-caret-right"></i></button>
+      </div>
+    </section>
+
+    <!-- Plans -->
+    <section class="plans" id="plans">
+      <div class="section-header">
+        <span class="section-tag"><i class="ph ph-tag"></i> Planos</span>
+        <h2>Escolha o plano ideal para você</h2>
+        <p>Comece grátis e faça upgrade quando precisar de mais</p>
+      </div>
+      <div class="plans-grid">
+        <div class="plan-card">
+          <div class="plan-badge">Grátis</div>
+          <div class="plan-price">R$ 0<span>/mês</span></div>
+          <ul class="plan-features">
+            <li><i class="ph ph-check"></i> Até 2 membros</li>
+            <li><i class="ph ph-check"></i> Templates básicos</li>
+            <li><i class="ph ph-check"></i> Notificações diárias</li>
+            <li><i class="ph ph-check"></i> Convite por código</li>
+            <li><i class="ph ph-x"></i> Membros ilimitados</li>
+            <li><i class="ph ph-x"></i> Relatórios avançados</li>
+            <li><i class="ph ph-x"></i> Suporte prioritário</li>
+          </ul>
+          <a href="/login" class="btn btn-primary">Começar grátis</a>
+        </div>
+        <div class="plan-card plan-featured">
+          <div class="plan-popular">Mais Popular</div>
+          <div class="plan-badge">Premium</div>
+          <div class="plan-price">Em breve<span></span></div>
+          <ul class="plan-features">
+            <li><i class="ph ph-check"></i> Membros ilimitados</li>
+            <li><i class="ph ph-check"></i> Templates avançados</li>
+            <li><i class="ph ph-check"></i> Notificações personalizadas</li>
+            <li><i class="ph ph-check"></i> Relatórios de produtividade</li>
+            <li><i class="ph ph-check"></i> Suporte prioritário</li>
+            <li><i class="ph ph-check"></i> Histórico completo</li>
+            <li><i class="ph ph-check"></i> Exportação de dados</li>
+          </ul>
+          <a href="/login" class="btn btn-primary">Lista de espera</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-final">
+      <div class="cta-content">
+        <h2>Pronto para organizar sua casa?</h2>
+        <p>Cadastre-se grátis e comece a dividir as tarefas domésticas de forma justa e transparente.</p>
+        <a href="/login" class="btn btn-white btn-lg">Começar grátis</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="landing-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="footer-logo"><i class="ph ph-flower-tulip"></i> Casa em Ordem</div>
+        <p>Organize as tarefas da sua casa com quem você ama.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Produto</h4>
+        <a href="#features">Funcionalidades</a>
+        <a href="#plans">Planos</a>
+        <a href="/login">Entrar</a>
+      </div>
+      <div class="footer-col">
+        <h4>Suporte</h4>
+        <a href="#">Central de ajuda</a>
+        <a href="#">Contato</a>
+        <a href="#">Status</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacidade</a>
+        <a href="#">Termos</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Casa em Ordem. Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <script src="/js/landing.js"></script>
+</body>
+</html>

@@ -22,6 +22,7 @@
   --border-light: #F0E8F8;
   --destructive: #DC2626;
   --success: #059669;
+  --progress-secondary: #C4AAC4;
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
@@ -62,6 +63,7 @@
   --border-light: #22183A;
   --destructive: #EF4444;
   --success: #34D399;
+  --progress-secondary: #B896B8;
   --shadow: 0 1px 3px rgba(0,0,0,0.4);
   --shadow-hover: 0 4px 12px rgba(0,0,0,0.5);
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);

@@ -166,6 +166,7 @@ function showPage(page) {
   if (page === 'dashboard') loadDashboard();
   if (page === 'tasks') loadTasks();
   if (page === 'members') loadHousehold();
+  if (page === 'config') loadNotifSettings();
 }
 
 async function loadDashboard() {
@@ -227,7 +228,8 @@ async function loadDashboard() {
     if (houseData.members && membersList) {
       let mHtml = '';
       for (const m of houseData.members) {
-        mHtml += `<span class="widget-member-chip"><i class="ph ph-crown" style="color:var(--primary);font-size:10px"></i> ${m.username}</span>`;
+        const crown = m.role === 'admin' ? '<i class="ph ph-crown" style="color:var(--primary);font-size:10px"></i> ' : '';
+        mHtml += `<span class="widget-member-chip">${crown}${m.username}</span>`;
       }
       membersList.innerHTML = mHtml;
     }
@@ -241,7 +243,7 @@ async function loadDashboard() {
 }
 
 function switchConfigTab(tab) {
-  const tabs = ['casa', 'templates', 'notif', 'gerar', 'produt'];
+  const tabs = ['templates', 'notif', 'gerar', 'produt'];
   tabs.forEach(t => {
     const btn = document.getElementById('configTab' + t.charAt(0).toUpperCase() + t.slice(1));
     const content = document.getElementById('subtab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -684,6 +686,8 @@ async function regenerateCode() {
     document.getElementById('inviteCode').textContent = data.invite_code;
     generateInviteQR(data.invite_code);
     showToast('Novo código gerado!', 'success');
+  } else {
+    showToast(data.error || 'Erro ao gerar código', 'error');
   }
 }
 
@@ -815,7 +819,7 @@ function renderTemplateFilteredPage(freq) {
     const t = sorted[i];
     const dayLabel = (t.frequency === 'weekly' && t.day_value != null) ? dayNames[t.day_value] :
                 (t.frequency === 'monthly' && t.day_value != null) ? t.day_value + 'º dia' : '';
-    const roomTag = t.room ? `<span class="room-tag">${t.room}</span>` : '';
+    const roomTag = t.room ? `<span class="room-tag" style="background:${getRoomColor(t.room)};color:#fff">${t.room}</span>` : '';
     html += `
       <div class="template-list-item">
         <div class="template-desc">${t.description}</div>
