@@ -976,12 +976,14 @@ function changeDate(delta) {
 }
 
 function setDate(delta) {
+  const input = document.getElementById('taskDate');
+  if (!input) return;
   const d = new Date();
   d.setDate(d.getDate() + delta);
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
-  document.getElementById('taskDate').value = `${y}-${m}-${day}`;
+  input.value = `${y}-${m}-${day}`;
   loadTasks();
 }
 
