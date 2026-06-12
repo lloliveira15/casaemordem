@@ -25,8 +25,12 @@ router.post('/register', async (req, res) => {
       const household = await Household.findByInviteCode(invite_code.toUpperCase());
       if (household) {
         await Household.join(household.id, newUser.id);
-        await db.run('DELETE FROM household_members WHERE user_id = ? AND household_id != ?', [newUser.id, household.id]);
-        await db.run('DELETE FROM households WHERE id != ? AND admin_id = ?', [household.id, newUser.id]);
+        await new Promise((resolve, reject) => {
+          db.run('DELETE FROM household_members WHERE user_id = ? AND household_id != ?', [newUser.id, household.id], (err) => err ? reject(err) : resolve());
+        });
+        await new Promise((resolve, reject) => {
+          db.run('DELETE FROM households WHERE id != ? AND admin_id = ?', [household.id, newUser.id], (err) => err ? reject(err) : resolve());
+        });
       }
     }
 
