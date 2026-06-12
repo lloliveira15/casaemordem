@@ -17,15 +17,23 @@ export async function login(formData: FormData): Promise<{ error: string } | voi
   redirect("/app/dashboard")
 }
 
-export async function register(formData: FormData): Promise<{ error: string } | void> {
+export async function register(
+  prevState: { error?: string } | undefined,
+  formData: FormData
+): Promise<{ error?: string }> {
   const supabase = await createClient()
-  const data = registerSchema.parse(Object.fromEntries(formData))
+
+  const parsed = registerSchema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) {
+    const firstError = parsed.error.errors[0]
+    return { error: firstError?.message ?? "Dados inválidos" }
+  }
 
   const { error } = await supabase.auth.signUp({
-    email: data.email,
-    password: data.password,
+    email: parsed.data.email,
+    password: parsed.data.password,
     options: {
-      data: { username: data.username },
+      data: { username: parsed.data.username },
     },
   })
 
