@@ -16,13 +16,57 @@ class NotificationService {
   static getTransporter() {
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: process.env.SMTP_PORT || 587,
-      secure: false,
+      port: parseInt(process.env.SMTP_PORT) || 587,
+      secure: process.env.SMTP_SECURE === 'true',
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+      tls: {
+        rejectUnauthorized: false
       }
     });
+  }
+
+  static async sendPasswordResetEmail(email, resetToken) {
+    try {
+      if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+        return { sent: 0, reason: 'Email não configurado no servidor' };
+      }
+
+      const transporter = this.getTransporter();
+      
+      const resetLink = `${process.env.RESET_URL || 'http://localhost:3000'}?reset=${resetToken}`;
+      
+      const subject = '🔑 Redefinir senha - Casa em Ordem';
+      const text = `
+Olá,
+
+Você solicitou a redefinição da sua senha no Casa em Ordem.
+
+Clique no link abaixo para criar uma nova senha:
+${resetLink}
+
+Este link é válido por 1 hora.
+
+Se você não solicitou, ignore este email.
+`;
+
+      const result = await transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: email,
+        subject,
+        text
+      });
+
+      return { sent: 1 };
+    } catch (error) {
+      console.error('📧 Erro ao enviar email de reset:', error);
+      return { sent: 0, reason: error.message };
+    }
   }
 
   static async sendDailyEmail(householdId) {
