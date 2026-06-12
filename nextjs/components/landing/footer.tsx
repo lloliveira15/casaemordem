@@ -1,5 +1,7 @@
+"use client"
+
 import Link from "next/link"
-import { FlowerTulip } from "phosphor-react"
+import { Flower } from "phosphor-react"
 
 export function LandingFooter() {
   return (
@@ -7,7 +9,7 @@ export function LandingFooter() {
       <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-10 mb-10">
         <div className="col-span-2 md:col-span-1">
           <div className="text-xl font-bold text-[#5B21B6] flex items-center gap-2 mb-3">
-            <FlowerTulip className="text-[#7C3AED] size-6" />
+            <Flower className="text-[#7C3AED] size-6" />
             Casa em Ordem
           </div>
           <p className="text-sm text-[#6B5B8D] leading-relaxed max-w-[280px]">

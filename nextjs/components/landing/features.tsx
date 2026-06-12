@@ -1,3 +1,5 @@
+"use client"
+
 import { ListChecks, ClipboardText, Bell, ChartBar, QrCode, CalendarPlus, Star } from "phosphor-react"
 
 const features = [

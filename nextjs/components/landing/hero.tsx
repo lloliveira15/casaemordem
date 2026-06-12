@@ -1,5 +1,7 @@
+"use client"
+
 import Link from "next/link"
-import { FlowerTulip, ListChecks, CalendarBlank } from "phosphor-react"
+import { Flower, ListChecks, CalendarBlank } from "phosphor-react"
 
 export function Hero() {
   return (
@@ -40,7 +42,7 @@ export function Hero() {
           </div>
           <div className="flex min-h-[280px]">
             <div className="w-12 bg-[#5B21B6] pt-3 pb-3 flex flex-col items-center gap-4">
-              <FlowerTulip className="size-5 text-white" />
+              <Flower className="size-5 text-white" />
               <div className="size-8 flex items-center justify-center rounded-md bg-white/15 text-white">
                 <ListChecks className="size-4" />
               </div>

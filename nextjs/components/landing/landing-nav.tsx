@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { FlowerTulip, List, X } from "phosphor-react"
+import { Flower, List, X } from "phosphor-react"
 
 export function LandingNav() {
   const [scrolled, setScrolled] = useState(false)
@@ -24,7 +24,7 @@ export function LandingNav() {
     >
       <div className="max-w-[1200px] mx-auto flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-[#5B21B6] flex items-center gap-2">
-          <FlowerTulip className="text-[#7C3AED] size-6" />
+          <Flower className="text-[#7C3AED] size-6" />
           Casa em Ordem
         </Link>
 
