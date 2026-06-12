@@ -46,13 +46,13 @@ router.post('/login', async (req, res) => {
     // Buscar usuário
     const user = await User.findByEmail(email);
     if (!user) {
-      return res.status(401).json({ error: 'Conta não encontrada. Verifique o email ou crie uma nova conta.' });
+      return res.status(401).json({ error: 'Email ou senha inválidos' });
     }
 
     // Verificar senha
     const isPasswordValid = await User.verifyPassword(password, user.password_hash);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Senha incorreta. Tente novamente.' });
+      return res.status(401).json({ error: 'Email ou senha inválidos' });
     }
 
     // Gerar token
