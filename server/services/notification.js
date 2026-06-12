@@ -99,7 +99,7 @@ class NotificationService {
 
       const resetLink = `${process.env.RESET_URL || 'http://localhost:3000'}?reset=${resetToken}`;
 
-      const subject = '🔑 Redefinir senha - Casa em Ordem';
+      const subject = '🏠 Casa em Ordem - Redefinir senha';
       const text = `Olá,\n\nVocê solicitou a redefinição da sua senha no Casa em Ordem.\n\nClique no link abaixo para criar uma nova senha:\n${resetLink}\n\nEste link é válido por 1 hora.\n\nSe você não solicitou, ignore este email.`;
 
       await this.sendEmail({ to: email, subject, text });
@@ -137,7 +137,7 @@ class NotificationService {
       });
 
       const taskList = tasks.map(t => `- ${t.description}`).join('\n');
-      const subject = `📋 Você tem ${tasks.length} tarefa(s) para hoje!`;
+      const subject = `🏠 Casa em Ordem - Você tem ${tasks.length} tarefa(s) para hoje!`;
       const text = `Olá!\n\nVocê tem ${tasks.length} tarefa(s) pendente(s) para hoje:\n\n${taskList}\n\nAcesse o app para marcar como concluídas.\n\n🏠 Casa em Ordem`;
 
       const emails = members.map(m => m.email);
