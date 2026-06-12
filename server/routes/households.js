@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Household = require('../models/Household');
 const authMiddleware = require('../middleware/auth');
+const NotificationService = require('../services/notification');
 
 // GET /api/household - Get current user's household info
 router.get('/', authMiddleware, async (req, res) => {
@@ -16,6 +17,7 @@ router.get('/', authMiddleware, async (req, res) => {
     
     res.json({
       hasHousehold: true,
+      currentUserId: req.user.userId,
       household: {
         id: household.id,
         name: household.name,
@@ -26,8 +28,11 @@ router.get('/', authMiddleware, async (req, res) => {
       members: members.map(m => ({
         id: m.id,
         username: m.username,
+        email: m.email,
+        phone: m.phone,
         role: m.role,
-        joined_at: m.joined_at
+        joined_at: m.joined_at,
+        notifications_enabled: m.notifications_enabled === 1
       })),
       isAdmin: household.admin_id === req.user.userId
     });
@@ -85,6 +90,40 @@ router.post('/generate-code', authMiddleware, async (req, res) => {
   }
 });
 
+// POST /api/household/send-invite - Send invite email to a new member
+router.post('/send-invite', authMiddleware, async (req, res) => {
+  try {
+    const household = await Household.findByUserId(req.user.userId);
+
+    if (!household) {
+      return res.status(404).json({ error: 'Você não tem uma casa' });
+    }
+
+    if (household.admin_id !== req.user.userId) {
+      return res.status(403).json({ error: 'Apenas o administrador pode enviar convites' });
+    }
+
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email é obrigatório' });
+    }
+
+    const result = await NotificationService.sendInviteEmail(
+      email,
+      household.invite_code,
+      req.user.username
+    );
+
+    if (result.sent) {
+      res.json({ message: 'Convite enviado com sucesso!' });
+    } else {
+      res.status(500).json({ error: result.error || result.reason });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // POST /api/household/join - Join existing household with invite code
 router.post('/join', authMiddleware, async (req, res) => {
   try {
@@ -123,6 +162,68 @@ router.post('/join', authMiddleware, async (req, res) => {
         role: m.role
       }))
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/household/members/:memberId/notifications - Toggle member notification
+router.put('/members/:memberId/notifications', authMiddleware, async (req, res) => {
+  try {
+    const household = await Household.findByUserId(req.user.userId);
+    
+    if (!household) {
+      return res.status(404).json({ error: 'Você não tem uma casa' });
+    }
+    
+    if (household.admin_id !== req.user.userId) {
+      return res.status(403).json({ error: 'Apenas o administrador pode gerenciar notificações' });
+    }
+    
+    const { enabled } = req.body;
+    const memberId = parseInt(req.params.memberId);
+    
+    await Household.updateMemberNotification(household.id, memberId, enabled);
+    
+    res.json({ message: enabled ? 'Notificações ativadas' : 'Notificações desativadas' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/household/members/:memberId - Update member info
+router.put('/members/:memberId', authMiddleware, async (req, res) => {
+  try {
+    const household = await Household.findByUserId(req.user.userId);
+    
+    if (!household) {
+      return res.status(404).json({ error: 'Você não tem uma casa' });
+    }
+    
+    // Pode editar próprio perfil OU se for admin
+    const isOwnProfile = req.user.userId === parseInt(req.params.memberId);
+    if (household.admin_id !== req.user.userId && !isOwnProfile) {
+      return res.status(403).json({ error: 'Você pode editar apenas seu próprio cadastro' });
+    }
+    
+    const { username, email, phone, notifications_enabled } = req.body;
+    const memberId = parseInt(req.params.memberId);
+    
+    // Check if email is being changed to existing one
+    if (email && email !== '') {
+      const existing = await Household.findByEmailExcludeMember(email, memberId);
+      if (existing) {
+        return res.status(400).json({ error: 'Este email já está em uso por outro membro' });
+      }
+    }
+    
+    await Household.updateMember(household.id, memberId, username, email, phone);
+    
+    if (notifications_enabled !== undefined && household.admin_id === req.user.userId) {
+      await Household.updateMemberNotification(household.id, memberId, notifications_enabled);
+    }
+    
+    res.json({ message: 'Membro atualizado com sucesso' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

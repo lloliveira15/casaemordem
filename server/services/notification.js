@@ -182,6 +182,25 @@ class NotificationService {
       completed: false
     });
   }
+
+  static async sendInviteEmail(toEmail, inviteCode, senderName) {
+    try {
+      if (!this.isEmailConfigured()) {
+        return { sent: 0, reason: 'Email não configurado no servidor' };
+      }
+
+      const inviteLink = `${process.env.RESET_URL || 'http://localhost:3000'}?invite=${inviteCode}`;
+
+      const subject = `🏠 Casa em Ordem - Convite para ${senderName}`;
+      const text = `Olá!\n\n${senderName} te convidou para entrar no Casa em Ordem!\n\nUse o código abaixo no app para entrar:\n\n${inviteCode}\n\nOu acesse o link:\n${inviteLink}\n\n🏠 Casa em Ordem`;
+
+      await this.sendEmail({ to: toEmail, subject, text });
+      return { sent: 1 };
+    } catch (error) {
+      console.error('📧 Erro ao enviar convite:', error.message);
+      return { sent: 0, error: error.message };
+    }
+  }
 }
 
 module.exports = NotificationService;

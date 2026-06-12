@@ -36,12 +36,16 @@ db.serialize(() => {
       username TEXT UNIQUE NOT NULL,
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
+      phone TEXT,
       household_id INTEGER,
       role TEXT DEFAULT 'member',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(household_id) REFERENCES households(id)
     )
   `);
+
+  // Adicionar coluna phone se não existir
+  db.run('ALTER TABLE users ADD COLUMN phone TEXT', () => {});
 
   // Tabela de templates de tarefas
   db.run(`
@@ -92,11 +96,15 @@ db.serialize(() => {
       household_id INTEGER NOT NULL,
       user_id INTEGER NOT NULL,
       role TEXT DEFAULT 'member',
+      notifications_enabled INTEGER DEFAULT 1,
       joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(household_id) REFERENCES households(id),
       FOREIGN KEY(user_id) REFERENCES users(id)
     )
   `);
+
+  // Adicionar coluna notifications_enabled se não existir
+  db.run('ALTER TABLE household_members ADD COLUMN notifications_enabled INTEGER DEFAULT 1', () => {});
 
   // Tabela de eventos avulsos
   db.run(`

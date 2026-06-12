@@ -1719,7 +1719,29 @@
                 Código para convidar
               </div>
               <div class="house-code" id="inviteCode">------</div>
-              <div id="inviteQR" style="margin:16px 0;text-align:center"></div>
+              <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">
+                <button class="btn btn-secondary btn-sm" onclick="copyInviteCode()">
+                  <i class="ph ph-copy"></i>
+                  Copiar código
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="showInviteEmailForm()">
+                  <i class="ph ph-envelope"></i>
+                  Enviar convite por email
+                </button>
+              </div>
+              <div id="inviteQR" style="margin:16px 0;text-align:center;cursor:pointer" onclick="copyInviteLink()" title="Clique para copiar link"></div>
+              <div id="inviteEmailForm" style="display:none;margin-bottom:16px">
+                <div style="display:flex;gap:8px;max-width:400px;margin:0 auto">
+                  <input type="email" id="inviteEmailInput" placeholder="Email do convidado" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px">
+                  <button class="btn btn-primary btn-sm" onclick="sendInviteEmail()">
+                    <i class="ph ph-paper-plane-right"></i>
+                    Enviar
+                  </button>
+                </div>
+                <div style="text-align:center;margin-top:8px">
+                  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('inviteEmailForm').style.display='none'">Cancelar</button>
+                </div>
+              </div>
               <button class="btn btn-secondary btn-sm" onclick="regenerateCode()">
                 <i class="ph ph-arrows-clockwise"></i>
                 Gerar novo código
@@ -2397,6 +2419,72 @@
       const link = window.location.origin + '?invite=' + encodeURIComponent(code);
       const msg = 'Compartilhe o QR Code ou o link abaixo com o membro:\n\n' + link + '\n\nOu use o código: ' + code;
       alert(msg);
+    }
+
+    function copyInviteCode() {
+      const code = document.getElementById('inviteCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Código copiado!', 'success');
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = code;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Código copiado!', 'success');
+      });
+    }
+
+    function copyInviteLink() {
+      const code = document.getElementById('inviteCode').textContent;
+      const link = window.location.origin + '?invite=' + encodeURIComponent(code);
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('Link copiado!', 'success');
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = link;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Link copiado!', 'success');
+      });
+    }
+
+    function showInviteEmailForm() {
+      const form = document.getElementById('inviteEmailForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      if (form.style.display === 'block') {
+        document.getElementById('inviteEmailInput').focus();
+      }
+    }
+
+    async function sendInviteEmail() {
+      const token = localStorage.getItem('token');
+      const email = document.getElementById('inviteEmailInput').value.trim();
+      if (!email) {
+        showToast('Digite um email', 'error');
+        return;
+      }
+      const btn = document.querySelector('#inviteEmailForm .btn-primary');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+      const res = await fetch(`${API_URL}/api/household/send-invite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ph ph-paper-plane-right"></i> Enviar';
+      if (res.ok) {
+        showToast('Convite enviado!', 'success');
+        document.getElementById('inviteEmailForm').style.display = 'none';
+        document.getElementById('inviteEmailInput').value = '';
+      } else {
+        showToast(data.error || 'Erro ao enviar convite', 'error');
+      }
     }
 
     async function regenerateCode() {
