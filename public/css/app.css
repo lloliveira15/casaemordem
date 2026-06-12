@@ -195,13 +195,6 @@
   padding: 24px;
 }
 
-@media (max-width: 767px) {
-  .content {
-    padding: 16px;
-    padding-bottom: 80px;
-  }
-}
-
 /* ===================== PAGE SYSTEM ===================== */
 .page {
   display: none;
@@ -940,7 +933,7 @@
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background: white;
+  background: var(--bg-alt);
   border-radius: 50%;
   transition: 0.2s;
 }
@@ -1624,27 +1617,4 @@
   }
 }
 
-/* ===================== DARK MODE REFINEMENTS ===================== */
-[data-theme="dark"] .sidebar {
-  border-right-color: var(--border);
-}
 
-[data-theme="dark"] .bottom-nav {
-  border-top-color: var(--border);
-}
-
-[data-theme="dark"] .date-pill {
-  background: var(--surface);
-}
-
-[data-theme="dark"] .task-card {
-  background: var(--surface);
-}
-
-[data-theme="dark"] .member-card {
-  background: var(--surface);
-}
-
-[data-theme="dark"] .widget-card {
-  background: var(--surface);
-}
