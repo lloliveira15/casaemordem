@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
+import { Trash } from "phosphor-react"
 import { toggleTask, deleteTask } from "@/app/app/actions"
 
 interface Task {
@@ -93,7 +93,7 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
             </div>
           </div>
           <Button variant="ghost" size="icon" className="size-8" onClick={() => handleDelete(task.id)}>
-            <Trash2 className="size-4" />
+            <Trash className="size-4" />
           </Button>
         </div>
       ))}

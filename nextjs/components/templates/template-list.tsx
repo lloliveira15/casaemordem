@@ -3,7 +3,7 @@
 import { deleteTemplate } from "@/lib/actions/templates"
 import { FREQUENCY_LABELS } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
+import { Trash } from "phosphor-react"
 
 interface Template {
   id: string
@@ -36,7 +36,7 @@ export function TemplateList({ templates }: { templates: Template[] }) {
             </div>
           </div>
           <Button variant="ghost" size="icon" onClick={() => handleDelete(t.id)}>
-            <Trash2 className="size-4" />
+            <Trash className="size-4" />
           </Button>
         </div>
       ))}

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { updateMember } from "@/lib/actions/household"
 import { Button } from "@/components/ui/button"
-import { Pencil, Check, X } from "lucide-react"
+import { Pencil, Check, X } from "phosphor-react"
 
 interface MemberData {
   user_id: string

@@ -2,7 +2,7 @@
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
+import { Trash } from "phosphor-react"
 import { toggleTask, deleteTask } from "@/app/app/actions"
 
 interface Task {
@@ -40,7 +40,7 @@ export function TodayTasks({ tasks }: { tasks: Task[] }) {
           </div>
           <form action={async () => { await deleteTask(task.id) }}>
             <Button variant="ghost" size="icon" className="size-8" type="submit">
-              <Trash2 className="size-4" />
+              <Trash className="size-4" />
             </Button>
           </form>
         </div>

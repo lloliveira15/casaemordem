@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { CaretLeft, CaretRight } from "phosphor-react"
 
 function shiftDate(dateStr: string, days: number): string {
   const d = new Date(dateStr + "T12:00:00")
@@ -26,13 +26,13 @@ export function DateNav({ currentDate }: { currentDate: string }) {
   return (
     <div className="flex items-center gap-3">
       <Button variant="outline" size="sm" onClick={() => goTo(shiftDate(currentDate, -1))}>
-        <ChevronLeft className="size-4" />
+        <CaretLeft className="size-4" />
       </Button>
       <span className="text-sm font-medium min-w-[140px] text-center">
         {d}/{m}/{y}
       </span>
       <Button variant="outline" size="sm" onClick={() => goTo(shiftDate(currentDate, 1))}>
-        <ChevronRight className="size-4" />
+        <CaretRight className="size-4" />
       </Button>
       {currentDate !== today && (
         <Button variant="secondary" size="sm" onClick={() => goTo(today)}>

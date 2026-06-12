@@ -5,14 +5,18 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { logout } from "@/app/auth/actions"
 import {
-  LayoutDashboard, ListChecks, Users, Settings, LogOut,
-} from "lucide-react"
+  ChartBar,
+  ListChecks,
+  Users,
+  GearSix,
+  SignOut,
+} from "phosphor-react"
 
 const navItems = [
-  { href: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/app/dashboard", label: "Dashboard", icon: ChartBar },
   { href: "/app/tarefas", label: "Tarefas", icon: ListChecks },
   { href: "/app/membros", label: "Membros", icon: Users },
-  { href: "/app/configuracoes", label: "Configurações", icon: Settings },
+  { href: "/app/configuracoes", label: "Configurações", icon: GearSix },
 ]
 
 export function Sidebar() {
@@ -20,8 +24,11 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col w-64 border-r bg-sidebar-background p-4">
-        <div className="text-lg font-bold mb-8 px-4">Casa em Ordem</div>
+      <aside className="hidden md:flex flex-col w-64 border-r bg-sidebar-background text-sidebar-foreground p-4">
+        <div className="text-lg font-bold mb-8 px-4 flex items-center gap-2">
+          <span className="size-2 rounded-full bg-sidebar-primary" />
+          Casa em Ordem
+        </div>
         <nav className="flex-1 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon
@@ -44,8 +51,11 @@ export function Sidebar() {
           })}
         </nav>
         <form action={logout}>
-          <button type="submit" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-sidebar-foreground hover:bg-sidebar-accent w-full transition-colors">
-            <LogOut className="size-5" />
+          <button
+            type="submit"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-sidebar-foreground hover:bg-sidebar-accent w-full transition-colors"
+          >
+            <SignOut className="size-5" />
             Sair
           </button>
         </form>
