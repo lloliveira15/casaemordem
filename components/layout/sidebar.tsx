@@ -24,7 +24,7 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-secondary text-secondary-foreground p-4">
+      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-secondary text-muted-foreground p-4">
         <div className="text-lg font-bold mb-8 px-4 flex items-center gap-2 text-primary">
           <span className="size-2 rounded-full bg-primary" />
           Casa em Ordem
