@@ -10,6 +10,7 @@ import {
   Users,
   GearSix,
   SignOut,
+  Crown,
 } from "phosphor-react"
 
 const navItems = [
@@ -19,7 +20,7 @@ const navItems = [
   { href: "/app/configuracoes", label: "Configurações", icon: GearSix },
 ]
 
-export function Sidebar() {
+export function Sidebar({ username, isAdmin }: { username: string; isAdmin: boolean }) {
   const pathname = usePathname()
 
   return (
@@ -50,6 +51,10 @@ export function Sidebar() {
             )
           })}
         </nav>
+        <div className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground border-t border-border mb-2">
+          {isAdmin && <Crown className="size-3 text-primary" weight="fill" />}
+          <span className="font-medium text-foreground truncate">{username}</span>
+        </div>
         <form action={logout}>
           <button
             type="submit"
