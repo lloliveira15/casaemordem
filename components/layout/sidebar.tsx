@@ -24,9 +24,9 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col w-64 border-r bg-sidebar-background text-sidebar-foreground p-4">
-        <div className="text-lg font-bold mb-8 px-4 flex items-center gap-2">
-          <span className="size-2 rounded-full bg-sidebar-primary" />
+      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-secondary text-secondary-foreground p-4">
+        <div className="text-lg font-bold mb-8 px-4 flex items-center gap-2 text-primary">
+          <span className="size-2 rounded-full bg-primary" />
           Casa em Ordem
         </div>
         <nav className="flex-1 space-y-1">
@@ -38,10 +38,10 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
                   isActive
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent"
+                    ? "bg-card text-primary shadow-[var(--shadow-sm)] border border-border"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <Icon className="size-5" />
@@ -53,7 +53,7 @@ export function Sidebar() {
         <form action={logout}>
           <button
             type="submit"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-sidebar-foreground hover:bg-sidebar-accent w-full transition-colors"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-muted-foreground hover:bg-muted hover:text-foreground w-full transition-colors"
           >
             <SignOut className="size-5" />
             Sair
@@ -61,7 +61,7 @@ export function Sidebar() {
         </form>
       </aside>
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border bg-card/95 backdrop-blur text-card-foreground z-50">
         <div className="flex justify-around py-2">
           {navItems.map((item) => {
             const Icon = item.icon
@@ -71,7 +71,7 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-1 text-xs",
+                  "flex flex-col items-center gap-0.5 px-3 py-1 text-xs font-medium transition-colors",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
