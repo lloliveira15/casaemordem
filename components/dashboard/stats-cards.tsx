@@ -25,10 +25,10 @@ export function StatsCards({ total, completed, pending, memberCount }: StatsProp
           className="border-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-150 cursor-pointer"
         >
           <CardContent className="p-5 space-y-2">
-            <div className="size-10 rounded-xl bg-[#EDE9FE] flex items-center justify-center mx-auto">
-              <p className="text-2xl font-extrabold text-[#A78BFA]">{stat.value}</p>
+            <div className="size-10 rounded-xl bg-secondary flex items-center justify-center mx-auto">
+              <p className="text-2xl font-extrabold text-primary">{stat.value}</p>
             </div>
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-[#6B5B8D]">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               {stat.label}
             </p>
           </CardContent>
