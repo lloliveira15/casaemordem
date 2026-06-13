@@ -41,24 +41,24 @@ function AnimatedNumber({ target, suffix = "+" }: { target: number; suffix?: str
   const display =
     target === 98 ? `${current}%` : `${current.toLocaleString("pt-BR")}${suffix}`
 
-  return <div ref={ref} className="text-4xl md:text-5xl font-extrabold leading-none mb-2">{display}</div>
+  return <div ref={ref} className="text-4xl md:text-5xl font-extrabold leading-none mb-2 text-primary">{display}</div>
 }
 
 export function Stats() {
   return (
-    <section className="bg-[#7C3AED] py-12 px-6">
-      <div className="max-w-[900px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center text-white">
-        <div>
+    <section className="py-12 px-6">
+      <div className="max-w-[900px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="bg-card rounded-2xl p-8 border border-border text-center shadow-[var(--shadow-sm)]">
           <AnimatedNumber target={10000} suffix="+" />
-          <div className="text-base opacity-85 font-medium">tarefas concluídas</div>
+          <div className="text-base text-muted-foreground font-medium mt-2">tarefas concluídas</div>
         </div>
-        <div>
+        <div className="bg-card rounded-2xl p-8 border border-border text-center shadow-[var(--shadow-sm)]">
           <AnimatedNumber target={500} suffix="+" />
-          <div className="text-base opacity-85 font-medium">casas organizadas</div>
+          <div className="text-base text-muted-foreground font-medium mt-2">casas organizadas</div>
         </div>
-        <div>
+        <div className="bg-card rounded-2xl p-8 border border-border text-center shadow-[var(--shadow-sm)]">
           <AnimatedNumber target={98} suffix="%" />
-          <div className="text-base opacity-85 font-medium">% de satisfação</div>
+          <div className="text-base text-muted-foreground font-medium mt-2">% de satisfação</div>
         </div>
       </div>
     </section>

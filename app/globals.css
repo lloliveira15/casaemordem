@@ -4,39 +4,38 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #FAF5FF;
-  --foreground: #1F1B2E;
+  --background: #FAFAFA;
+  --foreground: #1E1B2E;
   --card: #FFFFFF;
-  --card-foreground: #1F1B2E;
+  --card-foreground: #1E1B2E;
   --popover: #FFFFFF;
-  --popover-foreground: #1F1B2E;
-  --primary: #7C3AED;
+  --popover-foreground: #1E1B2E;
+  --primary: #A78BFA;
   --primary-foreground: #FFFFFF;
   --secondary: #F5F3FF;
   --secondary-foreground: #5B21B6;
-  --muted: #F0E8F8;
+  --muted: #F5F3FF;
   --muted-foreground: #6B5B8D;
-  --accent: #EA580C;
-  --accent-foreground: #FFFFFF;
+  --accent: #F59E0B;
+  --accent-foreground: #1E1B2E;
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
-  --success: #059669;
-  --border: #E8E0F0;
-  --input: #E8E0F0;
-  --ring: #7C3AED;
+  --success: #10B981;
+  --border: #E8E2F2;
+  --input: #E8E2F2;
+  --ring: #A78BFA;
   --radius: 0.75rem;
   --sidebar-background: #5B21B6;
   --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #7C3AED;
+  --sidebar-primary: #A78BFA;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #6D28D9;
   --sidebar-accent-foreground: #FFFFFF;
   --sidebar-border: #4C1D95;
-  --sidebar-ring: #7C3AED;
-  /* Shadows with purple nuance */
-  --shadow-sm: 0 1px 3px rgba(124,58,237,0.08);
-  --shadow-md: 0 4px 12px rgba(124,58,237,0.12);
-  --shadow-lg: 0 8px 24px rgba(124,58,237,0.12);
+  --sidebar-ring: #A78BFA;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
   /* Room colors */
   --room-cozinha: #F97316;
   --room-quarto: #3B82F6;
@@ -142,6 +141,61 @@
   body { @apply bg-background text-foreground; }
 }
 
+/* Landing page — soft, airy lavender palette */
+.landing {
+  --background: #FDFBFF;
+  --foreground: #3D3650;
+  --card: #FCFAFF;
+  --card-foreground: #3D3650;
+  --popover: #FFFFFF;
+  --popover-foreground: #3D3650;
+  --primary: #7C65C9;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F4F0FF;
+  --secondary-foreground: #5A4A8A;
+  --muted: #F8F5FF;
+  --muted-foreground: #5E5377;
+  --accent: #6BAE9C;
+  --accent-foreground: #3D6B5C;
+  --destructive: #E07A7A;
+  --destructive-foreground: #FFFFFF;
+  --success: #6BAE9C;
+  --border: #EDE8F5;
+  --input: #EDE8F5;
+  --ring: #9F8AE0;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+.landing .section-white {
+  background-color: #FFFFFF;
+}
+
+.landing .hero-glow {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(159, 138, 224, 0.12), transparent),
+    radial-gradient(ellipse 60% 50% at 90% 20%, rgba(107, 174, 156, 0.08), transparent),
+    var(--background);
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -156,6 +210,17 @@
 @keyframes counterUp {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 4s ease infinite;
 }
 
 /* Skeleton utility classes */
