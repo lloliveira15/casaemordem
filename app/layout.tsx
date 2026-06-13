@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
+import { Analytics } from "@vercel/analytics/next"
 import { Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           disableTransitionOnChange
         >
           {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
