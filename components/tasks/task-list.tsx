@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Trash } from "phosphor-react"
+import { cn } from "@/lib/utils"
 import { toggleTask, deleteTask } from "@/app/app/actions"
 
 interface Task {
@@ -87,18 +88,28 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
       {tasks.map((task) => (
         <div
           key={task.id}
-          className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl shadow-[var(--shadow-sm)] hover:border-primary/30 transition-all"
+          className="group flex items-center gap-3 p-3 bg-card border border-border rounded-xl hover:border-primary/30 hover:shadow-[var(--shadow-sm)] transition-all duration-150"
         >
-          <Checkbox
-            checked={selected.has(task.id)}
-            onCheckedChange={() => toggleSelect(task.id)}
-          />
-          <Checkbox
-            checked={task.completed}
-            onCheckedChange={() => handleToggle(task.id)}
-          />
+          <div
+            className={cn(
+              "size-5 rounded-full border-2 flex items-center justify-center transition-colors cursor-pointer",
+              task.completed
+                ? "bg-primary border-primary"
+                : "border-muted-foreground hover:border-primary"
+            )}
+            onClick={() => handleToggle(task.id)}
+          >
+            {task.completed && (
+              <svg className="size-3 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+          </div>
           <div className="flex-1 min-w-0">
-            <p className={`text-sm ${task.completed ? "line-through text-muted-foreground" : "text-foreground"}`}>
+            <p className={cn(
+              "text-sm transition-all",
+              task.completed ? "line-through text-muted-foreground" : "text-foreground"
+            )}>
               {task.description}
             </p>
             <div className="flex gap-2 text-xs text-muted-foreground mt-0.5">
@@ -106,9 +117,12 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
               {task.assigned_to && <span>— {task.assigned_to}</span>}
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-destructive" onClick={() => handleDelete(task.id)}>
+          <button
+            className="size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
+            onClick={() => handleDelete(task.id)}
+          >
             <Trash className="size-4" />
-          </Button>
+          </button>
         </div>
       ))}
     </div>
