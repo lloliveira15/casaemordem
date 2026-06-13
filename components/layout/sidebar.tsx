@@ -11,6 +11,7 @@ import {
   GearSix,
   SignOut,
   Crown,
+  Flower,
 } from "phosphor-react"
 
 const navItems = [
@@ -24,69 +25,52 @@ export function Sidebar({ username, isAdmin }: { username: string; isAdmin: bool
   const pathname = usePathname()
 
   return (
-    <>
-      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-secondary text-muted-foreground p-4">
-        <div className="text-lg font-bold mb-8 px-4 flex items-center gap-2 text-primary">
-          <span className="size-2 rounded-full bg-primary" />
-          Casa em Ordem
-        </div>
-        <nav className="flex-1 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname.startsWith(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                  isActive
-                    ? "bg-card text-primary shadow-[var(--shadow-sm)] border border-border"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <Icon className="size-5" />
-                {item.label}
-              </Link>
-            )
-          })}
-        </nav>
-        <div className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground border-t border-border mb-2">
-          {isAdmin && <Crown className="size-3 text-primary" weight="fill" />}
-          <span className="font-medium text-foreground truncate">{username}</span>
-        </div>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-muted-foreground hover:bg-muted hover:text-foreground w-full transition-colors"
-          >
-            <SignOut className="size-5" />
-            Sair
-          </button>
-        </form>
-      </aside>
+    <aside className="hidden md:flex flex-col w-[260px] border-r border-[#E5E7EB] bg-white text-[#374151] p-4">
+      {/* Logo */}
+      <div className="mb-8 px-4 flex items-center gap-2">
+        <Flower className="size-6 text-[#A78BFA]" weight="fill" />
+        <span className="text-lg font-semibold text-[#A78BFA]">Casa em Ordem</span>
+      </div>
 
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border bg-card/95 backdrop-blur text-card-foreground z-50">
-        <div className="flex justify-around py-2">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname.startsWith(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex flex-col items-center gap-0.5 px-3 py-1 text-xs font-medium transition-colors",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                <Icon className="size-5" />
-                {item.label}
-              </Link>
-            )
-          })}
-        </div>
+      {/* Nav Items */}
+      <nav className="flex-1 space-y-1">
+        {navItems.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname.startsWith(item.href)
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
+                isActive
+                  ? "bg-[#EDE9FE] text-[#A78BFA] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-[3px] before:bg-[#A78BFA] before:rounded-r"
+                  : "text-[#374151] hover:bg-[#F9FAFB] hover:text-[#1F2937]"
+              )}
+            >
+              <Icon className="size-5" />
+              {item.label}
+            </Link>
+          )
+        })}
       </nav>
-    </>
+
+      {/* User Info */}
+      <div className="flex items-center gap-2 px-4 py-2 text-sm border-t border-[#E5E7EB] mb-2">
+        {isAdmin && <Crown className="size-3 text-[#A78BFA]" weight="fill" />}
+        <span className="font-medium truncate">{username}</span>
+      </div>
+
+      {/* Logout */}
+      <form action={logout}>
+        <button
+          type="submit"
+          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-[#374151] hover:bg-[#F9FAFB] w-full transition-colors"
+        >
+          <SignOut className="size-5" />
+          Sair
+        </button>
+      </form>
+    </aside>
   )
 }
