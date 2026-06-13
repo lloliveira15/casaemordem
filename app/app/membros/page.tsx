@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { InviteSection } from "@/components/members/invite-section"
 import { MemberCard } from "@/components/members/member-card"
@@ -18,8 +19,22 @@ export default async function MembersPage() {
 
   const { data: members } = await supabase
     .from("household_members")
-    .select("*, profile:profiles!user_id(*)")
+    .select("*")
     .eq("household_id", profile.household_id)
+
+  const memberUserIds = members?.map((m) => m.user_id) ?? []
+
+  // Use admin client to fetch member profiles because RLS policies currently
+  // restrict viewing other household members' profiles.
+  const admin = createAdminClient()
+  const { data: memberProfiles } = await admin
+    .from("profiles")
+    .select("id, username, email, phone")
+    .in("id", memberUserIds.length > 0 ? memberUserIds : [user.id])
+
+  const profileById = new Map(
+    memberProfiles?.map((p) => [p.id, p]) ?? []
+  )
 
   const household = profile.household as unknown as { invite_code: string; name: string; admin_id: string }
   const isAdmin = household.admin_id === user.id
@@ -33,15 +48,15 @@ export default async function MembersPage() {
       <div className="space-y-3">
         <h2 className="text-lg font-semibold">Membros ({members?.length ?? 0})</h2>
         {members?.map((m) => {
-          const memberProfile = m.profile as unknown as { id: string; username: string; email: string; phone: string | null }
+          const memberProfile = profileById.get(m.user_id)
           return (
             <MemberCard
               key={m.user_id}
               member={{
                 user_id: m.user_id,
-                username: memberProfile.username,
-                email: memberProfile.email,
-                phone: memberProfile.phone,
+                username: memberProfile?.username ?? "Usuário",
+                email: memberProfile?.email ?? "",
+                phone: memberProfile?.phone ?? null,
                 role: m.role,
                 notifications_enabled: m.notifications_enabled,
               }}
