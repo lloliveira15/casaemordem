@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Trash } from "phosphor-react"
+import { Trash, ListChecks } from "phosphor-react"
 import { cn } from "@/lib/utils"
 import { toggleTask, deleteTask } from "@/app/app/actions"
 
@@ -49,16 +49,13 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
   }
 
   if (tasks.length === 0) {
-    const today = new Date()
-    const dateFormatted = today.toLocaleDateString("pt-BR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-    })
     return (
-      <div className="text-center py-14">
-        <p className="text-muted-foreground text-sm">Nenhuma tarefa para esta data.</p>
-        <p className="text-xs text-muted-foreground/60 mt-1 capitalize">{dateFormatted}</p>
+      <div className="text-center py-16 px-4">
+        <div className="size-16 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4">
+          <ListChecks className="size-8 text-primary" />
+        </div>
+        <p className="text-foreground font-medium">Nenhuma tarefa ainda</p>
+        <p className="text-muted-foreground text-sm mt-1">Clique em "Nova Tarefa" para começar</p>
       </div>
     )
   }
