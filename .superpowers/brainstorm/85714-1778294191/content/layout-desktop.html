@@ -1,0 +1,132 @@
+<h2>💻 Layout responsivo — sugestão</h2>
+<p class="subtitle">Comportamento adaptável para mobile e desktop</p>
+
+<div class="section">
+  <h3>📱 Mobile</h3>
+  <p class="subtitle">Até 767px — layout atual melhorado</p>
+  <div style="max-width:360px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(91,61,94,0.15)">
+    <div style="background:#f9f5f9;padding:12px">
+      <div style="background:white;border-radius:14px;overflow:hidden">
+        <div style="background:white;padding:12px 14px;border-bottom:1px solid #e8dce8;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700;color:#5c3d5e;font-size:16px">Casa em Ordem</span>
+          <span style="background:#9b6b9d;color:white;padding:1px 8px;border-radius:8px;font-size:12px;font-weight:700">3</span>
+        </div>
+        <div style="display:flex;padding:4px 6px;gap:3px;background:#f5f0f5;border-bottom:1px solid #e8dce8">
+          <div style="flex:1;text-align:center;padding:8px;background:white;border-radius:8px;color:#9b6b9d;font-size:11px;font-weight:600">📋 Tarefas</div>
+          <div style="flex:1;text-align:center;padding:8px;border-radius:8px;color:#8b6b8d;font-size:11px">⚙️ Config</div>
+          <div style="flex:1;text-align:center;padding:8px;border-radius:8px;color:#8b6b8d;font-size:11px">🚪 Sair</div>
+        </div>
+        <div style="padding:14px;background:#f9f5f9">
+          <div style="background:white;border-radius:10px;padding:10px;border:1px solid #e8dce8;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:6px">
+            <button style="border:none;background:none;color:#9b6b9d">◀</button>
+            <span style="font-size:13px;font-weight:600;color:#5c3d5e">15/05/2026</span>
+            <button style="border:none;background:none;color:#9b6b9d">▶</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:12px;justify-content:center">
+            <span style="padding:4px 10px;border:1px solid #e8dce8;border-radius:12px;font-size:11px;color:#8b6b8d">Ontem</span>
+            <span style="padding:4px 10px;background:#9b6b9d;color:white;border-radius:12px;font-size:11px;font-weight:600">Hoje</span>
+            <span style="padding:4px 10px;border:1px solid #e8dce8;border-radius:12px;font-size:11px;color:#8b6b8d">Amanhã</span>
+          </div>
+          <div style="background:white;border-radius:10px;padding:10px;border:1px solid #e8dce8;display:flex;align-items:center;gap:8px">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d">
+            <div style="flex:1;font-size:12px;color:#3d2d3f">Lavar louça</div>
+            <button style="background:#f0e8f0;border:none;border-radius:50%;width:26px;height:26px;color:#9b6b9d;font-size:10px">✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🖥️ Desktop</h3>
+  <p class="subtitle">768px+ — layout expandido, duas colunas, mais espaçamento</p>
+  <div style="background:#f9f5f9;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(91,61,94,0.15)">
+    <!-- Header desktop -->
+    <div style="background:white;padding:16px 24px;border-bottom:1px solid #e8dce8;display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:24px">
+        <span style="font-weight:700;color:#5c3d5e;font-size:20px">🌸 Casa em Ordem</span>
+        <div style="display:flex;gap:4px">
+          <span style="padding:6px 14px;background:white;border-radius:8px;color:#9b6b9d;font-size:13px;font-weight:600;border:1px solid #e8dce8">📋 Tarefas</span>
+          <span style="padding:6px 14px;border-radius:8px;color:#8b6b8d;font-size:13px">⚙️ Config</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:13px;color:#8b6b8d">Pendentes hoje</span>
+        <span style="background:#9b6b9d;color:white;padding:2px 12px;border-radius:10px;font-size:16px;font-weight:700">3</span>
+        <span style="padding:6px 12px;border:1px solid #e8dce8;border-radius:8px;color:#8b6b8d;font-size:13px;cursor:pointer">🚪 Sair</span>
+      </div>
+    </div>
+
+    <!-- Content desktop - 2 colunas -->
+    <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto">
+      <!-- Coluna esquerda: navegação de data + tarefas pendentes -->
+      <div>
+        <div style="background:white;border-radius:12px;padding:14px;border:1px solid #e8dce8;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+          <button style="border:none;background:#f0e8f0;border-radius:50%;width:34px;height:34px;color:#9b6b9d">◀</button>
+          <div>
+            <div style="font-weight:600;color:#5c3d5e">Hoje · 15/05/2026</div>
+            <div style="font-size:12px;color:#8b6b8d;text-align:center">sexta-feira</div>
+          </div>
+          <button style="border:none;background:#f0e8f0;border-radius:50%;width:34px;height:34px;color:#9b6b9d">▶</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <span style="padding:5px 14px;background:#9b6b9d;color:white;border-radius:14px;font-size:12px;font-weight:600">Hoje</span>
+          <span style="padding:5px 14px;border:1px solid #e8dce8;border-radius:14px;font-size:12px;color:#8b6b8d">Amanhã</span>
+          <span style="padding:5px 14px;border:1px solid #e8dce8;border-radius:14px;font-size:12px;color:#8b6b8d">Ontem</span>
+        </div>
+        <button style="width:100%;padding:10px;border:1.5px dashed #d5b8d5;border-radius:10px;background:white;color:#9b6b9d;font-size:13px;font-weight:600;margin-bottom:12px">+ Adicionar tarefa</button>
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid #e8dce8;display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <input type="checkbox" style="width:18px;height:18px;accent-color:#9b6b9d">
+          <div style="flex:1;font-size:13px;color:#3d2d3f">Lavar louça <span style="color:#8b6b8d">· Cozinha</span></div>
+          <span style="font-size:11px;color:#9b7b9d">Maria</span>
+          <button style="background:#f0e8f0;border:none;border-radius:50%;width:28px;height:28px;color:#9b6b9d">✓</button>
+        </div>
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid #e8dce8;display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <input type="checkbox" style="width:18px;height:18px;accent-color:#9b6b9d">
+          <div style="flex:1;font-size:13px;color:#3d2d3f">Limpar banheiro <span style="color:#8b6b8d">· Banheiro</span></div>
+          <span style="font-size:11px;color:#9b7b9d">João</span>
+          <button style="background:#f0e8f0;border:none;border-radius:50%;width:28px;height:28px;color:#9b6b9d">✓</button>
+        </div>
+      </div>
+
+      <!-- Coluna direita: concluídas + mini produtividade -->
+      <div>
+        <div style="background:white;border-radius:12px;padding:14px;border:1px solid #e8dce8;margin-bottom:14px">
+          <div style="font-size:12px;font-weight:600;color:#8b6b8d;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">✅ Concluídas hoje</div>
+          <div style="padding:8px 0;display:flex;align-items:center;gap:8px;opacity:0.6">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d" checked>
+            <span style="font-size:12px;text-decoration:line-through;color:#5c3d5e">Passar pano na sala</span>
+          </div>
+          <div style="padding:8px 0;display:flex;align-items:center;gap:8px;opacity:0.6">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d" checked>
+            <span style="font-size:12px;text-decoration:line-through;color:#5c3d5e">Tirar lixo</span>
+          </div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:14px;border:1px solid #e8dce8">
+          <div style="font-size:12px;font-weight:600;color:#8b6b8d;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">📊 Produtividade da semana</div>
+          <div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="color:#5c3d5e">Maria</span>
+              <span style="color:#8b6b8d">80%</span>
+            </div>
+            <div style="height:6px;background:#f0e8f0;border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:80%;background:#9b6b9d;border-radius:3px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="color:#5c3d5e">João</span>
+              <span style="color:#8b6b8d">45%</span>
+            </div>
+            <div style="height:6px;background:#f0e8f0;border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:45%;background:#b89bb8;border-radius:3px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:16px;font-size:13px;color:#888">O que acha dessa abordagem responsiva?</p>

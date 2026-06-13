@@ -1,0 +1,153 @@
+<h2>🖥️ Layout Desktop — Aproveitando a tela</h2>
+<p class="subtitle">Duas abordagens para distribuir melhor o espaço</p>
+
+<div class="section">
+  <h3>A. Sidebar + conteúdo expandido</h3>
+  <p class="subtitle">Nav fixa à esquerda, conteúdo à direita ocupando a tela toda</p>
+  <div style="background:#f9f5f9;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(91,61,94,0.15)">
+    <div style="display:flex;min-height:460px">
+      <!-- Sidebar -->
+      <div style="width:200px;background:white;border-right:1px solid #e8dce8;padding:20px 0;display:flex;flex-direction:column">
+        <div style="padding:0 20px 20px;border-bottom:1px solid #f0e8f0;margin-bottom:12px">
+          <div style="font-weight:700;color:#5c3d5e;font-size:16px">🌸 Casa em Ordem</div>
+        </div>
+        <div style="padding:0 12px;flex:1">
+          <div style="padding:10px 12px;background:#f5eff5;border-radius:10px;color:#9b6b9d;font-weight:600;font-size:13px;margin-bottom:4px">📋 Tarefas</div>
+          <div style="padding:10px 12px;border-radius:10px;color:#8b6b8d;font-size:13px">⚙️ Configurações</div>
+          <div style="padding:10px 12px;border-radius:10px;color:#8b6b8d;font-size:13px">📊 Produtividade</div>
+        </div>
+        <div style="padding:12px 20px;border-top:1px solid #f0e8f0">
+          <div style="font-size:12px;color:#8b6b8d">Maria</div>
+          <div style="font-size:12px;color:#b89bb8;cursor:pointer">Sair</div>
+        </div>
+      </div>
+      <!-- Main -->
+      <div style="flex:1;padding:24px;display:grid;grid-template-columns:2fr 1fr;gap:24px">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div>
+              <div style="font-size:18px;font-weight:700;color:#3d2d3f">Tarefas</div>
+              <div style="font-size:13px;color:#8b6b8d">sexta-feira, 15 de maio de 2026</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button style="border:none;background:#f0e8f0;border-radius:50%;width:32px;height:32px;color:#9b6b9d">◀</button>
+              <button style="border:none;background:#f0e8f0;border-radius:50%;width:32px;height:32px;color:#9b6b9d">▶</button>
+              <span style="padding:4px 12px;background:#9b6b9d;color:white;border-radius:12px;font-size:12px">Hoje</span>
+            </div>
+          </div>
+          <button style="width:100%;padding:12px;border:1.5px dashed #d5b8d5;border-radius:10px;background:white;color:#9b6b9d;font-size:13px;font-weight:600;margin-bottom:12px">+ Adicionar tarefa</button>
+          <div style="background:white;border-radius:10px;padding:12px 14px;border:1px solid #e8dce8;display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:#9b6b9d">
+            <div style="flex:1;font-size:14px;color:#3d2d3f">Lavar louça <span style="color:#8b6b8d;font-size:12px">· Cozinha</span></div>
+            <span style="font-size:12px;color:#9b7b9d;background:#f5eff5;padding:2px 10px;border-radius:10px">Maria</span>
+            <button style="background:#f0e8f0;border:none;border-radius:50%;width:30px;height:30px;color:#9b6b9d;cursor:pointer">✓</button>
+          </div>
+          <div style="background:white;border-radius:10px;padding:12px 14px;border:1px solid #e8dce8;display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:#9b6b9d">
+            <div style="flex:1;font-size:14px;color:#3d2d3f">Limpar banheiro <span style="color:#8b6b8d;font-size:12px">· Banheiro social</span></div>
+            <span style="font-size:12px;color:#9b7b9d;background:#f5eff5;padding:2px 10px;border-radius:10px">João</span>
+            <button style="background:#f0e8f0;border:none;border-radius:50%;width:30px;height:30px;color:#9b6b9d;cursor:pointer">✓</button>
+          </div>
+        </div>
+        <div>
+          <div style="background:white;border-radius:12px;padding:16px;border:1px solid #e8dce8;margin-bottom:14px">
+            <div style="font-size:12px;font-weight:600;color:#8b6b8d;margin-bottom:12px;text-transform:uppercase">✅ Concluídas</div>
+            <div style="padding:6px 0;display:flex;align-items:center;gap:8px;opacity:0.6;font-size:13px">
+              <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d" checked> Passar pano na sala
+            </div>
+            <div style="padding:6px 0;display:flex;align-items:center;gap:8px;opacity:0.6;font-size:13px">
+              <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d" checked> Tirar lixo
+            </div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:16px;border:1px solid #e8dce8">
+            <div style="font-size:12px;font-weight:600;color:#8b6b8d;margin-bottom:12px;text-transform:uppercase">📊 Produtividade</div>
+            <div style="margin-bottom:10px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:#5c3d5e">Maria <span style="color:#8b6b8d">80%</span></div>
+              <div style="height:6px;background:#f0e8f0;border-radius:3px;overflow:hidden"><div style="height:100%;width:80%;background:#9b6b9d;border-radius:3px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:#5c3d5e">João <span style="color:#8b6b8d">45%</span></div>
+              <div style="height:6px;background:#f0e8f0;border-radius:3px;overflow:hidden"><div style="height:100%;width:45%;background:#b89bb8;border-radius:3px"></div></div>
+            </div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:16px;border:1px solid #e8dce8;margin-top:14px">
+            <div style="font-size:12px;font-weight:600;color:#8b6b8d;margin-bottom:8px;text-transform:uppercase">👥 Membros</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span style="padding:4px 12px;background:#f5eff5;border-radius:14px;font-size:12px;color:#5c3d5e">👑 Maria</span>
+              <span style="padding:4px 12px;background:#f5eff5;border-radius:14px;font-size:12px;color:#5c3d5e">João</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>B. Top nav + 3 colunas</h3>
+  <p class="subtitle">Header horizontal, conteúdo em três colunas para tarefas, concluídas e visão geral</p>
+  <div style="background:#f9f5f9;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(91,61,94,0.15)">
+    <div style="background:white;padding:14px 24px;border-bottom:1px solid #e8dce8;display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:24px">
+        <span style="font-weight:700;color:#5c3d5e;font-size:18px">🌸 Casa em Ordem</span>
+        <div style="display:flex;gap:4px">
+          <span style="padding:6px 14px;background:#f5eff5;border-radius:8px;color:#9b6b9d;font-size:13px;font-weight:600">📋 Tarefas</span>
+          <span style="padding:6px 14px;border-radius:8px;color:#8b6b8d;font-size:13px">⚙️ Config</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="font-size:13px;color:#5c3d5e">👑 Maria</span>
+        <span style="background:#9b6b9d;color:white;padding:2px 10px;border-radius:8px;font-size:14px;font-weight:700">3</span>
+      </div>
+    </div>
+    <div style="padding:24px;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:20px">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span style="font-size:15px;font-weight:700;color:#3d2d3f">📋 Pendentes</span>
+          <div style="display:flex;gap:4px">
+            <span style="padding:2px 10px;background:#9b6b9d;color:white;border-radius:10px;font-size:11px">Hoje</span>
+          </div>
+        </div>
+        <button style="width:100%;padding:10px;border:1.5px dashed #d5b8d5;border-radius:10px;background:white;color:#9b6b9d;font-size:13px;margin-bottom:10px">+ Adicionar</button>
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid #e8dce8;display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d">
+          <span style="flex:1;font-size:13px;color:#3d2d3f">Lavar louça · Cozinha</span>
+          <span style="font-size:11px;color:#9b7b9d">Maria</span>
+        </div>
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid #e8dce8;display:flex;align-items:center;gap:10px">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d">
+          <span style="flex:1;font-size:13px;color:#3d2d3f">Limpar banheiro · Social</span>
+          <span style="font-size:11px;color:#9b7b9d">João</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:#3d2d3f;margin-bottom:14px">✅ Concluídas</div>
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid #e8dce8;margin-bottom:6px;display:flex;align-items:center;gap:8px;opacity:0.6">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d" checked>
+          <span style="font-size:13px;text-decoration:line-through;color:#5c3d5e">Passar pano na sala</span>
+        </div>
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid #e8dce8;display:flex;align-items:center;gap:8px;opacity:0.6">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:#9b6b9d" checked>
+          <span style="font-size:13px;text-decoration:line-through;color:#5c3d5e">Tirar lixo</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:#3d2d3f;margin-bottom:14px">📊 Visão Geral</div>
+        <div style="background:white;border-radius:12px;padding:14px;border:1px solid #e8dce8;margin-bottom:10px">
+          <div style="font-size:11px;text-transform:uppercase;color:#8b6b8d;margin-bottom:8px">Produtividade</div>
+          <div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;color:#5c3d5e">Maria <span>80%</span></div><div style="height:5px;background:#f0e8f0;border-radius:3px;margin-top:3px"><div style="height:100%;width:80%;background:#9b6b9d;border-radius:3px"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;color:#5c3d5e">João <span>45%</span></div><div style="height:5px;background:#f0e8f0;border-radius:3px;margin-top:3px"><div style="height:100%;width:45%;background:#b89bb8;border-radius:3px"></div></div></div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:14px;border:1px solid #e8dce8">
+          <div style="font-size:11px;text-transform:uppercase;color:#8b6b8d;margin-bottom:8px">Membros</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="padding:4px 10px;background:#f5eff5;border-radius:12px;font-size:12px;color:#5c3d5e">👑 Maria</span>
+            <span style="padding:4px 10px;background:#f5eff5;border-radius:12px;font-size:12px;color:#5c3d5e">João</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:16px;font-size:13px;color:#888">Qual caminho prefere? Ou quer algo diferente? Me diga no terminal!</p>

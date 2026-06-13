@@ -8,47 +8,23 @@ Gerenciador de tarefas domésticas para casais e famílias.
 - **Modelos de Tarefas**: Defina templates para gerar tarefas automaticamente
 - **Ambientes**: Organize tarefas por cômodo da casa
 - **Notificações por Email**: Receba lembretes diários das tarefas pendentes
-- **Código de Invite**: Convide membros da família para a mesma casa
+- **Código de Convite**: Convide membros da família para a mesma casa
 
 ## Tech Stack
 
-- **Frontend**: HTML, CSS, JavaScript (Vanilla)
-- **Backend**: Node.js, Express
-- **Database**: SQLite
-- **Auth**: JWT
+- **Framework**: Next.js 15 (App Router) + TypeScript
+- **Database**: Supabase PostgreSQL
+- **Auth**: Supabase Auth (email/password)
+- **Email**: Resend API
+- **Styling**: Tailwind CSS 4 + shadcn/ui
+- **Deploy**: Vercel
 
 ## Instalação
 
 ```bash
+cp .env.local.example .env.local  # configure suas chaves
 npm install
-npm start
+npm run dev
 ```
 
 O servidor inicia em `http://localhost:3000`.
-
-## API Endpoints
-
-### Auth
-- `POST /auth/register` - Criar conta
-- `POST /auth/login` - Fazer login
-- `GET /auth/me` - Usuário atual
-
-### Tasks
-- `GET /api/tasks` - Listar tarefas
-- `POST /api/tasks` - Criar tarefa
-- `PUT /api/tasks/:id/toggle` - Marcar como feita
-- `DELETE /api/tasks/:id` - Excluir tarefa
-
-### Templates
-- `GET /api/templates` - Listar templates
-- `POST /api/templates` - Criar template
-- `DELETE /api/templates/:id` - Excluir template
-
-### Household
-- `GET /api/household` - Dados da casa
-- `POST /api/household/generate-code` - Gerar novo código
-
-### Notifications
-- `GET /api/notifications/pending` - Tarefas pendentes
-- `GET /api/notifications/settings` - Configurações
-- `PUT /api/notifications/settings` - Atualizar configurações
