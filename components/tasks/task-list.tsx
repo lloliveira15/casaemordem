@@ -48,9 +48,16 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
   }
 
   if (tasks.length === 0) {
+    const today = new Date()
+    const dateFormatted = today.toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    })
     return (
-      <div className="text-center py-10">
+      <div className="text-center py-14">
         <p className="text-muted-foreground text-sm">Nenhuma tarefa para esta data.</p>
+        <p className="text-xs text-muted-foreground/60 mt-1 capitalize">{dateFormatted}</p>
       </div>
     )
   }
