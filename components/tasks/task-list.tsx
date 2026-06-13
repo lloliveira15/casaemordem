@@ -90,21 +90,11 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
           key={task.id}
           className="group flex items-center gap-3 p-3 bg-card border border-border rounded-xl hover:border-primary/30 hover:shadow-[var(--shadow-sm)] transition-all duration-150"
         >
-          <div
-            className={cn(
-              "size-5 rounded-full border-2 flex items-center justify-center transition-colors cursor-pointer",
-              task.completed
-                ? "bg-primary border-primary"
-                : "border-muted-foreground hover:border-primary"
-            )}
-            onClick={() => handleToggle(task.id)}
-          >
-            {task.completed && (
-              <svg className="size-3 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-            )}
-          </div>
+          <Checkbox
+            checked={task.completed}
+            onCheckedChange={() => handleToggle(task.id)}
+            className="cursor-pointer"
+          />
           <div className="flex-1 min-w-0">
             <p className={cn(
               "text-sm transition-all",
