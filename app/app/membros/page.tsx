@@ -36,14 +36,28 @@ export default async function MembersPage() {
     memberProfiles?.map((p) => [p.id, p]) ?? []
   )
 
-  const household = profile.household as unknown as { invite_code: string; name: string; admin_id: string }
+  const household = profile.household as unknown as { id: string; invite_code: string; name: string; admin_id: string }
   const isAdmin = household.admin_id === user.id
+
+  // Ensure the household always has an invite code when visiting this page.
+  let inviteCode = household.invite_code
+  if (!inviteCode) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    inviteCode = Array.from({ length: 6 }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join("")
+
+    await admin
+      .from("households")
+      .update({ invite_code: inviteCode })
+      .eq("id", household.id)
+  }
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Membros</h1>
 
-      <InviteSection inviteCode={household.invite_code} />
+      <InviteSection inviteCode={inviteCode} />
 
       <div className="space-y-3">
         <h2 className="text-lg font-semibold">Membros ({members?.length ?? 0})</h2>
