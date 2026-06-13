@@ -10,7 +10,10 @@ interface MemberStats {
   completion_rate: number
 }
 
-export default async function ProductivityPage() {
+export default async function ProductivityPage(props: { searchParams?: Promise<{ periodo?: string }> }) {
+  const sp = props.searchParams ? await props.searchParams : {}
+  const period = sp.periodo || "month"
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/auth/login")
@@ -21,15 +24,40 @@ export default async function ProductivityPage() {
   if (!profile?.household_id) redirect("/auth/login")
 
   const today = new Date()
-  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split("T")[0]
-  const lastOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split("T")[0]
+  let startDate: Date
+  let endDate: Date
+
+  switch (period) {
+    case "week": {
+      const dow = today.getDay()
+      startDate = new Date(today)
+      startDate.setDate(today.getDate() - dow)
+      endDate = new Date(startDate)
+      endDate.setDate(startDate.getDate() + 6)
+      break
+    }
+    case "year": {
+      startDate = new Date(today.getFullYear(), 0, 1)
+      endDate = new Date(today.getFullYear(), 11, 31)
+      break
+    }
+    case "month":
+    default: {
+      startDate = new Date(today.getFullYear(), today.getMonth(), 1)
+      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      break
+    }
+  }
+
+  const firstDay = startDate.toISOString().split("T")[0]
+  const lastDay = endDate.toISOString().split("T")[0]
 
   const { data: tasks } = await supabase
     .from("tasks")
     .select("*")
     .eq("household_id", profile.household_id)
-    .gte("due_date", firstOfMonth)
-    .lte("due_date", lastOfMonth)
+    .gte("due_date", firstDay)
+    .lte("due_date", lastDay)
 
   const { data: members } = await supabase
     .from("household_members")
@@ -61,6 +89,24 @@ export default async function ProductivityPage() {
         : "bg-card text-muted-foreground hover:text-primary border border-border"
     }`
 
+  const periodLink = (p: string) => {
+    const base = "/app/configuracoes/produtividade"
+    return p === period ? base : `${base}?periodo=${p}`
+  }
+
+  const periodClass = (p: string) =>
+    `px-4 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+      p === period
+        ? "bg-primary text-primary-foreground"
+        : "bg-card text-muted-foreground hover:text-primary border border-border"
+    }`
+
+  function barColor(rate: number): string {
+    if (rate >= 70) return "bg-primary"
+    if (rate >= 40) return "bg-amber-500"
+    return "bg-primary/30"
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-2">
@@ -72,21 +118,30 @@ export default async function ProductivityPage() {
 
       <h1 className="text-2xl font-extrabold">Produtividade</h1>
 
+      <div className="flex flex-wrap gap-2">
+        <a href={periodLink("week")} className={periodClass("week")}>Semana</a>
+        <a href={periodLink("month")} className={periodClass("month")}>Mês</a>
+        <a href={periodLink("year")} className={periodClass("year")}>Ano</a>
+      </div>
+
       <div className="p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)] space-y-3">
         <p className="text-sm text-muted-foreground">Casa: {globalCompleted}/{globalTotal} ({globalRate}%)</p>
-        <Progress value={globalRate} className="h-2" />
+        <Progress value={globalRate} className={`h-2 [&>div]:${barColor(globalRate)}`} />
       </div>
 
       <div className="space-y-3">
-        {memberStats.map((ms) => (
-          <div key={ms.user_id} className="p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)] space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="font-semibold text-foreground">{ms.username}</span>
-              <span className="text-muted-foreground">{ms.completed}/{ms.total} ({ms.completion_rate}%)</span>
+        {memberStats.map((ms) => {
+          const barClass = barColor(ms.completion_rate)
+          return (
+            <div key={ms.user_id} className="p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)] space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="font-semibold text-foreground">{ms.username}</span>
+                <span className="text-muted-foreground">{ms.completed}/{ms.total} ({ms.completion_rate}%)</span>
+              </div>
+              <Progress value={ms.completion_rate} className={`h-2 [&>div]:${barClass}`} />
             </div>
-            <Progress value={ms.completion_rate} className="h-2" />
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

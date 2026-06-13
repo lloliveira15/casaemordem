@@ -34,20 +34,24 @@ export default function GeneratePage() {
 
       <h1 className="text-2xl font-extrabold">Gerar Tarefas</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-5 max-w-md p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)]">
-        <div>
-          <label className="text-xs font-semibold text-muted-foreground block mb-1">Período</label>
-          <select name="period" className={selectClass}>
-            <option value="day">Hoje</option>
-            <option value="week">Esta Semana</option>
-            <option value="month">Este Mês</option>
-          </select>
-        </div>
-        <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors">
-          Gerar Tarefas dos Templates
-        </button>
-        {result && <p className="text-sm text-success font-medium">{result}</p>}
-      </form>
+      <div className="space-y-5">
+        {/* Gerar dos templates */}
+        <form onSubmit={handleSubmit} className="space-y-5 max-w-md p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)]">
+          <h2 className="text-sm font-semibold text-foreground">Gerar a partir dos templates</h2>
+          <div>
+            <label className="text-xs font-semibold text-muted-foreground block mb-1">Período</label>
+            <select name="period" className={selectClass}>
+              <option value="day">Hoje</option>
+              <option value="week">Esta Semana</option>
+              <option value="month">Este Mês</option>
+            </select>
+          </div>
+          <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors">
+            Gerar
+          </button>
+          {result && <p className="text-sm text-success font-medium">{result}</p>}
+        </form>
+      </div>
     </div>
   )
 }

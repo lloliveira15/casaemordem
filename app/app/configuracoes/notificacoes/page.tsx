@@ -42,18 +42,26 @@ export default async function NotificationsPage() {
           <input type="checkbox" name="email_enabled" value="true" defaultChecked={settings?.email_enabled ?? true} className="size-4 accent-primary rounded border-border" />
           <span className="text-sm text-foreground">Notificações por email ativadas</span>
         </label>
+
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">Horário do lembrete</label>
           <input type="time" name="reminder_time" defaultValue={settings?.reminder_time ?? "16:00"} className={inputClass} />
         </div>
+
         <div>
           <label className="text-xs font-semibold text-muted-foreground block mb-1">Frequência do lembrete</label>
           <select name="reminder_freq" defaultValue={settings?.reminder_freq ?? "daily"} className={selectClass}>
-            <option value="daily">Diário</option>
+            <option value="daily">1x ao dia</option>
+            <option value="every2h">A cada 2h</option>
+            <option value="every4h">A cada 4h</option>
+            <option value="every6h">A cada 6h</option>
             <option value="weekly">Semanal</option>
           </select>
         </div>
-        <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors">Salvar</button>
+
+        <button type="submit" className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors">
+          Salvar
+        </button>
       </form>
     </div>
   )
