@@ -32,11 +32,11 @@ export function MemberCard({ member, isAdmin }: { member: MemberData; isAdmin: b
   const inputClass = "px-2 py-1.5 border border-input rounded-lg bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
 
   return (
-    <div className="p-4 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)] hover:border-primary/30 transition-all">
+    <div className="p-5 bg-card border border-border rounded-xl shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-0.5 transition-all duration-150">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="size-11 rounded-full bg-secondary flex items-center justify-center text-primary shrink-0">
-            <User className="size-5" />
+          <div className="size-10 rounded-full bg-secondary flex items-center justify-center text-primary shrink-0">
+            <User className="size-5" weight="fill" />
           </div>
           <div className="min-w-0">
             <p className="font-semibold text-foreground truncate">
