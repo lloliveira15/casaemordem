@@ -22,11 +22,13 @@ export function StatsCards({ total, completed, pending, memberCount }: StatsProp
       {stats.map((stat) => (
         <Card
           key={stat.label}
-          className="border-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:border-primary/30 transition-all"
+          className="border-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-150 cursor-pointer"
         >
-          <CardContent className="p-5 text-center space-y-1">
-            <p className="text-3xl font-extrabold text-primary">{stat.value}</p>
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          <CardContent className="p-5 space-y-2">
+            <div className="size-10 rounded-xl bg-[#EDE9FE] flex items-center justify-center mx-auto">
+              <p className="text-2xl font-extrabold text-[#A78BFA]">{stat.value}</p>
+            </div>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-[#6B5B8D]">
               {stat.label}
             </p>
           </CardContent>
