@@ -185,6 +185,50 @@
   --color-ring: var(--ring);
 }
 
+/* App area — same soft lavender palette as landing */
+.app-theme {
+  --background: #FDFBFF;
+  --foreground: #3D3650;
+  --card: #FCFAFF;
+  --card-foreground: #3D3650;
+  --popover: #FFFFFF;
+  --popover-foreground: #3D3650;
+  --primary: #7C65C9;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F4F0FF;
+  --secondary-foreground: #5A4A8A;
+  --muted: #F8F5FF;
+  --muted-foreground: #5E5377;
+  --accent: #6BAE9C;
+  --accent-foreground: #3D6B5C;
+  --destructive: #E07A7A;
+  --destructive-foreground: #FFFFFF;
+  --success: #6BAE9C;
+  --border: #EDE8F5;
+  --input: #EDE8F5;
+  --ring: #9F8AE0;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
 .landing .section-white {
   background-color: #FFFFFF;
 }
