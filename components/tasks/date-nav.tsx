@@ -24,18 +24,33 @@ export function DateNav({ currentDate }: { currentDate: string }) {
   const [y, m, d] = currentDate.split("-")
 
   return (
-    <div className="flex items-center gap-3">
-      <Button variant="outline" size="sm" onClick={() => goTo(shiftDate(currentDate, -1))}>
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goTo(shiftDate(currentDate, -1))}
+        className="rounded-lg border-border bg-card hover:bg-muted hover:text-primary"
+      >
         <CaretLeft className="size-4" />
       </Button>
-      <span className="text-sm font-medium min-w-[140px] text-center">
+      <span className="text-sm font-semibold min-w-[140px] text-center text-foreground">
         {d}/{m}/{y}
       </span>
-      <Button variant="outline" size="sm" onClick={() => goTo(shiftDate(currentDate, 1))}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => goTo(shiftDate(currentDate, 1))}
+        className="rounded-lg border-border bg-card hover:bg-muted hover:text-primary"
+      >
         <CaretRight className="size-4" />
       </Button>
       {currentDate !== today && (
-        <Button variant="secondary" size="sm" onClick={() => goTo(today)}>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => goTo(today)}
+          className="rounded-lg"
+        >
           Hoje
         </Button>
       )}

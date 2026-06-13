@@ -21,31 +21,29 @@ export default async function ConfigPage() {
     .order("frequency")
     .order("day_value")
 
+  const tabClass = (href: string) =>
+    `px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+      href === "/app/configuracoes"
+        ? "bg-primary text-primary-foreground"
+        : "bg-card text-muted-foreground hover:text-primary border border-border"
+    }`
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Configurações</h1>
+      <h1 className="text-2xl font-extrabold">Configurações</h1>
 
-      <section className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        <a href="/app/configuracoes" className={tabClass("/app/configuracoes")}>Templates</a>
+        <a href="/app/configuracoes/notificacoes" className={tabClass("/app/configuracoes/notificacoes")}>Notificações</a>
+        <a href="/app/configuracoes/gerar" className={tabClass("/app/configuracoes/gerar")}>Gerar Tarefas</a>
+        <a href="/app/configuracoes/produtividade" className={tabClass("/app/configuracoes/produtividade")}>Produtividade</a>
+      </div>
+
+      <section className="space-y-4 p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)]">
         <h2 className="text-lg font-semibold">Templates de Tarefas</h2>
         <TemplateForm />
         <TemplateList templates={templates ?? []} />
       </section>
-
-      <div className="flex gap-2 text-sm">
-        <span className="font-medium">Templates</span>
-        <span aria-hidden>·</span>
-        <a href="/app/configuracoes/notificacoes" className="text-primary hover:underline">
-          Notificações
-        </a>
-        <span aria-hidden>·</span>
-        <a href="/app/configuracoes/gerar" className="text-primary hover:underline">
-          Gerar Tarefas
-        </a>
-        <span aria-hidden>·</span>
-        <a href="/app/configuracoes/produtividade" className="text-primary hover:underline">
-          Produtividade
-        </a>
-      </div>
     </div>
   )
 }

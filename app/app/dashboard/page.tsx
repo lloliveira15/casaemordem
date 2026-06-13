@@ -38,8 +38,8 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">Olá, {profile.username}!</p>
+        <h1 className="text-2xl font-extrabold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground text-sm mt-0.5">Olá, {profile.username}!</p>
       </div>
 
       <StatsCards

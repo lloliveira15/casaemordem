@@ -3,6 +3,8 @@
 import { useRef } from "react"
 import { createQuickTask } from "@/app/app/actions"
 import { ROOM_OPTIONS } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Plus } from "phosphor-react"
 
 export function TaskForm({ dueDate }: { dueDate: string }) {
   const formRef = useRef<HTMLFormElement>(null)
@@ -14,27 +16,25 @@ export function TaskForm({ dueDate }: { dueDate: string }) {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="flex gap-2">
+    <form ref={formRef} action={handleSubmit} className="flex flex-col sm:flex-row gap-2">
       <input
         name="description"
         placeholder="Adicionar tarefa..."
         required
-        className="flex-1 px-3 py-2 border rounded-md bg-background text-sm"
+        className="flex-1 px-3 py-2 border border-input rounded-lg bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
       />
       <select
         name="room"
-        className="px-3 py-2 border rounded-md bg-background text-sm"
+        className="px-3 py-2 border border-input rounded-lg bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
       >
         {ROOM_OPTIONS.map(r => (
           <option key={r} value={r}>{r}</option>
         ))}
       </select>
-      <button
-        type="submit"
-        className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium"
-      >
+      <Button type="submit" className="rounded-lg">
+        <Plus className="size-4 mr-1" />
         Adicionar
-      </button>
+      </Button>
     </form>
   )
 }

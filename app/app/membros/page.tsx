@@ -55,12 +55,12 @@ export default async function MembersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Membros</h1>
+      <h1 className="text-2xl font-extrabold text-foreground">Membros</h1>
 
       <InviteSection inviteCode={inviteCode} />
 
       <div className="space-y-3">
-        <h2 className="text-lg font-semibold">Membros ({members?.length ?? 0})</h2>
+        <h2 className="text-lg font-semibold text-foreground">Membros ({members?.length ?? 0})</h2>
         {members?.map((m) => {
           const memberProfile = profileById.get(m.user_id)
           return (

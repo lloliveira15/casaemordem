@@ -54,33 +54,37 @@ export default async function ProductivityPage() {
   const globalCompleted = tasks?.filter(t => t.completed).length ?? 0
   const globalRate = globalTotal > 0 ? Math.round((globalCompleted / globalTotal) * 100) : 0
 
+  const tabClass = (href: string) =>
+    `px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+      href === "/app/configuracoes/produtividade"
+        ? "bg-primary text-primary-foreground"
+        : "bg-card text-muted-foreground hover:text-primary border border-border"
+    }`
+
   return (
     <div className="space-y-6">
-      <div className="flex gap-2 text-sm">
-        <a href="/app/configuracoes" className="text-primary hover:underline">Templates</a>
-        <span aria-hidden>·</span>
-        <a href="/app/configuracoes/notificacoes" className="text-primary hover:underline">Notificações</a>
-        <span aria-hidden>·</span>
-        <a href="/app/configuracoes/gerar" className="text-primary hover:underline">Gerar Tarefas</a>
-        <span aria-hidden>·</span>
-        <span className="font-medium">Produtividade</span>
+      <div className="flex flex-wrap gap-2">
+        <a href="/app/configuracoes" className={tabClass("/app/configuracoes")}>Templates</a>
+        <a href="/app/configuracoes/notificacoes" className={tabClass("/app/configuracoes/notificacoes")}>Notificações</a>
+        <a href="/app/configuracoes/gerar" className={tabClass("/app/configuracoes/gerar")}>Gerar Tarefas</a>
+        <a href="/app/configuracoes/produtividade" className={tabClass("/app/configuracoes/produtividade")}>Produtividade</a>
       </div>
 
-      <h1 className="text-2xl font-bold">Produtividade</h1>
+      <h1 className="text-2xl font-extrabold">Produtividade</h1>
 
-      <div className="p-4 border rounded-lg">
+      <div className="p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)] space-y-3">
         <p className="text-sm text-muted-foreground">Casa: {globalCompleted}/{globalTotal} ({globalRate}%)</p>
-        <Progress value={globalRate} className="mt-2" />
+        <Progress value={globalRate} className="h-2" />
       </div>
 
       <div className="space-y-3">
         {memberStats.map((ms) => (
-          <div key={ms.user_id} className="p-4 border rounded-lg space-y-2">
+          <div key={ms.user_id} className="p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)] space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="font-medium">{ms.username}</span>
-              <span>{ms.completed}/{ms.total} ({ms.completion_rate}%)</span>
+              <span className="font-semibold text-foreground">{ms.username}</span>
+              <span className="text-muted-foreground">{ms.completed}/{ms.total} ({ms.completion_rate}%)</span>
             </div>
-            <Progress value={ms.completion_rate} />
+            <Progress value={ms.completion_rate} className="h-2" />
           </div>
         ))}
       </div>
