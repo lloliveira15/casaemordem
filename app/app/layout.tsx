@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Sidebar } from "@/components/layout/sidebar"
+import { BottomNav } from "@/components/layout/bottom-nav"
 import { AppTheme } from "@/components/layout/app-theme"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -30,7 +31,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="app-theme flex min-h-screen bg-background text-foreground">
       <AppTheme />
       <Sidebar username={username} isAdmin={isAdmin} />
-      <main className="flex-1 p-4 md:p-8 pb-20 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8">
+        <BottomNav />
         {children}
       </main>
     </div>
