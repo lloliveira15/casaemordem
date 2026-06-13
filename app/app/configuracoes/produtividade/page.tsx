@@ -65,13 +65,14 @@ export default async function ProductivityPage(props: { searchParams?: Promise<{
     .eq("household_id", profile.household_id)
 
   const memberStats: MemberStats[] = (members ?? []).map((m) => {
-    const p = m.profile as unknown as { username: string }
-    const memberTasks = (tasks ?? []).filter(t => t.assigned_to === p.username)
+    const p = m.profile as unknown as { username: string } | null
+    const username = p?.username ?? "Usuário"
+    const memberTasks = (tasks ?? []).filter(t => t.assigned_to === username)
     const total = memberTasks.length
     const completed = memberTasks.filter(t => t.completed).length
     return {
       user_id: m.user_id,
-      username: p.username,
+      username,
       total,
       completed,
       completion_rate: total > 0 ? Math.round((completed / total) * 100) : 0,
