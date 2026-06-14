@@ -91,3 +91,39 @@ CREATE POLICY "shopcat_update" ON shopping_categories FOR UPDATE USING (
 CREATE POLICY "shopcat_delete" ON shopping_categories FOR DELETE USING (
   household_id IN (SELECT household_id FROM household_members WHERE user_id = auth.uid())
 );
+
+-- 7. Data migration: create rooms from existing unique room values
+INSERT INTO rooms (household_id, name, sort_order)
+SELECT DISTINCT ON (t.household_id, t.room)
+  t.household_id,
+  COALESCE(t.room, 'Geral'),
+  CASE
+    WHEN COALESCE(t.room, 'Geral') = 'Geral' THEN 0
+    WHEN COALESCE(t.room, 'Geral') = 'Sala' THEN 1
+    WHEN COALESCE(t.room, 'Geral') = 'Cozinha' THEN 2
+    WHEN COALESCE(t.room, 'Geral') = 'Quarto' THEN 3
+    WHEN COALESCE(t.room, 'Geral') = 'Banheiro' THEN 4
+    WHEN COALESCE(t.room, 'Geral') = 'Área de Serviço' THEN 5
+    WHEN COALESCE(t.room, 'Geral') = 'Jardim' THEN 6
+    WHEN COALESCE(t.room, 'Geral') = 'Garagem' THEN 7
+    WHEN COALESCE(t.room, 'Geral') = 'Escritório' THEN 8
+    ELSE 9
+  END
+FROM (
+  SELECT household_id, room FROM task_templates WHERE room IS NOT NULL AND is_active = true
+  UNION
+  SELECT household_id, room FROM tasks WHERE room IS NOT NULL
+) t
+WHERE t.room IS NOT NULL;
+
+-- Update task_templates.room_id
+UPDATE task_templates tt
+SET room_id = r.id
+FROM rooms r
+WHERE r.household_id = tt.household_id AND r.name = COALESCE(tt.room, 'Geral');
+
+-- Update tasks.room_id
+UPDATE tasks t
+SET room_id = r.id
+FROM rooms r
+WHERE r.household_id = t.household_id AND r.name = COALESCE(t.room, 'Geral');
