@@ -107,7 +107,8 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
               {task.assigned && (
                 <span>— {task.assigned.profiles.username}</span>
               )}
-              {!task.assigned && task.assigned_to && (
+              {/* Only display assigned_to if it's a name (not a UUID from legacy data) */}
+              {!task.assigned && task.assigned_to && !/^[0-9a-f-]{36}$/.test(task.assigned_to) && (
                 <span>— {task.assigned_to}</span>
               )}
             </div>
