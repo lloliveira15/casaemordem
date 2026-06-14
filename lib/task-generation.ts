@@ -2,10 +2,19 @@ interface Template {
   id: string
   household_id: string
   description: string
-  room: string | null
-  assigned_to: string | null
+  room_id: string | null
+  assigned_to_id: string | null
   frequency: string
   day_value: number
+}
+
+interface TaskToCreate {
+  household_id: string
+  template_id: string
+  description: string
+  room_id: string | null
+  assigned_to_id: string | null
+  due_date: string
 }
 
 function isBiweeklyMatch(date: Date, dayValue: number): boolean {
@@ -30,15 +39,6 @@ export function shouldGenerateOnDate(template: Template, date: Date): boolean {
   }
 }
 
-interface TaskToCreate {
-  household_id: string
-  template_id: string
-  description: string
-  room: string | null
-  assigned_to: string | null
-  due_date: string
-}
-
 export function generateTasksForRange(
   templates: Template[],
   householdId: string,
@@ -56,8 +56,8 @@ export function generateTasksForRange(
           household_id: householdId,
           template_id: template.id,
           description: template.description,
-          room: template.room,
-          assigned_to: template.assigned_to,
+          room_id: template.room_id,
+          assigned_to_id: template.assigned_to_id,
           due_date: dueDate,
         })
       }

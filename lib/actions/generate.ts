@@ -40,6 +40,7 @@ export async function generateTasks(formData: FormData) {
     .select("*")
     .eq("household_id", profile.household_id)
     .eq("is_active", true)
+    .eq("is_sporadic", false)
 
   if (!templates?.length) return { error: "Nenhum template ativo" }
 
