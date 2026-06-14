@@ -32,7 +32,4 @@ export const FREQUENCY_LABELS: Record<string, string> = {
   monthly: "Mensal",
 }
 
-export const ROOM_OPTIONS = [
-  "Geral", "Sala", "Cozinha", "Quarto", "Banheiro",
-  "Área de Serviço", "Jardim", "Garagem", "Escritório",
-]
+export const ROOM_OPTIONS: string[] = []
