@@ -1,40 +1,51 @@
 import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/layout/sidebar"
 import { BottomNav } from "@/components/layout/bottom-nav"
-import { AppTheme } from "@/components/layout/app-theme"
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  let username = "Usuário"
-  let isAdmin = false
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/auth/login")
 
-  try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("username, household:households(admin_id)")
-        .eq("id", user.id)
-        .single()
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*, household:households(*)")
+    .eq("id", user.id)
+    .single()
 
-      if (profile) {
-        username = profile.username ?? "Usuário"
-        const household = (profile.household as unknown as { admin_id: string } | undefined)
-        isAdmin = household?.admin_id === user.id
-      }
-    }
-  } catch (e) {
-    // User may not be authenticated on some pages
-  }
+  if (!profile?.household_id) redirect("/auth/login")
+
+  const { data: memberships } = await supabase
+    .from("household_members")
+    .select("household_id, household:households(name)")
+    .eq("user_id", user.id)
+
+  const household = profile.household as unknown as { id: string; name: string; admin_id: string }
+  const households = (memberships ?? []).map(m => ({
+    id: m.household_id,
+    name: (m.household as unknown as { name: string })?.name ?? "Casa",
+  }))
+
+  const { data: member } = await supabase
+    .from("household_members")
+    .select("role")
+    .eq("household_id", profile.household_id)
+    .eq("user_id", user.id)
+    .single()
 
   return (
-    <div className="app-theme flex min-h-screen bg-background text-foreground">
-      <AppTheme />
-      <Sidebar username={username} isAdmin={isAdmin} />
-      <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8">
-        <BottomNav />
+    <div className="flex min-h-screen bg-[#F9FAFB]">
+      <Sidebar
+        username={profile.username}
+        isAdmin={household.admin_id === user.id || member?.role === "admin"}
+        currentHousehold={{ id: household.id, name: household.name }}
+        households={households}
+      />
+      <main className="flex-1 p-6 pb-20 md:pb-6">
         {children}
       </main>
+      <BottomNav />
     </div>
   )
 }

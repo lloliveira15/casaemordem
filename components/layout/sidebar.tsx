@@ -5,32 +5,42 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { logout } from "@/app/auth/actions"
 import {
-  ChartBar,
   ListChecks,
   Users,
   GearSix,
   SignOut,
   Crown,
   Flower,
+  House,
+  ShoppingCart,
 } from "phosphor-react"
+import { HouseholdSwitcher } from "@/components/layout/household-switcher"
+
+interface Household {
+  id: string
+  name: string
+}
 
 const navItems = [
-  { href: "/app/dashboard", label: "Dashboard", icon: ChartBar },
-  { href: "/app/tarefas", label: "Tarefas", icon: ListChecks },
+  { href: "/app/dashboard", label: "Dashboard", icon: House },
+  { href: "/app/comodos", label: "Cômodos", icon: ListChecks },
+  { href: "/app/compras", label: "Compras", icon: ShoppingCart },
   { href: "/app/membros", label: "Membros", icon: Users },
   { href: "/app/configuracoes", label: "Configurações", icon: GearSix },
 ]
 
-export function Sidebar({ username, isAdmin }: { username: string; isAdmin: boolean }) {
+export function Sidebar({ username, isAdmin, currentHousehold, households }: { username: string; isAdmin: boolean; currentHousehold: Household; households: Household[] }) {
   const pathname = usePathname()
 
   return (
     <aside className="hidden md:flex flex-col w-[260px] border-r border-[#E5E7EB] bg-white text-[#374151] p-4">
       {/* Logo */}
-      <div className="mb-8 px-4 flex items-center gap-2">
+      <div className="mb-2 px-4 flex items-center gap-2">
         <Flower className="size-6 text-[#A78BFA]" weight="fill" />
         <span className="text-lg font-semibold text-[#A78BFA]">Casa em Ordem</span>
       </div>
+
+      <HouseholdSwitcher current={currentHousehold} households={households} />
 
       {/* Nav Items */}
       <nav className="flex-1 space-y-1">
