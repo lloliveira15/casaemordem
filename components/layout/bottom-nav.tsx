@@ -4,17 +4,15 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
-  ChartBar,
   ListChecks,
   Users,
   GearSix,
 } from "phosphor-react"
 
 const navItems = [
-  { href: "/app/dashboard", label: "Dashboard", icon: ChartBar },
-  { href: "/app/tarefas", label: "Tarefas", icon: ListChecks },
+  { href: "/app/comodos", label: "Cômodos", icon: ListChecks },
   { href: "/app/membros", label: "Membros", icon: Users },
-  { href: "/app/configuracoes", label: "Ajustes", icon: GearSix },
+  { href: "/app/configuracoes", label: "Notificações", icon: GearSix },
 ]
 
 export function BottomNav() {
