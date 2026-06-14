@@ -13,17 +13,18 @@ export const registerSchema = z.object({
   invite_code: z.string().optional(),
 })
 
-export const createTaskSchema = z.object({
+export const createRoomTaskSchema = z.object({
   description: z.string().min(1, "Descrição obrigatória"),
-  room: z.string().default("Geral"),
-  assigned_to: z.string().optional(),
-  due_date: z.string(),
+  is_sporadic: z.string().optional(),
+  frequency: z.enum(["daily", "weekly", "biweekly", "monthly"]).optional(),
+  day_value: z.coerce.number().optional().default(0),
+  assigned_to_id: z.string().uuid().optional().nullable(),
+  due_date: z.string().optional(),
 })
 
-export const createTemplateSchema = z.object({
+export const createQuickTaskSchema = z.object({
   description: z.string().min(1, "Descrição obrigatória"),
-  room: z.string().default("Geral"),
-  assigned_to: z.string().optional(),
-  frequency: z.enum(["daily", "weekly", "biweekly", "monthly"]).default("daily"),
-  day_value: z.coerce.number().default(0),
+  room_id: z.string().uuid().optional().nullable(),
+  assigned_to_id: z.string().uuid().optional().nullable(),
+  due_date: z.string(),
 })
