@@ -16,7 +16,10 @@ export const registerSchema = z.object({
 export const createRoomTaskSchema = z.object({
   description: z.string().min(1, "Descrição obrigatória"),
   is_sporadic: z.string().optional(),
-  frequency: z.enum(["daily", "weekly", "biweekly", "monthly"]).optional(),
+  frequency: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : v),
+    z.enum(["daily", "weekly", "biweekly", "monthly"]).optional()
+  ),
   day_value: z.coerce.number().optional().default(0),
   assigned_to_id: z.string().uuid().optional().nullable(),
   due_date: z.string().optional(),

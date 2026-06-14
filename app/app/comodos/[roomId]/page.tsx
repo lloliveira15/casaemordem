@@ -29,10 +29,23 @@ export default async function RoomTasksPage(props: { params: Promise<{ roomId: s
     .eq("is_sporadic", false)
     .order("created_at")
 
-  const { data: members } = await supabase
+  const { data: rawMembers } = await supabase
     .from("household_members")
-    .select("id, user_id, profiles!inner(username)")
+    .select("id, user_id")
     .eq("household_id", profile.household_id)
+
+  const memberIds = rawMembers?.map(m => m.user_id) ?? []
+  const { data: memberProfiles } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .in("id", memberIds.length > 0 ? memberIds : [user.id])
+
+  const profileMap = new Map(memberProfiles?.map(p => [p.id, p]) ?? [])
+  const members = (rawMembers ?? []).map(m => ({
+    id: m.id,
+    user_id: m.user_id,
+    profile: { username: profileMap.get(m.user_id)?.username ?? "Usuário" },
+  }))
 
   return (
     <div className="space-y-6">

@@ -17,7 +17,7 @@ export async function createRoomTask(formData: FormData) {
   const raw = Object.fromEntries(formData)
   const data = createRoomTaskSchema.parse(raw)
 
-  const isSporadic = !data.frequency || data.frequency === ""
+  const isSporadic = !data.frequency
 
   const { error } = await supabase.from("task_templates").insert({
     household_id: profile.household_id,

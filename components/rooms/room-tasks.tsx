@@ -21,7 +21,7 @@ interface Template {
 interface Member {
   id: string
   user_id: string
-  profiles: { username: string }
+  profile: { username: string }
 }
 
 export function RoomTasks({ roomId, templates, members }: { roomId: string; templates: Template[]; members: Member[] }) {
@@ -95,7 +95,7 @@ export function RoomTasks({ roomId, templates, members }: { roomId: string; temp
             <select name="assigned_to_id" className={`${selectClass} w-full`}>
               <option value="">Livre</option>
               {members.map(m => (
-                <option key={m.id} value={m.id}>{m.profiles.username}</option>
+                <option key={m.id} value={m.id}>{m.profile.username}</option>
               ))}
             </select>
           </div>
