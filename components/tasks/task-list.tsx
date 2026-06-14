@@ -10,10 +10,13 @@ import { toggleTask, deleteTask } from "@/app/app/actions"
 interface Task {
   id: string
   description: string
-  room: string | null
+  room: { name: string } | null
+  room_id: string | null
   assigned_to: string | null
+  assigned_to_id: string | null
   completed: boolean
   completed_by: string | null
+  assigned: { user_id: string; profiles: { username: string } } | null
 }
 
 export function TaskList({ tasks }: { tasks: Task[] }) {
@@ -100,8 +103,13 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
               {task.description}
             </p>
             <div className="flex gap-2 text-xs text-muted-foreground mt-0.5">
-              {task.room && <span>{task.room}</span>}
-              {task.assigned_to && <span>— {task.assigned_to}</span>}
+              {task.room && <span>{task.room.name}</span>}
+              {task.assigned && (
+                <span>— {task.assigned.profiles.username}</span>
+              )}
+              {!task.assigned && task.assigned_to && (
+                <span>— {task.assigned_to}</span>
+              )}
             </div>
           </div>
           <button
