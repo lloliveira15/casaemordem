@@ -46,8 +46,8 @@ export async function createQuickTask(formData: FormData) {
   const { error } = await supabase.from("tasks").insert({
     household_id: profile?.household_id,
     description: formData.get("description") as string,
-    room: (formData.get("room") as string) || "Geral",
-    assigned_to: formData.get("assigned_to") as string || null,
+    room_id: (formData.get("room_id") as string) || null,
+    assigned_to_id: (formData.get("assigned_to_id") as string) || null,
     due_date: formData.get("due_date") as string,
   })
 
