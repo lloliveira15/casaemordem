@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { Calendar } from "@/components/dashboard/calendar"
-import { TaskList } from "@/components/tasks/task-list"
+import { TaskTable } from "@/components/tasks/task-table"
 import { StatsCards } from "@/components/dashboard/stats-cards"
 import { getTodayDateString } from "@/lib/utils"
 import Link from "next/link"
@@ -86,7 +86,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
 
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">Tarefas do Dia</h2>
-        <TaskList tasks={tasks ?? []} />
+        <TaskTable tasks={tasks ?? []} />
       </div>
     </div>
   )
