@@ -13,6 +13,8 @@ import {
   Flower,
   House,
   ShoppingCart,
+  ClockCounterClockwise,
+  Armchair,
 } from "phosphor-react"
 import { HouseholdSwitcher } from "@/components/layout/household-switcher"
 
@@ -22,11 +24,12 @@ interface Household {
 }
 
 const navItems = [
-  { href: "/app/dashboard", label: "Início", icon: ListChecks },
-  { href: "/app/comodos", label: "Cômodos", icon: House },
+  { href: "/app/dashboard", label: "Tarefas", icon: ListChecks },
+  { href: "/app/comodos", label: "Cômodos", icon: Armchair },
   { href: "/app/compras", label: "Compras", icon: ShoppingCart },
+  { href: "/app/configuracoes", label: "Rotinas", icon: ClockCounterClockwise },
   { href: "/app/membros", label: "Membros", icon: Users },
-  { href: "/app/configuracoes", label: "Configurações", icon: GearSix },
+  { href: "/app/configuracoes/notificacoes", label: "Configurações", icon: GearSix },
 ]
 
 export function Sidebar({ username, isAdmin, currentHousehold, households }: { username: string; isAdmin: boolean; currentHousehold: Household; households: Household[] }) {

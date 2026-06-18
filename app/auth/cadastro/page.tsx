@@ -1,8 +1,9 @@
 import { register } from "../actions"
 
-export default async function RegisterPage(props: { searchParams?: Promise<{ erro?: string }> }) {
+export default async function RegisterPage(props: { searchParams?: Promise<{ erro?: string; invite?: string }> }) {
   const searchParams = props.searchParams ? await props.searchParams : {}
   const erro = searchParams.erro
+  const inviteCode = searchParams.invite || ""
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -30,8 +31,15 @@ export default async function RegisterPage(props: { searchParams?: Promise<{ err
             <input id="phone" name="phone" type="tel" className="w-full px-3 py-2 border rounded-md bg-background" />
           </div>
           <div>
-            <label htmlFor="invite_code" className="block text-sm font-medium mb-1">Código de convite (opcional)</label>
-            <input id="invite_code" name="invite_code" type="text" className="w-full px-3 py-2 border rounded-md bg-background" />
+            <label htmlFor="invite_code" className="block text-sm font-medium mb-1">Código de convite</label>
+            <input
+              id="invite_code"
+              name="invite_code"
+              type="text"
+              defaultValue={inviteCode}
+              readOnly={!!inviteCode}
+              className="w-full px-3 py-2 border rounded-md bg-background uppercase tracking-widest"
+            />
           </div>
           <button type="submit" className="w-full py-2 bg-primary text-primary-foreground rounded-md font-medium">
             Criar conta

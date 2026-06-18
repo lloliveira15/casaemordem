@@ -38,6 +38,38 @@ export async function register(formData: FormData): Promise<never | void> {
   })
 
   if (error) return redirect(`/auth/cadastro?erro=${encodeURIComponent(error.message)}`)
+
+  if (parsed.data.invite_code) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const code = parsed.data.invite_code.trim().toUpperCase()
+      const { data: household } = await supabase
+        .from("households")
+        .select("id")
+        .eq("invite_code", code)
+        .single()
+
+      if (household) {
+        const { data: existing } = await supabase
+          .from("household_members")
+          .select("id")
+          .eq("household_id", household.id)
+          .eq("user_id", user.id)
+          .maybeSingle()
+
+        if (!existing) {
+          await supabase.from("household_members").insert({
+            household_id: household.id,
+            user_id: user.id,
+            role: "member",
+          })
+        }
+
+        await supabase.from("profiles").update({ household_id: household.id }).eq("id", user.id)
+      }
+    }
+  }
+
   redirect("/app/dashboard")
 }
 
