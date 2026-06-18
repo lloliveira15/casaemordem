@@ -61,14 +61,25 @@ export async function sendInvite(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "Unauthorized" }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("username, household:households(invite_code)")
+    .select("username, household_id")
     .eq("id", user.id)
     .single()
 
-  const household = profile?.household as unknown as { invite_code: string }
-  if (!household?.invite_code) return { error: "Código de convite não encontrado" }
+  if (profileError || !profile?.household_id) {
+    return { error: "Perfil não encontrado" }
+  }
+
+  const { data: household, error: householdError } = await supabase
+    .from("households")
+    .select("invite_code")
+    .eq("id", profile.household_id)
+    .single()
+
+  if (householdError || !household?.invite_code) {
+    return { error: "Código de convite não encontrado" }
+  }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
@@ -76,9 +87,9 @@ export async function sendInvite(formData: FormData) {
     await getResend().emails.send({
       from: process.env.RESEND_FROM ?? "noreply@casaemordem.com.br",
       to: email,
-      subject: `${profile?.username ?? "Alguém"} te convidou para o Casa em Ordem!`,
+      subject: `${profile.username ?? "Alguém"} te convidou para o Casa em Ordem!`,
       react: InviteEmail({
-        senderName: profile?.username ?? "Alguém",
+        senderName: profile.username ?? "Alguém",
         inviteCode: household.invite_code,
         appUrl,
       }),
