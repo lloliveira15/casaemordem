@@ -1,4 +1,9 @@
 node_modules/
-server.log
-.env
+.next/
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+.vercel
 .superpowers/
+.DS_Store
+supabase/.temp/
