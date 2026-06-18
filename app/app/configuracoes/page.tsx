@@ -58,14 +58,13 @@ export default async function ConfigPage() {
       <h1 className="text-2xl font-extrabold">Configurações</h1>
 
       <div className="flex flex-wrap gap-2">
-        <a href="/app/configuracoes" className={tabClass("/app/configuracoes")}>Templates</a>
+        <a href="/app/configuracoes" className={tabClass("/app/configuracoes")}>Rotinas</a>
         <a href="/app/configuracoes/notificacoes" className={tabClass("/app/configuracoes/notificacoes")}>Notificações</a>
         <a href="/app/configuracoes/gerar" className={tabClass("/app/configuracoes/gerar")}>Gerar Tarefas</a>
-        <a href="/app/configuracoes/produtividade" className={tabClass("/app/configuracoes/produtividade")}>Produtividade</a>
       </div>
 
       <section className="space-y-4 p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)]">
-        <h2 className="text-lg font-semibold">Templates de Tarefas</h2>
+        <h2 className="text-lg font-semibold">Rotinas da Casa</h2>
         <TemplateForm rooms={roomNames} members={members} />
         <TemplateList templates={templates ?? []} />
       </section>
