@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { CaretDown, Plus, House } from "phosphor-react"
-import { switchHousehold, createNewHousehold } from "@/lib/actions/household-switch"
+import { CaretDown, Plus, House, SignIn } from "phosphor-react"
+import { switchHousehold, createNewHousehold, joinHousehold } from "@/lib/actions/household-switch"
 
 interface Household {
   id: string
@@ -15,6 +15,9 @@ export function HouseholdSwitcher({ current, households }: { current: Household;
   const [open, setOpen] = useState(false)
   const [showNew, setShowNew] = useState(false)
   const [newName, setNewName] = useState("")
+  const [showJoin, setShowJoin] = useState(false)
+  const [inviteCode, setInviteCode] = useState("")
+  const [joinError, setJoinError] = useState("")
 
   async function handleSwitch(id: string) {
     await switchHousehold(id)
@@ -29,6 +32,20 @@ export function HouseholdSwitcher({ current, households }: { current: Household;
     setShowNew(false)
     setOpen(false)
     router.refresh()
+  }
+
+  async function handleJoin() {
+    if (!inviteCode.trim()) return
+    setJoinError("")
+    const result = await joinHousehold(inviteCode.trim())
+    if (result?.error) {
+      setJoinError(result.error)
+    } else {
+      setInviteCode("")
+      setShowJoin(false)
+      setOpen(false)
+      router.refresh()
+    }
   }
 
   return (
@@ -70,11 +87,39 @@ export function HouseholdSwitcher({ current, households }: { current: Household;
               </div>
             ) : (
               <button
-                onClick={() => setShowNew(true)}
+                onClick={() => { setShowNew(true); setShowJoin(false) }}
                 className="w-full text-left px-4 py-2.5 text-sm text-[#374151] hover:bg-[#F9FAFB] flex items-center gap-2"
               >
                 <Plus className="size-4" />
                 Nova Casa
+              </button>
+            )}
+          </div>
+          <div className="border-t border-[#E5E7EB]">
+            {showJoin ? (
+              <div className="p-3">
+                <div className="flex gap-2">
+                  <input
+                    value={inviteCode}
+                    onChange={(e) => { setInviteCode(e.target.value); setJoinError("") }}
+                    placeholder="Código de convite"
+                    className="flex-1 px-3 py-1.5 border border-input rounded-lg text-sm uppercase focus:outline-none focus:ring-2 focus:ring-ring"
+                    autoFocus
+                    onKeyDown={(e) => { if (e.key === "Enter") handleJoin(); if (e.key === "Escape") setShowJoin(false) }}
+                  />
+                  <button onClick={handleJoin} className="px-3 py-1.5 bg-primary text-primary-foreground rounded-lg text-xs font-semibold">Entrar</button>
+                </div>
+                {joinError && (
+                  <p className="text-xs text-destructive mt-1">{joinError}</p>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => { setShowJoin(true); setShowNew(false) }}
+                className="w-full text-left px-4 py-2.5 text-sm text-[#374151] hover:bg-[#F9FAFB] flex items-center gap-2"
+              >
+                <SignIn className="size-4" />
+                Entrar em uma casa
               </button>
             )}
           </div>

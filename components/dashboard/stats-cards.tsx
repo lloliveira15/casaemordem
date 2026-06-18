@@ -1,5 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card"
-
 interface StatsProps {
   total: number
   completed: number
@@ -18,21 +16,17 @@ export function StatsCards({ total, completed, pending, memberCount }: StatsProp
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       {stats.map((stat) => (
-        <Card
+        <div
           key={stat.label}
-          className="border-border shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-150 cursor-pointer"
+          className="bg-card border border-border rounded-xl p-4 space-y-1 hover:shadow-[var(--shadow-md)] hover:border-primary/30 transition-all duration-150"
         >
-          <CardContent className="p-5 space-y-2">
-            <div className="size-10 rounded-xl bg-secondary flex items-center justify-center mx-auto">
-              <p className="text-2xl font-extrabold text-primary">{stat.value}</p>
-            </div>
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {stat.label}
-            </p>
-          </CardContent>
-        </Card>
+          <p className="text-2xl font-extrabold text-primary">{stat.value}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            {stat.label}
+          </p>
+        </div>
       ))}
     </div>
   )

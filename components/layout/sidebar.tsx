@@ -22,8 +22,8 @@ interface Household {
 }
 
 const navItems = [
-  { href: "/app/dashboard", label: "Dashboard", icon: House },
-  { href: "/app/comodos", label: "Cômodos", icon: ListChecks },
+  { href: "/app/dashboard", label: "Início", icon: ListChecks },
+  { href: "/app/comodos", label: "Cômodos", icon: House },
   { href: "/app/compras", label: "Compras", icon: ShoppingCart },
   { href: "/app/membros", label: "Membros", icon: Users },
   { href: "/app/configuracoes", label: "Configurações", icon: GearSix },

@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 interface CalendarProps {
@@ -14,16 +14,11 @@ const MONTH_NAMES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
 export function Calendar({ currentDate, taskDates }: CalendarProps) {
   const router = useRouter()
 
-  const { year, month, days, firstDayOfWeek, todayStr } = useMemo(() => {
-    const d = new Date(currentDate + "T12:00:00")
-    const y = d.getFullYear()
-    const m = d.getMonth()
-    const first = new Date(y, m, 1).getDay()
-    const daysInMonth = new Date(y, m + 1, 0).getDate()
-    const today = new Date()
-    const tStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
-    return { year: y, month: m, days: daysInMonth, firstDayOfWeek: first, todayStr: tStr }
-  }, [currentDate])
+  const today = new Date()
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
+
+  const [viewYear, setViewYear] = useState(today.getFullYear())
+  const [viewMonth, setViewMonth] = useState(today.getMonth())
 
   function goToDate(dateStr: string) {
     const params = new URLSearchParams(window.location.search)
@@ -32,23 +27,32 @@ export function Calendar({ currentDate, taskDates }: CalendarProps) {
   }
 
   function prevMonth() {
-    const d = new Date(year, month - 1, 1)
-    const str = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`
-    goToDate(str)
+    if (viewMonth === 0) {
+      setViewYear(y => y - 1)
+      setViewMonth(11)
+    } else {
+      setViewMonth(m => m - 1)
+    }
   }
 
   function nextMonth() {
-    const d = new Date(year, month + 1, 1)
-    const str = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`
-    goToDate(str)
+    if (viewMonth === 11) {
+      setViewYear(y => y + 1)
+      setViewMonth(0)
+    } else {
+      setViewMonth(m => m + 1)
+    }
   }
+
+  const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay()
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
 
   const cells = []
   for (let i = 0; i < firstDayOfWeek; i++) {
     cells.push(<div key={`empty-${i}`} />)
   }
-  for (let day = 1; day <= days; day++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
     const isToday = dateStr === todayStr
     const isSelected = dateStr === currentDate
     const hasTasks = taskDates.has(dateStr)
@@ -76,7 +80,7 @@ export function Calendar({ currentDate, taskDates }: CalendarProps) {
     <div className="p-3 bg-card border border-border rounded-xl shadow-[var(--shadow-sm)] max-w-xs">
       <div className="flex items-center justify-between mb-3">
         <button onClick={prevMonth} className="size-6 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-secondary transition-all text-sm">&larr;</button>
-        <span className="text-xs font-bold text-foreground">{MONTH_NAMES[month]} {year}</span>
+        <span className="text-xs font-bold text-foreground">{MONTH_NAMES[viewMonth]} {viewYear}</span>
         <button onClick={nextMonth} className="size-6 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-secondary transition-all text-sm">&rarr;</button>
       </div>
       <div className="grid grid-cols-7 gap-0.5 text-center">

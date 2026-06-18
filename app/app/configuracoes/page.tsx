@@ -13,6 +13,31 @@ export default async function ConfigPage() {
 
   if (!profile?.household_id) redirect("/auth/login")
 
+  const { data: rooms } = await supabase
+    .from("rooms")
+    .select("name")
+    .eq("household_id", profile.household_id)
+    .order("name")
+
+  const roomNames = rooms?.map(r => r.name) ?? []
+
+  const { data: rawMembers } = await supabase
+    .from("household_members")
+    .select("id, user_id")
+    .eq("household_id", profile.household_id)
+
+  const memberIds = rawMembers?.map(m => m.user_id) ?? []
+  const { data: memberProfiles } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .in("id", memberIds.length > 0 ? memberIds : [user.id])
+
+  const profileMap = new Map(memberProfiles?.map(p => [p.id, p]) ?? [])
+  const members = (rawMembers ?? []).map(m => ({
+    id: m.id,
+    username: profileMap.get(m.user_id)?.username ?? "Usuário",
+  }))
+
   const { data: templates } = await supabase
     .from("task_templates")
     .select("*")
@@ -41,7 +66,7 @@ export default async function ConfigPage() {
 
       <section className="space-y-4 p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)]">
         <h2 className="text-lg font-semibold">Templates de Tarefas</h2>
-        <TemplateForm />
+        <TemplateForm rooms={roomNames} members={members} />
         <TemplateList templates={templates ?? []} />
       </section>
     </div>

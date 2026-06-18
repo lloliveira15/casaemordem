@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
-import { autoCategorize } from "@/lib/shopping-categories"
+import { autoCategorize, DEFAULT_CATEGORIES } from "@/lib/shopping-categories"
 
 export async function addShoppingItem(formData: FormData) {
   const supabase = await createClient()
@@ -18,11 +18,32 @@ export async function addShoppingItem(formData: FormData) {
   const quantity = (formData.get("quantity") as string)?.trim() || null
   if (!itemName) return { error: "Nome do item obrigatório" }
 
-  const { data: categories } = await supabase
+  let { data: categories } = await supabase
     .from("shopping_categories")
     .select("*")
     .eq("household_id", profile.household_id)
     .order("sort_order")
+
+  if (!categories || categories.length === 0) {
+    const { error: seedError } = await supabase
+      .from("shopping_categories")
+      .insert(
+        DEFAULT_CATEGORIES.map((cat) => ({
+          household_id: profile.household_id,
+          name: cat.name,
+          keywords: cat.keywords,
+          sort_order: cat.sort_order,
+        }))
+      )
+    if (!seedError) {
+      const { data: seeded } = await supabase
+        .from("shopping_categories")
+        .select("*")
+        .eq("household_id", profile.household_id)
+        .order("sort_order")
+      categories = seeded ?? []
+    }
+  }
 
   const category = autoCategorize(itemName, categories ?? [])
 

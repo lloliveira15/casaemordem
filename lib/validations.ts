@@ -21,13 +21,22 @@ export const createRoomTaskSchema = z.object({
     z.enum(["daily", "weekly", "biweekly", "monthly"]).optional()
   ),
   day_value: z.coerce.number().optional().default(0),
-  assigned_to_id: z.string().uuid().optional().nullable(),
+  assigned_to_id: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : v),
+    z.string().uuid().optional().nullable()
+  ),
   due_date: z.string().optional(),
 })
 
 export const createQuickTaskSchema = z.object({
   description: z.string().min(1, "Descrição obrigatória"),
-  room_id: z.string().uuid().optional().nullable(),
-  assigned_to_id: z.string().uuid().optional().nullable(),
+  room_id: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : v),
+    z.string().uuid().optional().nullable()
+  ),
+  assigned_to_id: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : v),
+    z.string().uuid().optional().nullable()
+  ),
   due_date: z.string(),
 })

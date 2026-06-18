@@ -3,6 +3,8 @@ import { redirect } from "next/navigation"
 import { Calendar } from "@/components/dashboard/calendar"
 import { TaskTable } from "@/components/tasks/task-table"
 import { StatsCards } from "@/components/dashboard/stats-cards"
+import { DateNavigator } from "@/components/dashboard/date-navigator"
+import { QuickTaskDialog } from "@/components/tasks/quick-task-dialog"
 import { getTodayDateString } from "@/lib/utils"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -45,10 +47,30 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
 
   const taskDates = new Set(monthTasks?.map(t => t.due_date) ?? [])
 
-  const { data: members } = await supabase
+  const { data: rawMembers } = await supabase
     .from("household_members")
-    .select("id")
+    .select("id, user_id")
     .eq("household_id", profile.household_id)
+
+  const { data: rooms } = await supabase
+    .from("rooms")
+    .select("id, name")
+    .eq("household_id", profile.household_id)
+    .order("sort_order")
+
+  const memberIds = rawMembers?.map(m => m.user_id) ?? []
+  const { data: memberProfiles } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .in("id", memberIds.length > 0 ? memberIds : [user.id])
+
+  const profileMap = new Map(memberProfiles?.map(p => [p.id, p]) ?? [])
+  const members = (rawMembers ?? []).map(m => ({
+    id: m.id,
+    username: profileMap.get(m.user_id)?.username ?? "Usuário",
+  }))
+
+  const householdName = profile.household?.name
 
   const pending = tasks?.filter(t => !t.completed).length ?? 0
   const completed = tasks?.filter(t => t.completed).length ?? 0
@@ -63,26 +85,36 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground text-sm mt-0.5 capitalize">{dateFormatted}</p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-extrabold text-foreground mb-1">
+            {householdName ?? "Início"}
+          </h1>
+          <DateNavigator currentDate={currentDate} dateFormatted={dateFormatted} />
         </div>
-        <Link href="/app/configuracoes/gerar">
-          <Button variant="outline" className="rounded-lg">
-            Gerar Tarefas
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          <QuickTaskDialog rooms={rooms ?? []} members={members} currentDate={currentDate} />
+          <Link href="/app/configuracoes/gerar">
+            <Button variant="outline" className="rounded-lg">
+              Gerar Tarefas
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      <StatsCards
-        total={total}
-        completed={completed}
-        pending={pending}
-        memberCount={members?.length ?? 0}
-      />
-
-      <Calendar currentDate={currentDate} taskDates={taskDates} />
+      <div className="flex flex-col md:flex-row gap-5">
+        <div className="w-full md:w-2/5 lg:w-1/3">
+          <Calendar currentDate={currentDate} taskDates={taskDates} />
+        </div>
+        <div className="w-full md:w-3/5 lg:w-2/3">
+          <StatsCards
+            total={total}
+            completed={completed}
+            pending={pending}
+            memberCount={rawMembers?.length ?? 0}
+          />
+        </div>
+      </div>
 
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">Tarefas do Dia</h2>

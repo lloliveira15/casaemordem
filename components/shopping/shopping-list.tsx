@@ -1,8 +1,9 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { addShoppingItem, toggleShoppingItem, deleteShoppingItem, clearCompletedItems } from "@/lib/actions/shopping"
+import { getWeekId, formatWeekRange } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash, Eraser } from "phosphor-react"
@@ -14,6 +15,7 @@ interface ShoppingItem {
   quantity: string | null
   completed: boolean
   completed_by: string | null
+  created_at: string
 }
 
 const CATEGORY_EMOJIS: Record<string, string> = {
@@ -32,17 +34,28 @@ export function ShoppingList({ items }: { items: ShoppingItem[] }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [newItem, setNewItem] = useState("")
 
-  const grouped: Record<string, ShoppingItem[]> = {}
-  const categoryOrder: string[] = []
+  const weeks = useMemo(() => {
+    const weekMap: Record<string, Record<string, ShoppingItem[]>> = {}
+    const weekOrder: string[] = []
 
-  for (const item of items) {
-    const cat = item.category || "Outros"
-    if (!grouped[cat]) {
-      grouped[cat] = []
-      categoryOrder.push(cat)
+    for (const item of items) {
+      const weekId = getWeekId(new Date(item.created_at))
+      const cat = item.category || "Outros"
+
+      if (!weekMap[weekId]) {
+        weekMap[weekId] = {}
+        weekOrder.push(weekId)
+      }
+      if (!weekMap[weekId][cat]) {
+        weekMap[weekId][cat] = []
+      }
+      weekMap[weekId][cat].push(item)
     }
-    grouped[cat].push(item)
-  }
+
+    weekOrder.reverse()
+
+    return { weekMap, weekOrder }
+  }, [items])
 
   async function handleAdd() {
     if (!newItem.trim()) return
@@ -98,39 +111,49 @@ export function ShoppingList({ items }: { items: ShoppingItem[] }) {
         <p className="text-sm text-muted-foreground text-center py-8">Lista de compras vazia.</p>
       )}
 
-      <div className="space-y-6">
-        {categoryOrder.map(cat => (
-          <div key={cat}>
-            <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1.5">
-              <span>{CATEGORY_EMOJIS[cat] || "📦"}</span>
-              {cat}
-              <span className="text-xs text-muted-foreground font-normal">({grouped[cat].length})</span>
-            </h3>
-            <div className="space-y-1">
-              {grouped[cat].map(item => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl hover:border-primary/30 transition-all group"
-                >
-                  <Checkbox
-                    checked={item.completed}
-                    onCheckedChange={() => handleToggle(item.id)}
-                    className="cursor-pointer"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm ${item.completed ? "line-through text-muted-foreground" : "text-foreground"}`}>
-                      {item.item_name}
-                    </p>
+      <div className="space-y-8">
+        {weeks.weekOrder.map(weekId => (
+          <div key={weekId}>
+            <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2">
+              <span>📅</span>
+              {formatWeekRange(weekId)}
+            </h2>
+            <div className="space-y-4">
+              {Object.entries(weeks.weekMap[weekId]).map(([cat, catItems]) => (
+                <div key={cat}>
+                  <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1.5">
+                    <span>{CATEGORY_EMOJIS[cat] || "📦"}</span>
+                    {cat}
+                    <span className="text-xs text-muted-foreground font-normal">({catItems.length})</span>
+                  </h3>
+                  <div className="space-y-1">
+                    {catItems.map(item => (
+                      <div
+                        key={item.id}
+                        className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl hover:border-primary/30 transition-all group"
+                      >
+                        <Checkbox
+                          checked={item.completed}
+                          onCheckedChange={() => handleToggle(item.id)}
+                          className="cursor-pointer"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm ${item.completed ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                            {item.item_name}
+                          </p>
+                        </div>
+                        {item.quantity && (
+                          <span className="text-xs text-muted-foreground shrink-0">{item.quantity}</span>
+                        )}
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                          <Trash className="size-4" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                  {item.quantity && (
-                    <span className="text-xs text-muted-foreground shrink-0">{item.quantity}</span>
-                  )}
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
-                  >
-                    <Trash className="size-4" />
-                  </button>
                 </div>
               ))}
             </div>
