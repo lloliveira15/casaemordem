@@ -11,7 +11,6 @@ import {
   SignOut,
   Crown,
   Flower,
-  House,
   ShoppingCart,
   ClockCounterClockwise,
   Armchair,
@@ -37,16 +36,10 @@ export function Sidebar({ username, isAdmin, currentHousehold, households }: { u
 
   return (
     <aside className="hidden md:flex flex-col w-[260px] border-r border-[#E5E7EB] bg-white text-[#374151] p-4">
-      {/* Logo + Household Name */}
-      <div className="mb-2 px-4">
-        <div className="flex items-center gap-2 mb-1">
-          <Flower className="size-6 text-[#A78BFA]" weight="fill" />
-          <span className="text-lg font-semibold text-[#A78BFA]">Casa em Ordem</span>
-        </div>
-        <div className="flex items-center gap-1.5 pl-1">
-          <House className="size-3.5 text-[#C4B5FD]" weight="fill" />
-          <span className="text-xs font-medium text-[#A78BFA]/70 truncate">{currentHousehold.name}</span>
-        </div>
+      {/* Logo */}
+      <div className="mb-2 px-4 flex items-center gap-2">
+        <Flower className="size-6 text-[#A78BFA]" weight="fill" />
+        <span className="text-lg font-semibold text-[#A78BFA]">Casa em Ordem</span>
       </div>
 
       <HouseholdSwitcher current={currentHousehold} households={households} />
