@@ -7,3 +7,11 @@ next-env.d.ts
 .superpowers/
 .DS_Store
 supabase/.temp/
+*.png
+*.webp
+*.jpeg
+*.jpg
+references/
+design-system/
+.opencode/
+docs/

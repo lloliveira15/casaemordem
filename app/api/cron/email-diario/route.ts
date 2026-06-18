@@ -40,7 +40,7 @@ export async function POST() {
         if (!profile?.email) continue
 
         await getResend().emails.send({
-          from: process.env.RESEND_FROM ?? "noreply@casaemordem.com.br",
+          from: process.env.RESEND_FROM ?? "noreply@casaemordem.app",
           to: profile.email,
           subject: `🏠 Tarefas de hoje - ${household.name ?? "Casa"}`,
           react: DailyDigest({

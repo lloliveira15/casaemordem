@@ -85,7 +85,7 @@ export async function sendInvite(formData: FormData) {
 
   try {
     await getResend().emails.send({
-      from: process.env.RESEND_FROM ?? "noreply@casaemordem.com.br",
+      from: process.env.RESEND_FROM ?? "noreply@casaemordem.app",
       to: email,
       subject: `${profile.username ?? "Alguém"} te convidou para o Casa em Ordem!`,
       react: InviteEmail({
