@@ -11,6 +11,7 @@ export function InviteSection({ inviteCode }: { inviteCode: string }) {
   const [showEmailForm, setShowEmailForm] = useState(false)
   const [email, setEmail] = useState("")
   const [emailSent, setEmailSent] = useState(false)
+  const [emailError, setEmailError] = useState("")
   const [sending, setSending] = useState(false)
 
   async function handleRegenerate() {
@@ -30,6 +31,7 @@ export function InviteSection({ inviteCode }: { inviteCode: string }) {
   async function handleSendInvite() {
     if (!email) return
     setSending(true)
+    setEmailError("")
     const fd = new FormData()
     fd.set("email", email)
     const result = await sendInvite(fd)
@@ -39,6 +41,8 @@ export function InviteSection({ inviteCode }: { inviteCode: string }) {
       setShowEmailForm(false)
       setEmail("")
       setTimeout(() => setEmailSent(false), 3000)
+    } else if (result.error) {
+      setEmailError(result.error)
     }
   }
 
@@ -99,30 +103,35 @@ export function InviteSection({ inviteCode }: { inviteCode: string }) {
       </div>
 
       {showEmailForm && (
-        <div className="flex gap-2 items-center">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email do convidado"
-            className="flex-1 px-3 py-2 border border-input rounded-lg bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <Button
-            size="sm"
-            onClick={handleSendInvite}
-            disabled={sending || !email}
-            className="rounded-lg"
-          >
-            {sending ? "Enviando..." : "Enviar"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowEmailForm(false)}
-            className="text-muted-foreground"
-          >
-            Cancelar
-          </Button>
+        <div className="space-y-2">
+          <div className="flex gap-2 items-center">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setEmailError("") }}
+              placeholder="Email do convidado"
+              className="flex-1 px-3 py-2 border border-input rounded-lg bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <Button
+              size="sm"
+              onClick={handleSendInvite}
+              disabled={sending || !email}
+              className="rounded-lg"
+            >
+              {sending ? "Enviando..." : "Enviar"}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowEmailForm(false)}
+              className="text-muted-foreground"
+            >
+              Cancelar
+            </Button>
+          </div>
+          {emailError && (
+            <p className="text-sm text-destructive">{emailError}</p>
+          )}
         </div>
       )}
 

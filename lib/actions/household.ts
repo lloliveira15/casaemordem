@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { getResend } from "@/lib/resend"
+import { InviteEmail } from "@/emails/invite"
 
 export async function regenerateCode() {
   const supabase = await createClient()
@@ -54,6 +56,8 @@ export async function toggleNotifications(memberUserId: string, enabled: boolean
 export async function sendInvite(formData: FormData) {
   const supabase = await createClient()
   const email = formData.get("email") as string
+  if (!email) return { error: "Email é obrigatório" }
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "Unauthorized" }
 
@@ -64,5 +68,25 @@ export async function sendInvite(formData: FormData) {
     .single()
 
   const household = profile?.household as unknown as { invite_code: string }
-  return { success: true, inviteCode: household?.invite_code, senderName: profile?.username }
+  if (!household?.invite_code) return { error: "Código de convite não encontrado" }
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+
+  try {
+    await getResend().emails.send({
+      from: process.env.RESEND_FROM ?? "noreply@casaemordem.com.br",
+      to: email,
+      subject: `${profile?.username ?? "Alguém"} te convidou para o Casa em Ordem!`,
+      react: InviteEmail({
+        senderName: profile?.username ?? "Alguém",
+        inviteCode: household.invite_code,
+        appUrl,
+      }),
+    })
+
+    return { success: true }
+  } catch (err) {
+    console.error("Send invite error:", err)
+    return { error: "Erro ao enviar convite. Verifique o email e tente novamente." }
+  }
 }
