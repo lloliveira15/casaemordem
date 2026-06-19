@@ -7,7 +7,7 @@ export default async function ConvitePage(props: { params: Promise<{ code: strin
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect(`/auth/cadastro?invite=${encodeURIComponent(code)}`)
+    redirect(`/auth/login?redirect=/convite/${encodeURIComponent(code)}`)
   }
 
   const normalizedCode = code.trim().toUpperCase()

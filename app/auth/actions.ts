@@ -7,9 +7,13 @@ import { loginSchema, registerSchema } from "@/lib/validations"
 export async function login(formData: FormData): Promise<never | void> {
   const supabase = await createClient()
 
+  const redirectTo = (formData.get("redirect") as string) || ""
+
   const parsed = loginSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) {
-    return redirect("/auth/login?erro=Dados+inválidos")
+    const errorParams = new URLSearchParams({ erro: "Dados inválidos" })
+    if (redirectTo) errorParams.set("redirect", redirectTo)
+    return redirect(`/auth/login?${errorParams.toString()}`)
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -17,8 +21,13 @@ export async function login(formData: FormData): Promise<never | void> {
     password: parsed.data.password,
   })
 
-  if (error) return redirect(`/auth/login?erro=${encodeURIComponent(error.message)}`)
-  redirect("/app/dashboard")
+  if (error) {
+    const errorParams = new URLSearchParams({ erro: error.message })
+    if (redirectTo) errorParams.set("redirect", redirectTo)
+    return redirect(`/auth/login?${errorParams.toString()}`)
+  }
+
+  redirect(redirectTo || "/app/dashboard")
 }
 
 export async function register(formData: FormData): Promise<never | void> {
