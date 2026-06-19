@@ -15,7 +15,7 @@ export default async function ConfigPage() {
 
   const { data: rooms } = await supabase
     .from("rooms")
-    .select("name")
+    .select("id, name")
     .eq("household_id", profile.household_id)
     .order("name")
 
@@ -40,7 +40,7 @@ export default async function ConfigPage() {
 
   const { data: templates } = await supabase
     .from("task_templates")
-    .select("*")
+    .select("*, room:rooms(name)")
     .eq("household_id", profile.household_id)
     .eq("is_active", true)
     .order("frequency")
@@ -66,7 +66,7 @@ export default async function ConfigPage() {
       <section className="space-y-4 p-5 bg-card border border-border rounded-2xl shadow-[var(--shadow-sm)]">
         <h2 className="text-lg font-semibold">Tarefas Programadas</h2>
         <TemplateForm rooms={roomNames} members={members} />
-        <TemplateList templates={templates ?? []} />
+        <TemplateList templates={templates ?? []} rooms={rooms ?? []} />
       </section>
     </div>
   )

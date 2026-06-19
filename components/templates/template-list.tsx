@@ -1,22 +1,30 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { deleteTemplate } from "@/lib/actions/templates"
+import { useRouter } from "next/navigation"
+import { deleteTemplate, updateTemplateRoom } from "@/lib/actions/templates"
 import { FREQUENCY_LABELS } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Trash } from "phosphor-react"
+import { Trash, PencilSimple } from "phosphor-react"
 
 interface Template {
   id: string
   description: string
-  room: string | null
+  room: { name: string } | null
+  room_id: string | null
   assigned_to: string | null
   frequency: string
   day_value: number
 }
 
+interface Room {
+  id: string
+  name: string
+}
+
 interface TemplateListProps {
   templates: Template[]
+  rooms: Room[]
 }
 
 const PAGE_SIZE = 12
@@ -44,9 +52,12 @@ function getRoomColor(room: string): string {
 
 const FREQ_ORDER = ["daily", "weekly", "biweekly", "monthly"]
 
-export function TemplateList({ templates }: TemplateListProps) {
+export function TemplateList({ templates, rooms }: TemplateListProps) {
+  const router = useRouter()
   const [activeFreq, setActiveFreq] = useState<string>(FREQ_ORDER[0])
-  const [activeRoom, setActiveRoom] = useState<string | null>(null)
+  const [activeRoomFilter, setActiveRoomFilter] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editRoomId, setEditRoomId] = useState<string>("")
 
   const freqLabels: Record<string, string> = {
     daily: "Diária",
@@ -69,10 +80,10 @@ export function TemplateList({ templates }: TemplateListProps) {
   const filteredTemplates = useMemo(() => {
     return templates.filter(t => {
       if (t.frequency !== activeFreq) return false
-      if (activeRoom && t.room !== activeRoom) return false
+      if (activeRoomFilter && t.room?.name !== activeRoomFilter) return false
       return true
     })
-  }, [templates, activeFreq, activeRoom])
+  }, [templates, activeFreq, activeRoomFilter])
 
   const sortedTemplates = useMemo(() => {
     return [...filteredTemplates].sort((a, b) => {
@@ -86,10 +97,10 @@ export function TemplateList({ templates }: TemplateListProps) {
     })
   }, [filteredTemplates])
 
-  const rooms = useMemo(() => {
+  const roomFilters = useMemo(() => {
     const roomSet = new Set<string>()
     for (const t of templates) {
-      if (t.frequency === activeFreq && t.room) roomSet.add(t.room)
+      if (t.frequency === activeFreq && t.room?.name) roomSet.add(t.room.name)
     }
     return Array.from(roomSet).sort()
   }, [templates, activeFreq])
@@ -102,17 +113,29 @@ export function TemplateList({ templates }: TemplateListProps) {
 
   function handleFreqChange(freq: string) {
     setActiveFreq(freq)
-    setActiveRoom(null)
+    setActiveRoomFilter(null)
     setPage(0)
   }
 
-  function handleRoomChange(room: string | null) {
-    setActiveRoom(room)
+  function handleRoomFilterChange(room: string | null) {
+    setActiveRoomFilter(room)
     setPage(0)
+  }
+
+  function startEdit(t: Template) {
+    setEditingId(t.id)
+    setEditRoomId(t.room_id ?? "")
+  }
+
+  async function saveEdit(templateId: string) {
+    await updateTemplateRoom(templateId, editRoomId || null)
+    setEditingId(null)
+    router.refresh()
   }
 
   async function handleDelete(templateId: string) {
     await deleteTemplate(templateId)
+    router.refresh()
   }
 
   if (templates.length === 0) {
@@ -122,6 +145,8 @@ export function TemplateList({ templates }: TemplateListProps) {
       </div>
     )
   }
+
+  const selectClass = "px-2 py-1 border border-input rounded-lg bg-card text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring min-w-[120px]"
 
   return (
     <div className="space-y-4">
@@ -148,26 +173,26 @@ export function TemplateList({ templates }: TemplateListProps) {
       </div>
 
       {/* Room sub-tabs */}
-      {rooms.length > 0 && (
+      {roomFilters.length > 0 && (
         <div className="flex flex-wrap gap-1">
           <button
-            onClick={() => handleRoomChange(null)}
+            onClick={() => handleRoomFilterChange(null)}
             className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
-              activeRoom === null
+              activeRoomFilter === null
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-primary"
             }`}
           >
             Todos ({sortedTemplates.length})
           </button>
-          {rooms.map((room) => {
-            const count = templates.filter(t => t.frequency === activeFreq && t.room === room).length
+          {roomFilters.map((room) => {
+            const count = templates.filter(t => t.frequency === activeFreq && t.room?.name === room).length
             return (
               <button
                 key={room}
-                onClick={() => handleRoomChange(room)}
+                onClick={() => handleRoomFilterChange(room)}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors flex items-center gap-1 ${
-                  activeRoom === room
+                  activeRoomFilter === room
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-primary"
                 }`}
@@ -186,7 +211,8 @@ export function TemplateList({ templates }: TemplateListProps) {
       {/* Template list */}
       <div className="space-y-2">
         {pageItems.map((t) => {
-          const roomColor = t.room ? getRoomColor(t.room) : undefined
+          const roomName = t.room?.name ?? ""
+          const roomColor = roomName ? getRoomColor(roomName) : undefined
           const dayLabel =
             t.frequency === "weekly" && t.day_value != null
               ? dayNames[t.day_value]
@@ -200,35 +226,72 @@ export function TemplateList({ templates }: TemplateListProps) {
             >
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-foreground">{t.description}</p>
-                <div className="flex flex-wrap gap-1.5 text-xs mt-1.5">
-                  {t.room && (
-                    <span
-                      className="px-2 py-0.5 rounded-full text-white font-semibold"
-                      style={{ backgroundColor: roomColor }}
-                    >
-                      {t.room}
-                    </span>
-                  )}
-                  {t.assigned_to && (
-                    <span className="px-2 py-0.5 bg-secondary rounded-full text-primary font-semibold">
-                      {t.assigned_to}
-                    </span>
-                  )}
-                  {dayLabel && (
-                    <span className="px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
-                      {dayLabel}
-                    </span>
+                <div className="flex flex-wrap items-center gap-1.5 text-xs mt-1.5">
+                  {editingId === t.id ? (
+                    <div className="flex items-center gap-1">
+                      <select
+                        value={editRoomId}
+                        onChange={(e) => setEditRoomId(e.target.value)}
+                        className={selectClass}
+                      >
+                        <option value="">Sem cômodo</option>
+                        {rooms.map((r) => (
+                          <option key={r.id} value={r.id}>{r.name}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => saveEdit(t.id)}
+                        className="px-2 py-1 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
+                        Salvar
+                      </button>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="px-2 py-1 text-xs font-semibold rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      {roomName && (
+                        <span
+                          className="px-2 py-0.5 rounded-full text-white font-semibold"
+                          style={{ backgroundColor: roomColor }}
+                        >
+                          {roomName}
+                        </span>
+                      )}
+                      {t.assigned_to && (
+                        <span className="px-2 py-0.5 bg-secondary rounded-full text-primary font-semibold">
+                          {t.assigned_to}
+                        </span>
+                      )}
+                      {dayLabel && (
+                        <span className="px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
+                          {dayLabel}
+                        </span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleDelete(t.id)}
-                className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0 ml-2"
-              >
-                <Trash className="size-4" />
-              </Button>
+              <div className="flex items-center gap-1 shrink-0 ml-2">
+                {editingId !== t.id && (
+                  <button
+                    onClick={() => startEdit(t)}
+                    className="size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+                  >
+                    <PencilSimple className="size-4" />
+                  </button>
+                )}
+                <button
+                  onClick={() => handleDelete(t.id)}
+                  className="size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
+                >
+                  <Trash className="size-4" />
+                </button>
+              </div>
             </div>
           )
         })}

@@ -76,3 +76,13 @@ export async function createTemplate(formData: FormData) {
 export async function deleteTemplate(templateId: string) {
   return deleteRoomTask(templateId)
 }
+
+export async function updateTemplateRoom(templateId: string, roomId: string | null) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from("task_templates")
+    .update({ room_id: roomId || null })
+    .eq("id", templateId)
+  if (!error) revalidatePath("/app/configuracoes")
+  return { error: error?.message }
+}
