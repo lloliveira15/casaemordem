@@ -22,6 +22,7 @@ export default async function NotificationsPage() {
       <NotificationsForm
         settings={{
           email_enabled: settings?.email_enabled ?? true,
+          events_enabled: settings?.events_enabled ?? true,
           reminder_times: settings?.reminder_times ?? ["08:00", "14:00", "18:00"],
           deadline_time: settings?.deadline_time ?? "21:00",
         }}

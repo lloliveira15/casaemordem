@@ -10,6 +10,7 @@ interface NotifSettings {
   email_enabled: boolean
   reminder_times: string[]
   deadline_time: string
+  events_enabled: boolean
 }
 
 export function NotificationsForm({ settings }: { settings: NotifSettings }) {
@@ -17,6 +18,7 @@ export function NotificationsForm({ settings }: { settings: NotifSettings }) {
   const [times, setTimes] = useState<string[]>(settings.reminder_times.length > 0 ? settings.reminder_times : ["08:00", "14:00", "18:00"])
   const [deadline, setDeadline] = useState(settings.deadline_time || "21:00")
   const [emailEnabled, setEmailEnabled] = useState(settings.email_enabled)
+  const [eventsEnabled, setEventsEnabled] = useState(settings.events_enabled)
 
   function addTime() {
     setTimes([...times, "12:00"])
@@ -36,6 +38,7 @@ export function NotificationsForm({ settings }: { settings: NotifSettings }) {
     e.preventDefault()
     const fd = new FormData()
     fd.set("email_enabled", String(emailEnabled))
+    fd.set("events_enabled", String(eventsEnabled))
     fd.set("deadline_time", deadline)
     for (const t of times) fd.append("reminder_time", t)
     await updateNotifSettings(fd)
@@ -50,6 +53,12 @@ export function NotificationsForm({ settings }: { settings: NotifSettings }) {
         <input type="checkbox" checked={emailEnabled} onChange={(e) => setEmailEnabled(e.target.checked)} className="size-4 accent-primary rounded border-border" />
         <span className="text-sm text-foreground">Notificações por email ativadas</span>
       </label>
+
+      <label className="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" checked={eventsEnabled} onChange={(e) => setEventsEnabled(e.target.checked)} className="size-4 accent-primary rounded border-border" />
+        <span className="text-sm text-foreground">Notificar compromissos</span>
+      </label>
+      <p className="text-[11px] text-muted-foreground -mt-3">Os membros recebem um email 1h e 30min antes de cada compromisso.</p>
 
       <div className="space-y-2">
         <label className="text-xs font-semibold text-muted-foreground block">Horários de lembrete</label>

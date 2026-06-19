@@ -14,6 +14,7 @@ export async function updateNotifSettings(formData: FormData) {
   if (!profile?.household_id) return { error: "No household" }
 
   const emailEnabled = formData.get("email_enabled") === "true"
+  const eventsEnabled = formData.get("events_enabled") !== "false"
   const deadlineTime = (formData.get("deadline_time") as string) || "21:00"
   const timesRaw = formData.getAll("reminder_time") as string[]
   const reminderTimes = timesRaw.filter(t => t).length > 0 ? timesRaw.filter(t => t) : ["08:00", "14:00", "18:00"]
@@ -22,6 +23,7 @@ export async function updateNotifSettings(formData: FormData) {
     .from("notification_settings")
     .update({
       email_enabled: emailEnabled,
+      events_enabled: eventsEnabled,
       reminder_times: reminderTimes,
       deadline_time: deadlineTime,
     })

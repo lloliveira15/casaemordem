@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { InviteSection } from "@/components/members/invite-section"
 import { MemberCard } from "@/components/members/member-card"
+import { FamilyMemberCard } from "@/components/members/family-member-card"
+import { AddFamilyMember } from "@/components/members/add-family-member"
 
 export default async function MembersPage() {
   const supabase = await createClient()
@@ -53,6 +55,12 @@ export default async function MembersPage() {
       .eq("id", household.id)
   }
 
+  const { data: familyMembers } = await supabase
+    .from("family_members")
+    .select("*")
+    .eq("household_id", profile.household_id)
+    .order("created_at")
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-extrabold text-foreground">Membros</h1>
@@ -78,6 +86,14 @@ export default async function MembersPage() {
             />
           )
         })}
+      </div>
+
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold text-foreground">Família ({familyMembers?.length ?? 0})</h2>
+        {familyMembers?.map((m) => (
+          <FamilyMemberCard key={m.id} member={m} isAdmin={isAdmin} />
+        ))}
+        <AddFamilyMember />
       </div>
     </div>
   )

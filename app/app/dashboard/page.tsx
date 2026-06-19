@@ -8,6 +8,8 @@ import { QuickTaskDialog } from "@/components/tasks/quick-task-dialog"
 import { getTodayDateString } from "@/lib/utils"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { CompromissoCard } from "@/components/events/compromisso-card"
+import { AddCompromisso } from "@/components/events/add-compromisso"
 
 export default async function DashboardPage(props: { searchParams: Promise<{ data?: string }> }) {
   const searchParams = await props.searchParams
@@ -70,6 +72,14 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
     username: profileMap.get(m.user_id)?.username ?? "Usuário",
   }))
 
+  const { data: compromissos } = await supabase
+    .from("events")
+    .select("*, profiles!events_created_by_fkey(username)")
+    .eq("household_id", profile.household_id)
+    .gte("event_date_time", `${currentDate}T00:00:00`)
+    .lt("event_date_time", `${currentDate}T23:59:59`)
+    .order("event_date_time")
+
   const householdName = profile.household?.name
 
   const pending = tasks?.filter(t => !t.completed).length ?? 0
@@ -85,13 +95,8 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-extrabold text-foreground mb-1">
-            {householdName ?? "Início"}
-          </h1>
-          <DateNavigator currentDate={currentDate} dateFormatted={dateFormatted} />
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <DateNavigator currentDate={currentDate} dateFormatted={dateFormatted} />
         <div className="flex items-center gap-2 shrink-0">
           <QuickTaskDialog rooms={rooms ?? []} members={members} currentDate={currentDate} />
           <Link href="/app/configuracoes/gerar">
@@ -114,6 +119,33 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
             memberCount={rawMembers?.length ?? 0}
           />
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold text-foreground">
+            Compromissos do Dia {(compromissos?.length ?? 0) > 0 && `(${compromissos?.length})`}
+          </h2>
+        </div>
+        {compromissos && compromissos.length > 0 ? (
+          <div className="space-y-2">
+            {compromissos.map((c) => (
+              <CompromissoCard
+                key={c.id}
+                compromisso={{
+                  id: c.id,
+                  description: c.description,
+                  event_date_time: c.event_date_time,
+                  location: c.location,
+                  created_by_name: c.profiles?.username ?? "Usuário",
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">Nenhum compromisso para hoje.</p>
+        )}
+        <AddCompromisso />
       </div>
 
       <div className="space-y-4">
