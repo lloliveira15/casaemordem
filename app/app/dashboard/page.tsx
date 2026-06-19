@@ -95,6 +95,11 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
 
   return (
     <div className="space-y-6">
+      <div className="text-center">
+        <h1 className="text-xl font-extrabold text-foreground">
+          Olá, {profile.username}!
+        </h1>
+      </div>
       <div className="flex justify-center">
         <DateNavigator currentDate={currentDate} dateFormatted={dateFormatted} />
       </div>
