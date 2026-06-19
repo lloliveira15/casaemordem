@@ -122,10 +122,11 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-foreground">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-foreground shrink-0">
             Compromissos do Dia {(compromissos?.length ?? 0) > 0 && `(${compromissos?.length})`}
           </h2>
+          <AddCompromisso />
         </div>
         {compromissos && compromissos.length > 0 ? (
           <div className="space-y-2">
@@ -145,7 +146,6 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
         ) : (
           <p className="text-sm text-muted-foreground">Nenhum compromisso para hoje.</p>
         )}
-        <AddCompromisso />
       </div>
 
       <div className="space-y-4">

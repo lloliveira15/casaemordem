@@ -18,6 +18,12 @@ export function AddCompromisso() {
     e.preventDefault()
     const form = e.currentTarget as HTMLFormElement
     const formData = new FormData(form)
+    const eventDate = formData.get("event_date") as string
+    const eventTime = formData.get("event_time") as string
+    const localDate = new Date(`${eventDate}T${eventTime}:00`)
+    formData.set("event_date_time", localDate.toISOString())
+    formData.delete("event_date")
+    formData.delete("event_time")
     const result = await createEvent(formData)
     if (!result?.error) {
       form.reset()
@@ -30,7 +36,7 @@ export function AddCompromisso() {
 
   if (!open) {
     return (
-      <Button variant="outline" size="sm" onClick={() => setOpen(true)} className="rounded-lg border-border bg-white hover:bg-primary/[0.04] hover:text-primary">
+      <Button onClick={() => setOpen(true)} className="rounded-lg shrink-0">
         <Plus className="size-4 mr-1" />
         Adicionar compromisso
       </Button>

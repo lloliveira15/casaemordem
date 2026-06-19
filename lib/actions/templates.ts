@@ -17,11 +17,37 @@ export async function createRoomTask(formData: FormData) {
   const raw = Object.fromEntries(formData)
   const data = createRoomTaskSchema.parse(raw)
 
+  let roomId = formData.get("room_id") as string | null
+  const roomName = formData.get("room") as string | null
+
+  if (!roomId && roomName && roomName.trim()) {
+    const name = roomName.trim()
+    const { data: existingRoom } = await supabase
+      .from("rooms")
+      .select("id")
+      .eq("household_id", profile.household_id)
+      .eq("name", name)
+      .maybeSingle()
+
+    if (existingRoom) {
+      roomId = existingRoom.id
+    } else {
+      const { data: newRoom, error: createError } = await supabase
+        .from("rooms")
+        .insert({ household_id: profile.household_id, name })
+        .select("id")
+        .single()
+
+      if (createError) return { error: createError.message }
+      roomId = newRoom.id
+    }
+  }
+
   const isSporadic = !data.frequency
 
   const { error } = await supabase.from("task_templates").insert({
     household_id: profile.household_id,
-    room_id: formData.get("room_id") as string || null,
+    room_id: roomId,
     description: data.description,
     assigned_to_id: data.assigned_to_id || null,
     frequency: isSporadic ? "daily" : data.frequency,
