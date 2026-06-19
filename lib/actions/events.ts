@@ -19,6 +19,7 @@ export async function createEvent(formData: FormData) {
   const description = formData.get("description") as string
   const eventDate = formData.get("event_date") as string
   const eventTime = formData.get("event_time") as string
+  const location = formData.get("location") as string
 
   if (!description || !eventDate || !eventTime) {
     return { error: "Descrição, data e hora são obrigatórios" }
@@ -31,6 +32,7 @@ export async function createEvent(formData: FormData) {
     created_by: user.id,
     description,
     event_date_time: eventDateTime,
+    location: location || null,
   })
 
   if (!error) revalidatePath("/app/dashboard")
