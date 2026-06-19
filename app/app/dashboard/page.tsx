@@ -95,16 +95,8 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex justify-center">
         <DateNavigator currentDate={currentDate} dateFormatted={dateFormatted} />
-        <div className="flex items-center gap-2 shrink-0">
-          <QuickTaskDialog rooms={rooms ?? []} members={members} currentDate={currentDate} />
-          <Link href="/app/configuracoes/gerar">
-            <Button variant="outline" className="rounded-lg">
-              Gerar Tarefas
-            </Button>
-          </Link>
-        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-5">
@@ -149,7 +141,17 @@ export default async function DashboardPage(props: { searchParams: Promise<{ dat
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Tarefas do Dia</h2>
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-foreground shrink-0">Tarefas do Dia</h2>
+          <div className="flex items-center gap-2 shrink-0">
+            <QuickTaskDialog rooms={rooms ?? []} members={members} currentDate={currentDate} />
+            <Link href="/app/configuracoes/gerar">
+              <Button variant="outline" className="rounded-lg">
+                Gerar Tarefas
+              </Button>
+            </Link>
+          </div>
+        </div>
         <TaskTable tasks={tasks ?? []} />
       </div>
     </div>
