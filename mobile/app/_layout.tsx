@@ -10,6 +10,7 @@ function RootLayoutNav() {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
   const segments = useSegments()
+  const segmentsPath = segments.join("/")
 
   useEffect(() => {
     if (isLoading) return
@@ -21,7 +22,7 @@ function RootLayoutNav() {
     } else if (isAuthenticated && inAuthGroup) {
       router.replace("/(tabs)/dashboard")
     }
-  }, [isAuthenticated, isLoading, segments])
+  }, [isAuthenticated, isLoading, segmentsPath])
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

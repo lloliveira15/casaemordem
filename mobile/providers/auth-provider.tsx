@@ -27,13 +27,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   })
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setState({
-        session,
-        isLoading: false,
-        isAuthenticated: !!session,
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setState({
+          session,
+          isLoading: false,
+          isAuthenticated: !!session,
+        })
       })
-    })
+      .catch(() => {
+        setState({ session: null, isLoading: false, isAuthenticated: false })
+      })
 
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
       setState({

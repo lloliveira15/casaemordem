@@ -1,16 +1,23 @@
-import { useState } from "react"
-import { useRouter, useLocalSearchParams } from "expo-router"
+import { useState, useEffect } from "react"
+import { useRouter } from "expo-router"
 import { YStack, Input, Button, Text } from "tamagui"
 import { supabase } from "../../lib/supabase-client"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function ResetPasswordScreen() {
   const router = useRouter()
-  const { code } = useLocalSearchParams<{ code: string }>()
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.replace("/(auth)/login")
+      }
+    })
+  }, [])
 
   const handleReset = async () => {
     if (password.length < 6) {
