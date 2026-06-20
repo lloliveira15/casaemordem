@@ -1,10 +1,20 @@
-import "react-native-get-random-values"
 import "react-native-url-polyfill/auto"
 import { createClient } from "@supabase/supabase-js"
 import { AppState } from "react-native"
 import * as SecureStore from "expo-secure-store"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as aesjs from "aes-js"
+import * as Crypto from "expo-crypto"
+
+// Polyfill crypto.getRandomValues using expo-crypto
+if (typeof global.crypto !== "object") {
+  global.crypto = {} as any
+}
+if (typeof global.crypto.getRandomValues !== "function") {
+  global.crypto.getRandomValues = (array: any) => {
+    return Crypto.getRandomValues(array)
+  }
+}
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
