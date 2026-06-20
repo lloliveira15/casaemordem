@@ -1,5 +1,5 @@
-import { createTamagui, createFont, createTokens } from "@tamagui/core"
-import { config as tamaguiConfig } from "@tamagui/config"
+import { createTamagui, createFont, createTokens } from "tamagui"
+import { config as baseConfig } from "@tamagui/config"
 
 const plusJakartaFont = createFont({
   family: "System",
@@ -20,7 +20,7 @@ const plusJakartaFont = createFont({
   },
 })
 
-const tokens = createTokens({
+const customTokens = createTokens({
   color: {
     primary: "#7C3AED",
     primaryLight: "#EDE9FE",
@@ -68,37 +68,38 @@ const tokens = createTokens({
   },
 })
 
-const conf = {
-  ...tamaguiConfig,
-  tokens,
+const appConfig = createTamagui({
+  ...baseConfig,
+  tokens: customTokens,
   fonts: {
     body: plusJakartaFont,
     heading: plusJakartaFont,
   },
   themes: {
     light: {
-      background: tokens.color.background,
-      backgroundHover: tokens.color.surfaceSecondary,
-      color: tokens.color.text,
-      colorHover: tokens.color.primary,
-      borderColor: tokens.color.border,
+      background: customTokens.color.background,
+      backgroundHover: customTokens.color.surfaceSecondary,
+      color: customTokens.color.text,
+      colorHover: customTokens.color.primary,
+      borderColor: customTokens.color.border,
       shadowColor: "rgba(0,0,0,0.05)",
     },
     dark: {
       background: "#111827",
       backgroundHover: "#1F2937",
       color: "#F9FAFB",
-      colorHover: tokens.color.secondary,
+      colorHover: customTokens.color.secondary,
       borderColor: "#374151",
       shadowColor: "rgba(0,0,0,0.3)",
     },
   },
-}
+  defaultTheme: "light",
+})
 
-export const tamaguiConfig = createTamagui(conf)
+export type AppConfig = typeof appConfig
 
-export type AppConfig = typeof tamaguiConfig
-
-declare module "@tamagui/core" {
+declare module "tamagui" {
   interface TamaguiCustomConfig extends AppConfig {}
 }
+
+export default appConfig

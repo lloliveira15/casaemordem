@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Stack, useRouter, useSegments } from "expo-router"
 import { TamaguiProvider, Theme } from "tamagui"
-import { tamaguiConfig } from "../tamagui.config"
+import appConfig from "../tamagui.config"
 import { AuthProvider, useAuth } from "../providers"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { StatusBar } from "expo-status-bar"
@@ -33,7 +33,7 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <TamaguiProvider config={tamaguiConfig}>
+    <TamaguiProvider config={appConfig} defaultTheme="light">
       <Theme name="light">
         <SafeAreaProvider>
           <AuthProvider>
