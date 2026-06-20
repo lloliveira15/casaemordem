@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "casaemordem",
     "name": "Casa em Ordem",
     "slug": "casaemordem",
     "version": "1.0.0",
@@ -27,6 +28,12 @@
     "plugins": [
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3cac9f84-4325-44f8-8b6b-3b41ef882d1e"
+      }
+    }
   }
 }

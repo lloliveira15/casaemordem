@@ -3,7 +3,7 @@ import { useRouter } from "expo-router"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { YStack, Input, Button, Text, XStack } from "tamagui"
-import { registerSchema } from "@casaemordem/shared"
+import { registerSchema } from "../../modules/shared"
 import { supabase } from "../../lib/supabase-client"
 
 interface RegisterFormData {
