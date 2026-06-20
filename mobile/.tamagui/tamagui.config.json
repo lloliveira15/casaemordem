@@ -25423,7 +25423,7 @@
   "tamaguiConfig": {
     "fonts": {
       "body": {
-        "family": "System",
+        "family": "Plus Jakarta Sans",
         "size": {
           "xs": 12,
           "sm": 14,
@@ -25448,7 +25448,7 @@
         }
       },
       "heading": {
-        "family": "System",
+        "family": "Plus Jakarta Sans",
         "size": {
           "xs": 12,
           "sm": 14,

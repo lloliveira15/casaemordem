@@ -21,7 +21,7 @@ export default function ForgotPasswordScreen() {
     setError("")
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${process.env.EXPO_PUBLIC_APP_URL}/auth/resetar-senha`,
+      redirectTo: "casaemordem://resetar-senha",
     })
 
     setLoading(false)

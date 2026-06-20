@@ -12,11 +12,15 @@ export default function ResetPasswordScreen() {
   const [error, setError] = useState("")
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (!session) {
+          router.replace("/(auth)/login")
+        }
+      })
+      .catch(() => {
         router.replace("/(auth)/login")
-      }
-    })
+      })
   }, [])
 
   const handleReset = async () => {

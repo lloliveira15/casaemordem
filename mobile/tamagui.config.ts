@@ -2,7 +2,7 @@ import { createTamagui, createFont, createTokens } from "tamagui"
 import { config as baseConfig } from "@tamagui/config"
 
 const plusJakartaFont = createFont({
-  family: "System",
+  family: "Plus Jakarta Sans",
   size: {
     xs: 12,
     sm: 14,
