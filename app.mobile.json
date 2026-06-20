@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "owner": "casaemordem",
+    "name": "Casa em Ordem",
+    "slug": "casaemordem",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "casaemordem",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.casaemordem.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.casaemordem.app",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3cac9f84-4325-44f8-8b6b-3b41ef882d1e"
+      }
+    }
+  }
+}
